@@ -1,0 +1,14 @@
+# Maestro Framework .gitignore
+
+# Node.js dependencies
+node_modules/
+.claude/hooks/node_modules/
+
+# macOS artifacts
+.DS_Store
+
+# General logs
+*.log
+
+# Maestro work tracker output
+.maestro-work-log.txt
