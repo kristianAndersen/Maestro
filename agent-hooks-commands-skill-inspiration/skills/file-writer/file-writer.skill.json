@@ -1,0 +1,52 @@
+{
+  "name": "file-writer",
+  "version": "1.0.0",
+  "type": "skill",
+  "tier": 2,
+  "description": "Auto-activated orchestrator for writing files with safety guarantees, backup strategies, and error recovery. Delegates to write-file micro-skill with domain expertise in file operations.",
+  "model": "sonnet",
+  "capabilities": [
+    "file-write",
+    "backup-management",
+    "content-validation",
+    "error-recovery",
+    "transaction-management",
+    "safety-guarantees"
+  ],
+  "delegates-to": [
+    "write-file",
+    "create-directory",
+    "validate-json",
+    "read-file"
+  ],
+  "allowed-tools": [],
+  "triggers": {
+    "keywords": [
+      "write file",
+      "save file",
+      "create file",
+      "write to file",
+      "save to disk",
+      "write config",
+      "save config",
+      "write JSON",
+      "save JSON",
+      "write YAML",
+      "save data",
+      "create config",
+      "output to file"
+    ],
+    "intentPatterns": [
+      "(write|save|create|output).*(file|to disk|config|JSON|YAML|data)",
+      "(put|store|persist).*(in file|to file|on disk|to disk)",
+      "(save|write).*(this|that|content|data)"
+    ]
+  },
+  "activation": {
+    "auto": true,
+    "enforcement": "suggest",
+    "priority": "high"
+  },
+  "domain": "file-operations",
+  "interaction-mode": "augmentation"
+}

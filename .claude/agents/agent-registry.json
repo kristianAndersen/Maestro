@@ -1,0 +1,227 @@
+{
+  "version": "1.0",
+  "agents": {
+    "list": {
+      "purpose": "Directory and file listing operations",
+      "triggers": {
+        "keywords": [
+          "list",
+          "show files",
+          "directory",
+          "ls",
+          "what files"
+        ],
+        "intentPatterns": [
+          "list.*files?",
+          "show.*directory",
+          "what.*in.*folder"
+        ],
+        "operations": [
+          "list",
+          "enumerate",
+          "scan"
+        ]
+      },
+      "complexity": "simple",
+      "autonomy": "high"
+    },
+    "open": {
+      "purpose": "File reading with context preservation",
+      "triggers": {
+        "keywords": [
+          "open",
+          "read file",
+          "show me",
+          "view"
+        ],
+        "intentPatterns": [
+          "open.*file",
+          "read.*from",
+          "show.*content"
+        ],
+        "operations": [
+          "read",
+          "view",
+          "display"
+        ]
+      },
+      "complexity": "simple",
+      "autonomy": "high"
+    },
+    "read": {
+      "purpose": "Deep file and codebase analysis",
+      "triggers": {
+        "keywords": [
+          "analyze",
+          "understand",
+          "explain",
+          "how does",
+          "what does"
+        ],
+        "intentPatterns": [
+          "analyze.*code",
+          "understand.*how",
+          "explain.*this"
+        ],
+        "operations": [
+          "analyze",
+          "research",
+          "investigate"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high"
+    },
+    "write": {
+      "purpose": "Code and file modifications",
+      "triggers": {
+        "keywords": [
+          "add",
+          "modify",
+          "change",
+          "update",
+          "fix",
+          "create",
+          "implement"
+        ],
+        "intentPatterns": [
+          "add.*to",
+          "modify.*file",
+          "fix.*bug",
+          "implement.*feature"
+        ],
+        "operations": [
+          "write",
+          "edit",
+          "modify",
+          "create"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "medium"
+    },
+    "fetch": {
+      "purpose": "External data retrieval",
+      "triggers": {
+        "keywords": [
+          "fetch",
+          "get data",
+          "API",
+          "download",
+          "retrieve"
+        ],
+        "intentPatterns": [
+          "fetch.*from",
+          "get.*api",
+          "download.*data"
+        ],
+        "operations": [
+          "fetch",
+          "retrieve",
+          "download"
+        ]
+      },
+      "complexity": "simple",
+      "autonomy": "high"
+    },
+    "base-research": {
+      "purpose": "Information gathering and codebase exploration",
+      "triggers": {
+        "keywords": [
+          "research",
+          "find",
+          "search",
+          "where is",
+          "locate"
+        ],
+        "intentPatterns": [
+          "find.*where",
+          "search.*for",
+          "locate.*code"
+        ],
+        "operations": [
+          "search",
+          "find",
+          "explore"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high"
+    },
+    "base-analysis": {
+      "purpose": "Code and system evaluation",
+      "triggers": {
+        "keywords": [
+          "evaluate",
+          "assess",
+          "review",
+          "check quality",
+          "analyze"
+        ],
+        "intentPatterns": [
+          "evaluate.*code",
+          "assess.*quality",
+          "review.*implementation"
+        ],
+        "operations": [
+          "evaluate",
+          "assess",
+          "review"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high"
+    },
+    "4d-evaluation": {
+      "purpose": "Quality assessment using 4-D framework",
+      "triggers": {
+        "keywords": [
+          "evaluate quality",
+          "4-D",
+          "quality check",
+          "assessment"
+        ],
+        "intentPatterns": [
+          "evaluate.*4-?D",
+          "quality.*assessment"
+        ],
+        "operations": [
+          "evaluate"
+        ]
+      },
+      "complexity": "simple",
+      "autonomy": "high",
+      "internal": true
+    },
+    "harry": {
+      "purpose": "Meta-orchestrator for creating and managing framework components",
+      "triggers": {
+        "keywords": [
+          "create agent",
+          "build skill",
+          "no agent found",
+          "wizard",
+          "harry",
+          "make agent",
+          "new skill"
+        ],
+        "intentPatterns": [
+          "create.*agent",
+          "build.*skill",
+          "need.*agent",
+          "make.*agent",
+          "new.*skill"
+        ],
+        "operations": [
+          "create",
+          "update",
+          "audit",
+          "heal"
+        ]
+      },
+      "complexity": "complex",
+      "autonomy": "high",
+      "fallback": true
+    }
+  }
+}

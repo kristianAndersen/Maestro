@@ -1,0 +1,95 @@
+{
+  "name": "file-reader",
+  "version": "1.0.0",
+  "description": "Intelligent file reading orchestrator with domain expertise in file system operations. Handles size-based strategies, encoding detection, binary files, and batch operations.",
+  "type": "skill",
+  "tier": 2,
+  "model": "sonnet",
+  "capabilities": [
+    "file-operations",
+    "encoding-detection",
+    "binary-handling",
+    "batch-processing",
+    "error-recovery",
+    "streaming",
+    "file-system"
+  ],
+  "input": {
+    "type": "object",
+    "description": "File reading request with optional constraints",
+    "properties": {
+      "file_path": {
+        "type": "string",
+        "description": "Absolute path to file or glob pattern for multiple files"
+      },
+      "encoding": {
+        "type": "string",
+        "description": "Desired encoding (auto-detected if not provided)",
+        "optional": true
+      },
+      "max_size": {
+        "type": "string",
+        "description": "Maximum file size to read (e.g., '10MB')",
+        "optional": true
+      },
+      "strategy": {
+        "type": "string",
+        "enum": ["auto", "direct", "streaming", "batch"],
+        "description": "Reading strategy (defaults to 'auto')",
+        "optional": true
+      }
+    }
+  },
+  "output": {
+    "type": "object",
+    "description": "File content with metadata",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether the operation succeeded"
+      },
+      "content": {
+        "type": "string",
+        "description": "File content (single file) or array of contents (batch)"
+      },
+      "metadata": {
+        "type": "object",
+        "description": "File metadata (size, encoding, type, etc.)"
+      },
+      "error": {
+        "type": "object",
+        "description": "Error details if failed",
+        "optional": true
+      }
+    }
+  },
+  "invocation_patterns": [
+    "Read a single file with auto-detection",
+    "Read large files using streaming",
+    "Batch read multiple files in parallel",
+    "Detect and handle binary files",
+    "Read files with specific encoding"
+  ],
+  "delegates_to": [
+    "read-file",
+    "read-file-stream",
+    "detect-encoding",
+    "file-info"
+  ],
+  "methodology": "tactical-4d",
+  "keywords": [
+    "read",
+    "file",
+    "load",
+    "content",
+    "encoding",
+    "binary",
+    "batch",
+    "stream",
+    "large files"
+  ],
+  "domain": "file-system-operations",
+  "error_recovery_levels": 5,
+  "author": "Maestro System",
+  "license": "MIT"
+}

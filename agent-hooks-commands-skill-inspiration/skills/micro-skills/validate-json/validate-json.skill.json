@@ -1,0 +1,112 @@
+{
+  "name": "validate-json",
+  "version": "1.0.0",
+  "type": "micro-skill",
+  "tier": 3,
+  "description": "Validates JSON syntax and optionally checks against JSON Schema. Provides precise error locations (line, column, character position) for syntax errors. No autonomous retry (logical errors don't benefit from retry), but provides rich context for orchestrator to handle validation failures. Supports both string content validation and schema compliance checking.",
+  "capabilities": [
+    "json-validation",
+    "syntax-checking",
+    "schema-validation",
+    "error-location",
+    "parse-testing",
+    "format-validation",
+    "structure-checking",
+    "context-escalation"
+  ],
+  "keywords": [
+    "json",
+    "validate",
+    "parse",
+    "check",
+    "syntax",
+    "schema",
+    "format",
+    "verify"
+  ],
+  "input": {
+    "type": "object",
+    "properties": {
+      "content": {
+        "type": "string",
+        "description": "JSON content to validate (as string)",
+        "required": true
+      },
+      "schema": {
+        "type": "object",
+        "description": "Optional JSON Schema to validate against"
+      },
+      "strict": {
+        "type": "boolean",
+        "description": "Strict mode: reject duplicate keys, trailing commas (default: false)",
+        "default": false
+      }
+    },
+    "required": ["content"]
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "valid": {
+        "type": "boolean",
+        "description": "Whether JSON is valid"
+      },
+      "parsed": {
+        "type": "object",
+        "description": "Parsed JSON object (only if valid)"
+      },
+      "errors": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["syntax", "schema"],
+              "description": "Type of error"
+            },
+            "message": {
+              "type": "string",
+              "description": "Error message"
+            },
+            "line": {
+              "type": "number",
+              "description": "Line number (1-indexed)"
+            },
+            "column": {
+              "type": "number",
+              "description": "Column number (1-indexed)"
+            },
+            "position": {
+              "type": "number",
+              "description": "Character position in string"
+            },
+            "context": {
+              "type": "string",
+              "description": "Surrounding text showing error location"
+            }
+          }
+        },
+        "description": "Array of validation errors (only if invalid)"
+      }
+    }
+  },
+  "error_handling": {
+    "autonomous_retry": [],
+    "context_escalation": [
+      {
+        "error_type": "syntax",
+        "context": "JSON syntax error with precise location",
+        "suggested_action": "Fix syntax error at indicated line/column"
+      },
+      {
+        "error_type": "schema",
+        "context": "JSON is syntactically valid but doesn't match schema",
+        "suggested_action": "Adjust JSON structure to match schema requirements"
+      }
+    ],
+    "note": "Validation errors are logical, not transient. No retry will help."
+  },
+  "model": "haiku",
+  "tools": ["Bash"]
+}

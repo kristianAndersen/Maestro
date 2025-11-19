@@ -1,0 +1,73 @@
+{
+  "name": "agent-name",
+  "version": "1.0.0",
+  "type": "agent",
+  "tier": 1,
+  "description": "Comprehensive description (100-1000 chars) with keywords for discovery. Explain what domain this agent coordinates and when it should be invoked.",
+  "model": "sonnet",
+  "domain": "domain-name",
+  "capabilities": [
+    "primary-capability",
+    "secondary-capability",
+    "search-keyword-1",
+    "search-keyword-2"
+  ],
+  "delegates-to": [
+    "skill-1",
+    "skill-2",
+    "skill-3"
+  ],
+  "skill-registry": ".claude/skills/skill-rules.json",
+  "allowed-tools": [
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep",
+    "Skill",
+    "Bash",
+    "Task"
+  ],
+  "triggers": {
+    "keywords": [
+      "trigger-word-1",
+      "trigger-phrase",
+      "domain-term"
+    ],
+    "intentPatterns": [
+      "^(action|verb).*domain-indicator$",
+      "keyword.*context-pattern"
+    ],
+    "domainIndicators": [
+      "contextual-clue-1",
+      "contextual-clue-2"
+    ]
+  },
+  "activation": {
+    "auto": true,
+    "enforcement": "suggest",
+    "priority": "high"
+  },
+  "delegation-strategy": {
+    "description": "How this agent routes work to skills",
+    "routing-logic": {
+      "condition-1": "route to skill-1",
+      "condition-2": "route to skill-2",
+      "default": "route to skill-3"
+    }
+  },
+  "methodology": "Domain Direction",
+  "ai-fluency-mode": "agency",
+  "evidence-requirements": [
+    "file:line references for code changes",
+    "test output for validations",
+    "build output for compilations"
+  ],
+  "metadata": {
+    "author": "creator-name",
+    "created": "2025-11-18",
+    "last-updated": "2025-11-18",
+    "status": "active",
+    "complexity": "medium"
+  }
+}

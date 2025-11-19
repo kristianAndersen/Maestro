@@ -1,0 +1,119 @@
+{
+  "name": "4d-evaluation",
+  "version": "2.0.0",
+  "description": "Strategic quality gate that evaluates skill/subagent output through rigorous 4-D discernment (Product, Process, Performance). Applies iterative refinement until excellence standards met. Evaluates at STRATEGIC level (goal achievement), not tactical execution.",
+  "type": "skill",
+  "tier": 2,
+  "model": "sonnet",
+  "capabilities": [
+    "quality-assurance",
+    "code-review",
+    "output-evaluation",
+    "excellence-verification",
+    "iterative-refinement",
+    "strategic-discernment"
+  ],
+  "input": {
+    "type": "object",
+    "description": "Output to evaluate with context",
+    "properties": {
+      "output": {
+        "type": "any",
+        "description": "The output produced by skill/subagent to evaluate"
+      },
+      "goal": {
+        "type": "string",
+        "description": "Original strategic goal/requirement"
+      },
+      "context": {
+        "type": "object",
+        "description": "Additional context (domain, constraints, standards)",
+        "optional": true
+      },
+      "iteration": {
+        "type": "number",
+        "description": "Current iteration count (max 3)",
+        "default": 1,
+        "optional": true
+      }
+    }
+  },
+  "output": {
+    "type": "object",
+    "description": "Evaluation decision with feedback",
+    "properties": {
+      "decision": {
+        "type": "string",
+        "enum": ["APPROVE", "REFINE", "ESCALATE"],
+        "description": "Quality gate decision"
+      },
+      "score": {
+        "type": "object",
+        "description": "Scores for Product, Process, Performance (0-10)"
+      },
+      "feedback": {
+        "type": "object",
+        "description": "Specific, actionable feedback organized by level"
+      },
+      "requires_changes": {
+        "type": "array",
+        "description": "List of required changes (if REFINE)",
+        "optional": true
+      },
+      "escalation_reason": {
+        "type": "string",
+        "description": "Why escalation is needed (if ESCALATE)",
+        "optional": true
+      }
+    }
+  },
+  "invocation_patterns": [
+    "Evaluate completed feature implementation",
+    "Review code changes before commit",
+    "Assess bug fix quality",
+    "Verify refactoring meets standards",
+    "Gate-check before deployment"
+  ],
+  "evaluation_framework": {
+    "levels": [
+      {
+        "name": "Product Discernment",
+        "focus": "WHAT was produced",
+        "criteria": ["correctness", "elegance", "completeness"]
+      },
+      {
+        "name": "Process Discernment",
+        "focus": "HOW it was produced",
+        "criteria": ["reasoning_quality", "sustainability"]
+      },
+      {
+        "name": "Performance Discernment",
+        "focus": "Does it meet EXCELLENCE",
+        "criteria": ["excellence_checklist", "quality_questions"]
+      }
+    ],
+    "decision_framework": {
+      "APPROVE": "All three levels meet excellence standards",
+      "REFINE": "Issues found, actionable feedback provided (max 3 iterations)",
+      "ESCALATE": "After 3 iterations or blocking issues requiring human judgment"
+    }
+  },
+  "keywords": [
+    "evaluate",
+    "review",
+    "quality",
+    "gate",
+    "check",
+    "approve",
+    "assess",
+    "verify",
+    "excellence",
+    "discernment"
+  ],
+  "domain": "quality-assurance",
+  "methodology": "tactical-4d",
+  "max_iterations": 3,
+  "tone": "coaching",
+  "author": "Maestro System",
+  "license": "MIT"
+}

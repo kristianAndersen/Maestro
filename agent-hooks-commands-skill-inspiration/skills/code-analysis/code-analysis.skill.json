@@ -1,0 +1,177 @@
+{
+  "name": "code-analysis",
+  "version": "1.0.0",
+  "description": "Intelligent code analysis orchestrator with domain expertise in software engineering. Analyzes code quality, patterns, complexity, security vulnerabilities, and provides actionable recommendations.",
+  "type": "skill",
+  "tier": 2,
+  "model": "sonnet",
+  "capabilities": [
+    "code-analysis",
+    "security-audit",
+    "quality-review",
+    "pattern-detection",
+    "complexity-analysis",
+    "vulnerability-scanning",
+    "code-smell-detection",
+    "best-practices-verification"
+  ],
+  "input": {
+    "type": "object",
+    "description": "Code analysis request with scope and focus",
+    "properties": {
+      "goal": {
+        "type": "string",
+        "description": "What to analyze (e.g., 'Security audit of payment module')"
+      },
+      "scope": {
+        "type": "string",
+        "description": "Directory or file pattern to analyze (e.g., 'src/auth/')"
+      },
+      "focus": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["security", "quality", "performance", "maintainability", "testing", "documentation"]
+        },
+        "description": "Analysis focus areas"
+      },
+      "standards": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Standards to verify against (e.g., ['OWASP', 'PCI-DSS'])",
+        "optional": true
+      },
+      "constraints": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Analysis constraints or limitations",
+        "optional": true
+      }
+    }
+  },
+  "output": {
+    "type": "object",
+    "description": "Analysis report with findings and recommendations",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether analysis completed successfully"
+      },
+      "analysis": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "description": "High-level summary of findings"
+          },
+          "critical_findings": {
+            "type": "array",
+            "description": "Critical issues requiring immediate attention"
+          },
+          "recommendations": {
+            "type": "array",
+            "description": "Actionable recommendations with evidence"
+          },
+          "code_quality_score": {
+            "type": "number",
+            "description": "Overall quality score (0-10)"
+          }
+        }
+      },
+      "metadata": {
+        "type": "object",
+        "properties": {
+          "files_analyzed": {
+            "type": "number"
+          },
+          "lines_analyzed": {
+            "type": "number"
+          },
+          "duration_ms": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "invocation_patterns": [
+    "Analyze code quality in authentication module",
+    "Security audit of payment processing",
+    "Review code before merge",
+    "Find all API endpoints in codebase",
+    "Check for OWASP vulnerabilities",
+    "Measure code complexity",
+    "Detect code smells and anti-patterns"
+  ],
+  "delegates_to": [
+    "search-codebase",
+    "read-file",
+    "parse-ast",
+    "detect-patterns",
+    "calculate-metrics",
+    "format-output"
+  ],
+  "methodology": "tactical-4d",
+  "domain_expertise": {
+    "areas": [
+      "Software Engineering",
+      "Code Quality",
+      "Security Vulnerabilities",
+      "Complexity Analysis",
+      "Best Practices"
+    ],
+    "standards": [
+      "OWASP Top 10",
+      "PCI-DSS",
+      "SOLID Principles",
+      "Clean Code",
+      "Team Coding Standards"
+    ]
+  },
+  "analysis_chains": {
+    "standard": [
+      "search-codebase",
+      "read-file (parallel)",
+      "parse-ast",
+      "detect-patterns",
+      "calculate-metrics",
+      "format-output"
+    ],
+    "security": [
+      "search-codebase",
+      "read-file (parallel)",
+      "detect-patterns (security)",
+      "calculate-metrics (attack-surface)",
+      "format-output"
+    ],
+    "quality": [
+      "search-codebase",
+      "read-file (batch)",
+      "parse-ast",
+      "detect-patterns (code-smells)",
+      "calculate-metrics (complexity)",
+      "format-output"
+    ]
+  },
+  "keywords": [
+    "code",
+    "analysis",
+    "review",
+    "security",
+    "quality",
+    "vulnerability",
+    "audit",
+    "patterns",
+    "complexity",
+    "refactor",
+    "best practices"
+  ],
+  "domain": "software-engineering",
+  "error_recovery_levels": 5,
+  "author": "Maestro System",
+  "license": "MIT"
+}

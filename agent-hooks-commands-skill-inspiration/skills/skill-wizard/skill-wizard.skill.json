@@ -1,0 +1,109 @@
+{
+  "name": "skill-wizard",
+  "version": "4.0.0",
+  "type": "skill",
+  "tier": 2,
+  "description": "Interactive wizard that guides users through creating new Maestro Marketplace-compatible skills and micro-skills. Walks through skill definition (name, description, capabilities), manifest generation with semantic search optimization, SKILL.md scaffolding using Tactical 4-D templates, and directory structure creation. Ensures new skills are discoverable by the registry through rich descriptions and proper capability tagging. Supports both Tier 2 skills (orchestrators with domain expertise) and Tier 3 micro-skills (single-purpose executors with smart error handling).",
+  "capabilities": [
+    "skill-creation",
+    "skill-development",
+    "interactive-wizard",
+    "manifest-generation",
+    "capability-selection",
+    "skill-scaffolding",
+    "registry-optimization",
+    "marketplace-compatible",
+    "skill-templates",
+    "micro-skill-creation",
+    "directory-creation",
+    "file-scaffolding"
+  ],
+  "keywords": [
+    "create",
+    "new",
+    "skill",
+    "wizard",
+    "generate",
+    "build",
+    "scaffold",
+    "interactive",
+    "guide",
+    "help",
+    "make",
+    "develop",
+    "setup",
+    "initialize",
+    "manifest",
+    "capability",
+    "micro-skill",
+    "orchestrator"
+  ],
+  "domain_expertise": {
+    "skill_design": "Best practices for skill architecture, capability naming, description optimization for semantic search",
+    "marketplace_architecture": "Three-tier system understanding (Conductor → Orchestrators → Musicians)",
+    "tactical_4d": "Implementation of Tactical 4-D methodology at skill level",
+    "registry_optimization": "Crafting descriptions and capabilities that maximize discovery scores"
+  },
+  "input": {
+    "type": "object",
+    "properties": {
+      "skill_type": {
+        "type": "string",
+        "enum": ["skill", "micro-skill"],
+        "description": "Whether to create a Tier 2 skill (orchestrator) or Tier 3 micro-skill (executor)",
+        "default": "skill"
+      },
+      "domain": {
+        "type": "string",
+        "description": "The domain this skill operates in (code, marketing, data, etc.) - optional but helpful for examples"
+      },
+      "interactive": {
+        "type": "boolean",
+        "description": "Whether to use interactive wizard mode with guided questions",
+        "default": true
+      },
+      "name": {
+        "type": "string",
+        "description": "Skill name in hyphen-case (if non-interactive mode)",
+        "pattern": "^[a-z0-9-]+$"
+      },
+      "description": {
+        "type": "string",
+        "description": "Rich description for semantic discovery (if non-interactive mode)"
+      },
+      "capabilities": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "List of capabilities (if non-interactive mode)"
+      }
+    }
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "success": { "type": "boolean" },
+      "skill_name": { "type": "string" },
+      "skill_path": { "type": "string" },
+      "manifest_created": { "type": "boolean" },
+      "skill_md_created": { "type": "boolean" },
+      "discoverable": { "type": "boolean" },
+      "registry_test_score": { "type": "number" },
+      "errors": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  },
+  "suggestedNextSkills": [
+    {
+      "skill": "skill-developer",
+      "reason": "After creating basic structure, skill-developer can help implement the full skill logic",
+      "priority": "medium",
+      "params": {
+        "skill_path": "{{output.skill_path}}"
+      }
+    }
+  ],
+  "model": "sonnet",
+  "tools": ["Read", "Write", "Edit", "Bash", "Glob", "AskUserQuestion"]
+}

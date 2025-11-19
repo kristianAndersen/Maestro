@@ -1,0 +1,12 @@
+{
+  "{skill_name}": {
+    "type": "domain",
+    "enforcement": "suggest",
+    "priority": "medium",
+    "description": "{skill_description}",
+    "promptTriggers": {
+      "keywords": [],
+      "intentPatterns": []
+    }
+  }
+}

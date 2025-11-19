@@ -1,0 +1,9 @@
+{
+  "name": "maestro-hooks",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Hook scripts for Maestro AI orchestration framework",
+  "dependencies": {
+    "minimatch": "^9.0.0"
+  }
+}

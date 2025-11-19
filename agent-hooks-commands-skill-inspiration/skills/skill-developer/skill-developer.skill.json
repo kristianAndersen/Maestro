@@ -1,0 +1,122 @@
+{
+  "name": "skill-developer",
+  "type": "skill",
+  "tier": 2,
+  "description": "Guide for creating Maestro Marketplace-compatible skills and micro-skills. Provides interactive wizard for skill creation, manifest generation assistance, Tactical 4-D methodology guidance, and registry integration. Use when creating new skills, updating existing skills to marketplace standards, generating skill manifests, understanding three-tier architecture (Conductor → Orchestrators → Musicians), debugging skill discovery, or implementing micro-skill chaining patterns. Covers both Tier 2 orchestrators (domain expertise, tactical decisions) and Tier 3 micro-skills (single operations, error handling).",
+
+  "inputs": [
+    {
+      "name": "skill_type",
+      "type": "string",
+      "description": "Type of skill to create: 'tier-2-skill' (orchestrator with domain expertise) or 'tier-3-micro-skill' (single-purpose operation)",
+      "required": true
+    },
+    {
+      "name": "domain",
+      "type": "string",
+      "description": "Domain expertise area: 'code', 'marketing', 'analytics', 'writing', 'data', 'file-operations', or custom domain",
+      "required": true
+    },
+    {
+      "name": "use_case",
+      "type": "string",
+      "description": "Specific use case or problem the skill solves (concrete example)",
+      "required": true
+    },
+    {
+      "name": "expertise",
+      "type": "string",
+      "description": "Domain expertise this skill provides (patterns, thresholds, standards)",
+      "required": false
+    },
+    {
+      "name": "micro_skills_needed",
+      "type": "array<string>",
+      "description": "List of micro-skills this skill will chain (for Tier 2 skills)",
+      "required": false
+    }
+  ],
+
+  "outputs": [
+    {
+      "name": "skill_package",
+      "type": "structured_package",
+      "description": "Complete skill implementation with SKILL.md, manifest JSON, directory structure, and reference documentation"
+    },
+    {
+      "name": "manifest",
+      "type": "json_object",
+      "description": "Registry-compatible skill manifest with name, description, capabilities, inputs/outputs, and metadata"
+    },
+    {
+      "name": "validation_report",
+      "type": "structured_document",
+      "description": "Validation results with checklist status, registry discovery test, and recommendations"
+    }
+  ],
+
+  "capabilities": [
+    "skill-creation",
+    "skill-development",
+    "manifest-generation",
+    "registry-integration",
+    "tactical-4d-methodology",
+    "micro-skill-chaining",
+    "marketplace-compatible",
+    "skill-wizard",
+    "skill-templates",
+    "domain-expertise-packaging",
+    "skill-validation",
+    "discovery-optimization",
+    "three-tier-architecture",
+    "orchestrator-creation",
+    "micro-skill-creation",
+    "error-handling-patterns",
+    "skill-testing",
+    "skill-documentation"
+  ],
+
+  "dependencies": [
+    "read-file",
+    "write-file",
+    "glob"
+  ],
+
+  "suggestedNextSkills": [
+    {
+      "skill": "4d-evaluation",
+      "reason": "Validate created skill against excellence standards",
+      "priority": "high",
+      "condition": "skill_creation_complete"
+    },
+    {
+      "skill": "code-analysis",
+      "reason": "If creating code domain skill, analyze patterns",
+      "priority": "medium",
+      "condition": "domain === 'code'"
+    }
+  ],
+
+  "estimatedComplexity": "high",
+  "version": "4.0.0",
+  "author": "Maestro Framework",
+
+  "tags": [
+    "framework",
+    "development",
+    "skill-creation",
+    "marketplace"
+  ],
+
+  "metadata": {
+    "lastUpdated": "2025-11-13",
+    "documentation": "SKILL-v4.md",
+    "references": [
+      "TACTICAL_4D_GUIDE.md",
+      "MICRO_SKILL_PATTERNS.md",
+      "ERROR_HANDLING_GUIDE.md",
+      "MANIFEST_REFERENCE.md",
+      "DISCOVERY_OPTIMIZATION.md"
+    ]
+  }
+}

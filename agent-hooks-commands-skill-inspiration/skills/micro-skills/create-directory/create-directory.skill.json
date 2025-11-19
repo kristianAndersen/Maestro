@@ -1,0 +1,117 @@
+{
+  "name": "create-directory",
+  "version": "1.0.0",
+  "type": "micro-skill",
+  "tier": 3,
+  "description": "Creates directory structures with intelligent error handling for common filesystem issues. Handles EEXIST (already exists), EACCES (permission denied), ENOSPC (no space), and ENOTDIR (parent not directory) errors. Autonomously retries permission issues, escalates with context for other errors. Supports recursive creation and validates parent paths before attempting creation.",
+  "capabilities": [
+    "directory-creation",
+    "filesystem-operations",
+    "recursive-mkdir",
+    "path-validation",
+    "error-handling",
+    "autonomous-retry",
+    "permission-handling",
+    "context-escalation"
+  ],
+  "keywords": [
+    "mkdir",
+    "create",
+    "directory",
+    "folder",
+    "path",
+    "filesystem",
+    "recursive",
+    "make directory"
+  ],
+  "input": {
+    "type": "object",
+    "properties": {
+      "path": {
+        "type": "string",
+        "description": "Absolute or relative path to create",
+        "required": true
+      },
+      "recursive": {
+        "type": "boolean",
+        "description": "Create parent directories if they don't exist",
+        "default": true
+      },
+      "mode": {
+        "type": "string",
+        "description": "Permissions mode (e.g., '0755', '0700')",
+        "pattern": "^0[0-7]{3}$",
+        "default": "0755"
+      }
+    },
+    "required": ["path"]
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "Whether directory creation succeeded"
+      },
+      "path": {
+        "type": "string",
+        "description": "Absolute path to created directory"
+      },
+      "created": {
+        "type": "boolean",
+        "description": "True if directory was created, false if already existed"
+      },
+      "error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code (EEXIST, EACCES, ENOSPC, ENOTDIR, etc.)"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message"
+          },
+          "context": {
+            "type": "object",
+            "description": "Additional context for escalation"
+          }
+        }
+      }
+    }
+  },
+  "error_handling": {
+    "autonomous_retry": [
+      {
+        "error_code": "EACCES",
+        "strategy": "Wait 100ms and retry up to 3 times (file system might be temporarily locked)",
+        "max_attempts": 3,
+        "backoff": "linear"
+      }
+    ],
+    "context_escalation": [
+      {
+        "error_code": "EEXIST",
+        "context": "Directory already exists. Verify if this is expected or if a unique name is needed.",
+        "suggested_action": "Check if existing directory can be used, or generate unique name"
+      },
+      {
+        "error_code": "ENOSPC",
+        "context": "No space left on device. Cannot create directory.",
+        "suggested_action": "Free up disk space or choose different location"
+      },
+      {
+        "error_code": "ENOTDIR",
+        "context": "Parent path exists but is not a directory (it's a file).",
+        "suggested_action": "Remove file or choose different parent path"
+      },
+      {
+        "error_code": "EROFS",
+        "context": "Read-only file system. Cannot create directory.",
+        "suggested_action": "Choose writable location or remount filesystem"
+      }
+    ]
+  },
+  "model": "haiku",
+  "tools": ["Bash"]
+}
