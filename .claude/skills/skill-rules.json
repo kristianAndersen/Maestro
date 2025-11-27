@@ -5,6 +5,10 @@
       "type": "domain",
       "enforcement": "suggest",
       "priority": "medium",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Directory/file listing operations"
+      },
       "promptTriggers": {
         "keywords": ["list", "show", "directory", "files", "contents"],
         "intentPatterns": ["list.*files", "show.*directory", "what.*files", "directory.*contents"]
@@ -20,6 +24,10 @@
       "type": "domain",
       "enforcement": "suggest",
       "priority": "medium",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "File reading operations"
+      },
       "promptTriggers": {
         "keywords": ["open", "read", "view", "display", "show"],
         "intentPatterns": ["open.*file", "read.*file", "view.*file", "show.*content"]
@@ -32,6 +40,10 @@
       "type": "domain",
       "enforcement": "suggest",
       "priority": "high",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Deep file/codebase analysis"
+      },
       "promptTriggers": {
         "keywords": ["analyze", "understand", "explain", "how", "why", "pattern"],
         "intentPatterns": ["analyze.*code", "understand.*how", "explain.*why", "pattern.*in", "how.*does.*work"]
@@ -44,18 +56,28 @@
       "type": "domain",
       "enforcement": "suggest",
       "priority": "high",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Code/file modifications"
+      },
       "promptTriggers": {
         "keywords": ["add", "modify", "fix", "create", "implement", "update", "change", "refactor"],
+        "synonyms": ["generate", "scaffold", "construct", "refactor", "tweak"],
         "intentPatterns": ["add.*to", "fix.*bug", "implement.*feature", "create.*function", "modify.*code", "update.*file", "refactor.*code"]
       },
       "fileTriggers": {
         "pathPatterns": ["**/*.js", "**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.py", "**/*.go", "**/*.java", "**/*.rb", "**/*.rs", "**/*.c", "**/*.cpp", "**/*.cs", "**/*.php", "**/*.json", "**/*.yaml", "**/*.yml", "**/*.md"]
-      }
+      },
+      "domain": "writing"
     },
     "fetch": {
       "type": "domain",
       "enforcement": "suggest",
       "priority": "medium",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "External data retrieval"
+      },
       "promptTriggers": {
         "keywords": ["fetch", "get", "download", "retrieve", "external", "api", "url", "http"],
         "intentPatterns": ["fetch.*from", "get.*data", "download.*from", "retrieve.*external", "call.*api", "http.*request"]
@@ -68,8 +90,13 @@
       "type": "domain",
       "enforcement": "suggest",
       "priority": "high",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Information gathering/research"
+      },
       "promptTriggers": {
         "keywords": ["find", "search", "locate", "research", "discover", "where", "which"],
+        "synonyms": ["investigate", "look up", "find out", "explore", "check for"],
         "intentPatterns": ["find.*in.*codebase", "search.*for", "locate.*file", "where.*is", "which.*files", "research.*how"]
       },
       "fileTriggers": {
@@ -80,18 +107,27 @@
       "type": "domain",
       "enforcement": "suggest",
       "priority": "high",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Code/system quality evaluation"
+      },
       "promptTriggers": {
         "keywords": ["evaluate", "assess", "review", "audit", "quality", "security", "performance", "maintainability"],
         "intentPatterns": ["evaluate.*quality", "assess.*security", "review.*code", "audit.*codebase", "analyze.*performance", "check.*maintainability"]
       },
       "fileTriggers": {
         "pathPatterns": ["**/*.js", "**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.py", "**/*.go", "**/*.java", "**/*.rb", "**/*.rs", "**/*.c", "**/*.cpp", "**/*.cs", "**/*.php"]
-      }
+      },
+      "domain": "analysis"
     },
     "4d-evaluation": {
       "type": "guardrail",
       "enforcement": "suggest",
       "priority": "critical",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "4-D quality assessment"
+      },
       "promptTriggers": {
         "keywords": ["evaluate", "assess", "discernment", "4-D", "quality", "gate", "delegation", "description", "diligence"],
         "intentPatterns": ["4-D.*evaluation", "quality.*gate", "evaluate.*output", "assess.*work", "discernment.*check"]
@@ -99,6 +135,41 @@
       "fileTriggers": {
         "pathPatterns": []
       }
+    },
+    "maestro-orchestration": {
+      "type": "conductor",
+      "enforcement": "suggest",
+      "priority": "critical",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Multi-agent orchestration guidance"
+      },
+      "promptTriggers": {
+        "keywords": ["orchestrate", "delegate", "multi-agent", "workflow", "coordinate", "manage", "conduct", "refinement", "coaching", "3P", "agent selection"],
+        "synonyms": ["coordinate work", "manage agents", "oversee tasks", "direct agents", "quality gate", "iterate"],
+        "intentPatterns": ["orchestrate.*workflow", "delegate.*to.*agent", "multi.*agent.*task", "coordinate.*agents", "manage.*delegation", "refine.*output", "which.*agent", "how.*to.*delegate"]
+      },
+      "fileTriggers": {
+        "pathPatterns": []
+      },
+      "agentContext": ["maestro"]
+    },
+    "hallucination-detection": {
+      "type": "guardrail",
+      "enforcement": "block",
+      "priority": "critical",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Hallucination detection/verification"
+      },
+      "promptTriggers": {
+        "keywords": ["evaluate", "assess", "4-D", "quality", "discernment", "hallucination", "4D-Evaluation"],
+        "intentPatterns": ["evaluate.*work", "assess.*output", "check for hallucinations", "run.*4-D.*evaluation"]
+      },
+      "fileTriggers": {
+        "pathPatterns": []
+      },
+      "agentContext": ["4d-evaluation"]
     }
   }
 }

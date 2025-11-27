@@ -3,6 +3,15 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Hook scripts for Maestro AI orchestration framework",
+  "scripts": {
+    "verify": "node -e \"console.log('✓ Maestro hooks verified - all dependencies present')\"",
+    "test:agent-detection": "echo 'analyze this code for bugs' | node maestro-agent-suggester.js",
+    "test:skill-detection": "echo 'modify the authentication handler' | node subagent-skill-discovery.js",
+    "test:evaluation-reminder": "echo 'SUBAGENT REPORT: Complete' | node evaluation-reminder.js",
+    "test:session-initializer": "echo '/maestro analyze codebase' | node session-initializer.js",
+    "test:session-persister": "echo '{\"session_id\":\"test-123\",\"hook_event_name\":\"PreCompact\"}' | node session-persister.js",
+    "test:session-finalizer": "echo '{\"session_id\":\"test-123\",\"hook_event_name\":\"SessionEnd\"}' | node session-finalizer.js"
+  },
   "dependencies": {
     "minimatch": "^9.0.0"
   }

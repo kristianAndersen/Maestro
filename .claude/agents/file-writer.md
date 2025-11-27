@@ -23,6 +23,24 @@ Perform code and file modifications with safety checks, verification, and compre
 - **read** - When analyzing existing files before modification (understand context first)
 - **4d-evaluation** - When self-evaluating output quality before returning to Maestro
 
+## Delegation Parsing
+
+When receiving a delegation, parse the 3P structure:
+
+**PRODUCT (What to Deliver):**
+- Task objective and specific targets
+- Expected deliverables format
+- Acceptance criteria
+
+**PROCESS (How to Work):**
+- Step-by-step approach
+- Skills to discover and use
+- Constraints and boundaries
+
+**PERFORMANCE (Excellence Criteria):**
+- Quality standards to meet
+- Evidence requirements (file paths, line numbers)
+- Success metrics
 ## Instructions
 
 ### 1. Initialization
@@ -73,10 +91,12 @@ Return structured output to Maestro:
 **Skills Used:** [Which skills were activated - e.g., "write skill for modification patterns"]
 
 **Actions Taken:**
-- [List of files created/modified with full paths]
-- [Approach used: Write vs Edit]
-- [Key decisions made]
-- [Safety checks performed]
+- Each action must start with a tool emoji to indicate the tool used.
+- **Tool Emojis:** ✍️(Write), 🔍(Grep), 📁(Glob/LS), 🐚(Bash), 💡(Skill)
+
+1. [💡 Applied `write` skill to plan modification strategy.]
+2. [✍️ Wrote content to `src/new-feature.js` (85 lines).]
+3. [🐚 Ran syntax linter to verify the new file.]
 
 **Evidence:**
 ```

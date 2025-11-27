@@ -1,6 +1,7 @@
 ---
 name: base-research
 description: Activates for information gathering tasks; provides research methodology, source evaluation, and synthesis guidance
+tools: Read, Grep, Glob, Bash, LS, WebSearch, WebFetch
 ---
 
 # BaseResearch Skill
@@ -12,6 +13,7 @@ This skill provides comprehensive guidance for information gathering and researc
 ## When to Use This Skill
 
 This skill automatically activates when:
+
 - Investigating unfamiliar topics or technologies
 - Gathering information to make decisions
 - Understanding how something works
@@ -31,18 +33,23 @@ For 80% of research operations, follow these principles:
 ## Core Principles
 
 ### 1. **Structured Investigation**
+
 Use systematic approach: define question → search → evaluate → synthesize.
 
 ### 2. **Source Diversity**
+
 Use multiple types of sources: official docs, code examples, discussions, academic papers.
 
 ### 3. **Critical Evaluation**
+
 Not all sources are equal. Verify authority, recency, and accuracy.
 
 ### 4. **Progressive Refinement**
+
 Start with high-level understanding, progressively add detail.
 
 ### 5. **Evidence-Based Conclusions**
+
 Base findings on concrete evidence, not assumptions.
 
 ## Research Methodology
@@ -98,17 +105,20 @@ grep -r "authentication" discussions/ issues/
 # Research Findings: Authentication
 
 ## Sources
+
 - docs/authentication.md (official, current)
 - src/auth/login.py (implementation)
 - tests/test_auth.py (usage examples)
 
 ## Key Findings
+
 1. Supports JWT and session-based auth
 2. Passwords hashed with bcrypt
 3. Sessions stored in Redis
 4. Token expiry: 24 hours
 
 ## Synthesis
+
 Framework provides flexible auth with two methods...
 ```
 
@@ -200,15 +210,18 @@ find . -path "*/examples/*" -name "*.py"
 # Research Log
 
 ## Question
+
 How to implement caching?
 
 ## Sources Consulted
+
 - docs/caching.md (official docs)
 - src/cache/redis.py (implementation)
 - examples/cache-demo.py (example)
 - https://redis.io/docs (Redis docs)
 
 ## Findings
+
 [Document what you learned]
 ```
 
@@ -218,20 +231,25 @@ How to implement caching?
 # Caching Research
 
 ## Overview
+
 [High-level summary]
 
 ## Key Concepts
+
 - Cache invalidation
 - TTL settings
 - Cache backends
 
 ## Implementation Details
+
 [Specific how-tos]
 
 ## Examples
+
 [Code snippets]
 
 ## Gotchas
+
 [Things to watch out for]
 ```
 
@@ -244,6 +262,7 @@ How to implement caching?
 ## Anti-Patterns
 
 ### ❌ Single Source Reliance
+
 ```bash
 # BAD: Trust first result
 info=$(grep "definition" first-file.md)
@@ -255,6 +274,7 @@ examples=$(cat examples/demo.py)
 ```
 
 ### ❌ No Source Tracking
+
 ```bash
 # BAD: Collect info without noting where from
 echo "Feature X works like this..."
@@ -264,6 +284,7 @@ echo "Feature X (per docs/features.md): works like this..."
 ```
 
 ### ❌ Assumption Over Evidence
+
 ```bash
 # BAD: "This probably uses Redis"
 conclusion="Uses Redis for caching"

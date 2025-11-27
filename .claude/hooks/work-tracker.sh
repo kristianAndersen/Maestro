@@ -27,8 +27,13 @@ if [ -n "$tool" ] && [ -n "$file" ]; then
     timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
     # Log to .maestro-work-log.txt in the repo root
-    # Use absolute path to ensure we write to the correct location
-    log_file="/Users/awesome/dev/devtest/Maestro/.maestro-work-log.txt"
+    # Dynamically find the repo root to ensure portability
+    repo_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [ -z "$repo_root" ]; then
+        # Fallback if not in a git repository, though less ideal
+        repo_root="."
+    fi
+    log_file="$repo_root/.maestro-work-log.txt"
 
     # Append log entry
     echo "[$timestamp] $tool: $file" >> "$log_file"

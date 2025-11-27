@@ -1,6 +1,30 @@
 {
   "version": "1.0",
   "agents": {
+    "maestro": {
+      "purpose": "AI orchestration conductor - delegates work and evaluates outputs",
+      "triggers": {
+        "keywords": [
+          "maestro",
+          "orchestrate",
+          "delegate",
+          "conduct"
+        ],
+        "intentPatterns": [
+          "orchestrate.*work",
+          "delegate.*to",
+          "conduct.*task"
+        ],
+        "operations": [
+          "orchestrate",
+          "delegate",
+          "evaluate"
+        ]
+      },
+      "complexity": "complex",
+      "autonomy": "high",
+      "internal": false
+    },
     "list": {
       "purpose": "Directory and file listing operations",
       "triggers": {
@@ -48,7 +72,7 @@
       "complexity": "simple",
       "autonomy": "high"
     },
-    "read": {
+    "file-reader": {
       "purpose": "Deep file and codebase analysis",
       "triggers": {
         "keywords": [
@@ -72,7 +96,7 @@
       "complexity": "medium",
       "autonomy": "high"
     },
-    "write": {
+    "file-writer": {
       "purpose": "Code and file modifications",
       "triggers": {
         "keywords": [
@@ -83,6 +107,13 @@
           "fix",
           "create",
           "implement"
+        ],
+        "synonyms": [
+          "generate",
+          "scaffold",
+          "construct",
+          "refactor",
+          "tweak"
         ],
         "intentPatterns": [
           "add.*to",
@@ -98,7 +129,8 @@
         ]
       },
       "complexity": "medium",
-      "autonomy": "medium"
+      "autonomy": "medium",
+      "domain": "writing"
     },
     "fetch": {
       "purpose": "External data retrieval",
@@ -133,6 +165,13 @@
           "search",
           "where is",
           "locate"
+        ],
+        "synonyms": [
+          "investigate",
+          "look up",
+          "find out",
+          "explore",
+          "check for"
         ],
         "intentPatterns": [
           "find.*where",
@@ -170,7 +209,8 @@
         ]
       },
       "complexity": "medium",
-      "autonomy": "high"
+      "autonomy": "high",
+      "domain": "analysis"
     },
     "4d-evaluation": {
       "purpose": "Quality assessment using 4-D framework",
@@ -192,6 +232,79 @@
       "complexity": "simple",
       "autonomy": "high",
       "internal": true
+    },
+    "gemini-brain": {
+      "purpose": "General-purpose context offloading for large-scale operations",
+      "triggers": {
+        "keywords": [
+          "gemini",
+          "large context",
+          "process all files",
+          "analyze codebase",
+          "bulk operation",
+          "context overflow",
+          "too many files",
+          "heavy context"
+        ],
+        "synonyms": [
+          "second brain",
+          "offload context",
+          "handle large",
+          "massive files"
+        ],
+        "intentPatterns": [
+          "process.*all.*files",
+          "analyze.*entire.*codebase",
+          "too.*large.*for.*context",
+          "context.*overflow",
+          "bulk.*operation"
+        ],
+        "operations": [
+          "offload",
+          "bulk-process",
+          "large-scale"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high"
+    },
+    "agent-refactorer": {
+      "purpose": "Code refactoring specialist - restructures code for improved quality",
+      "triggers": {
+        "keywords": [
+          "refactor",
+          "restructure",
+          "clean up code",
+          "improve structure",
+          "extract functionality",
+          "simplify",
+          "remove duplication",
+          "modernize code"
+        ],
+        "synonyms": [
+          "reorganize",
+          "cleanup",
+          "optimize structure",
+          "decompose",
+          "modularize"
+        ],
+        "intentPatterns": [
+          "refactor.*to",
+          "clean.*up.*code",
+          "improve.*structure",
+          "extract.*from",
+          "simplify.*function",
+          "remove.*duplication",
+          "modernize.*legacy"
+        ],
+        "operations": [
+          "refactor",
+          "restructure",
+          "optimize"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high"
     },
     "harry": {
       "purpose": "Meta-orchestrator for creating and managing framework components",

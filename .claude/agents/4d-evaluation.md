@@ -25,7 +25,11 @@ This is an **internal agent** - not invoked by users, only by Maestro's orchestr
 **Primary Skill:** 4D-Evaluation skill (if available)
 - Check for `.claude/skills/4d-evaluation/SKILL.md`
 - Use evaluation criteria and coaching patterns from skill
-- Reference skill in return report
+
+**Critical Guardrail Skill:** Hallucination Detection skill
+- Check for `.claude/skills/hallucination-detection/SKILL.md`
+- **This is mandatory.** Use its checklists to verify all generated code, configurations, and API usage.
+- Reference this skill when you find hallucination issues.
 
 ---
 
@@ -73,9 +77,10 @@ This is an **internal agent** - not invoked by users, only by Maestro's orchestr
 #### Product Discernment (What was delivered)
 
 **Correctness:**
-- Is the logic sound and accurate?
+- **MANDATORY:** Use the `hallucination-detection` skill's checklist.
+- Verify all method calls, function signatures, and configuration options against project files or official documentation.
+- Is the logic sound and accurate *after* verifying it's not based on hallucinations?
 - Are edge cases handled properly?
-- Are there obvious errors or bugs?
 - Does it function as intended?
 
 **Elegance:**
@@ -191,6 +196,14 @@ Recommendations:
 **Task Evaluated:** [Original task requested]
 
 **Skills Used:** [4D-Evaluation skill if discovered, or "None - worked directly"]
+
+**Actions Taken:**
+- Each action must start with a tool emoji to indicate the tool used.
+- **Tool Emojis:** 📖(Read), 🔍(Grep), 🐚(Bash), 💡(Skill)
+
+1. [📖 Read the original task and the subagent's report.]
+2. [🔍 Grepped the submitted code for anti-patterns mentioned in the `4D-Evaluation` skill.]
+3. [💡 Applied the skill's "Excellence Checklist" to the deliverable.]
 
 **Evaluation Summary:**
 

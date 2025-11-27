@@ -1,18 +1,19 @@
 ---
 name: read
-description: Activates for deep analysis tasks; provides methodology for pattern recognition, code comprehension, and systematic analysis
+description: Activates for deep reading tasks; provides methodology for pattern recognition, code comprehension, and systematic reading
 ---
 
 # Read Skill
 
 ## Purpose
 
-This skill provides comprehensive guidance for deep analysis of files, codebases, and systems. It helps you recognize patterns, comprehend complex code structures, analyze system architecture, and synthesize understanding from multiple sources.
+This skill provides comprehensive guidance for deep reading of files, codebases, and systems. It helps you recognize patterns, comprehend complex code structures, analyze system architecture, and synthesize understanding from multiple sources.
 
 ## When to Use This Skill
 
 This skill automatically activates when:
-- Analyzing code to understand how it works
+
+- Reading files to understand how it works
 - Investigating system architecture or design patterns
 - Comprehending complex algorithms or data flows
 - Researching how components interact
@@ -31,18 +32,23 @@ For 80% of analysis operations, follow these principles:
 ## Core Principles
 
 ### 1. **Layered Analysis**
+
 Start with high-level structure, progressively zoom into details. Understand architecture before algorithms.
 
 ### 2. **Pattern Recognition**
+
 Identify recurring structures, design patterns, and code idioms to accelerate comprehension.
 
 ### 3. **Contextual Understanding**
+
 Code doesn't exist in isolation. Understand purpose, constraints, and surrounding ecosystem.
 
 ### 4. **Evidence-Based Conclusions**
+
 Base analysis on actual code, not assumptions. Verify hypotheses with concrete examples.
 
 ### 5. **Systematic Approach**
+
 Use consistent methodology to avoid missing important details or jumping to conclusions.
 
 ## Analysis Methodology
@@ -111,18 +117,19 @@ sed -n '/def complex_algorithm/,/^def /p' module.py | head -n -1
 
 ### Design Patterns to Look For
 
-| Pattern | Indicators | What It Means |
-|---------|-----------|---------------|
-| MVC | Separate model/view/controller dirs | Separation of concerns |
-| Factory | `create_*`, `make_*` functions | Object creation abstraction |
-| Singleton | `instance`, `getInstance` | Single shared instance |
-| Observer | `subscribe`, `notify`, `listener` | Event-driven architecture |
-| Strategy | Multiple implementations, interface | Swappable algorithms |
-| Decorator | `@decorator`, wrapper functions | Behavior extension |
+| Pattern   | Indicators                          | What It Means               |
+| --------- | ----------------------------------- | --------------------------- |
+| MVC       | Separate model/view/controller dirs | Separation of concerns      |
+| Factory   | `create_*`, `make_*` functions      | Object creation abstraction |
+| Singleton | `instance`, `getInstance`           | Single shared instance      |
+| Observer  | `subscribe`, `notify`, `listener`   | Event-driven architecture   |
+| Strategy  | Multiple implementations, interface | Swappable algorithms        |
+| Decorator | `@decorator`, wrapper functions     | Behavior extension          |
 
 ### Code Idioms by Language
 
 **Python:**
+
 ```python
 # List comprehension → Data transformation
 [x*2 for x in items if x > 0]
@@ -135,6 +142,7 @@ with open(file) as f:
 ```
 
 **JavaScript:**
+
 ```javascript
 # Arrow functions → Functional style
 items.map(x => x * 2)
@@ -321,21 +329,25 @@ Request Flow:
 ## Edge Cases
 
 ### Complex Nested Structures
+
 - Break down into smaller parts
 - Analyze innermost structures first
 - Build understanding layer by layer
 
 ### Unclear Variable Names
+
 - Trace usage to understand purpose
 - Look at type hints or comments
 - Check tests for examples
 
 ### Missing Documentation
+
 - Read tests as documentation
 - Analyze function signatures
 - Look for usage examples
 
 ### Legacy or Unfamiliar Patterns
+
 - Research pattern names found in code
 - Compare with modern equivalents
 - Focus on intent, not just syntax
@@ -351,6 +363,7 @@ For deeper guidance, load these resources as needed:
 ## Anti-Patterns
 
 ### ❌ Line-by-Line Reading Without Context
+
 ```bash
 # BAD: Reading every line sequentially
 cat huge-file.py | less
@@ -361,6 +374,7 @@ cat -n huge-file.py  # Then details
 ```
 
 ### ❌ Assuming Without Verifying
+
 ```bash
 # BAD: "This probably uses Redis"
 echo "Uses Redis"
@@ -371,6 +385,7 @@ cat requirements.txt | grep redis
 ```
 
 ### ❌ Analysis Paralysis
+
 ```bash
 # BAD: Reading every file before understanding anything
 for file in src/*.py; do cat "$file"; done
@@ -382,6 +397,7 @@ cat src/main.py  # Entry point
 ```
 
 ### ❌ Ignoring Tests
+
 ```bash
 # BAD: Only reading source code
 cat src/module.py

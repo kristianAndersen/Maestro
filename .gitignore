@@ -12,3 +12,5 @@ node_modules/
 
 # Maestro work tracker output
 .maestro-work-log.txt
+# Runtime context tracking
+.claude/context.json

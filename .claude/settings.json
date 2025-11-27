@@ -5,22 +5,30 @@
         "hooks": [
           {
             "type": "command",
-            "command": "hooks/maestro-agent-suggester.js"
+            "command": ".claude/hooks/session-initializer.js"
           },
           {
             "type": "command",
-            "command": "hooks/subagent-skill-discovery.js"
+            "command": ".claude/hooks/maestro-agent-suggester.js"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/subagent-skill-discovery.js"
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Write|Edit",
+        "matcher": "Write|Edit|write_file|replace",
         "hooks": [
           {
             "type": "command",
-            "command": "hooks/work-tracker.sh"
+            "command": ".claude/hooks/work-tracker.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/context-tracker.js"
           }
         ]
       }
@@ -30,7 +38,41 @@
         "hooks": [
           {
             "type": "command",
-            "command": "hooks/evaluation-reminder.js"
+            "command": ".claude/hooks/evaluation-reminder.js"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/enforce-4d-evaluation.js"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/session-persister.js"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/session-finalizer.js"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/session-persister.js"
           }
         ]
       }

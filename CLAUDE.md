@@ -2,234 +2,243 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Repository Overview
 
-## Project Overview
+**Maestro** is an AI orchestration framework that implements Anthropic's 4-D methodology (Delegation, Description, Discernment, Diligence). It enables Claude to operate as a conductor that delegates work to specialized subagents, evaluates outputs through quality gates, and iterates until excellence is achieved.
 
-**Maestro** is a pure agnostic AI orchestration framework that implements Anthropic's 4-D methodology (Delegation, Description, Discernment, Diligence). It enables Claude to operate as a conductor that delegates work to specialized subagents, evaluates all outputs through quality gates, and iterates until excellence is achieved.
+**Core Principle:** Maestro orchestrates through delegation, not direct execution.
 
-## Core Philosophy
+## Setup and Installation
 
-### Maestro's Mandate
-- **Maestro Never Writes Code** - Acts as conductor, not executor
-- **Delegation First** - All work flows through specialized subagents
-- **Skills as Guidance** - Subagents discover and use skills within their context
-- **Quality Gates** - Every output passes through 4-D evaluation
-- **Iterative Refinement** - Iterate until excellent, never settle for "good enough"
-- **Framework Agnostic** - Zero bias toward any language, framework, or paradigm
+```bash
+# Install hook dependencies
+cd .claude/hooks
+npm install
 
-### Three-Tier Architecture
+# Verify hooks are working
+npm run verify
 
-```
-User Request
-    ↓
-Maestro Conductor (orchestrates, evaluates, never codes)
-    ↓
-Subagents (execute tasks, discover skills, work autonomously)
-    ↓
-Skills (provide guidance, loaded progressively in subagent context)
+# Test individual components
+npm run test:agent-detection
+npm run test:skill-detection
+npm run test:evaluation-reminder
 ```
 
-## Repository Structure
+**Dependencies:** Node.js >= 18.0.0, minimatch ^9.0.0 (for glob pattern matching in hooks)
+
+## Framework Architecture
+
+### Three-Layer System
+
+1. **Hooks** (`.claude/hooks/*.{js,sh}`) - Event-driven automation
+   - `maestro-agent-suggester.js`: Analyzes requests and suggests specialized agents (UserPromptSubmit)
+   - `subagent-skill-discovery.js`: Suggests relevant skills for subagents (UserPromptSubmit)
+   - `context-tracker.js`: Tracks active domain and last edited files (PostToolUse)
+   - `work-tracker.sh`: Logs all file modifications to `.maestro-work-log.txt` (PostToolUse)
+   - `evaluation-reminder.js`: Reminds to run 4-D evaluation (Stop)
+   - `enforce-4d-evaluation.js`: Enforces mandatory 4-D quality gates on subagent outputs (Stop)
+
+2. **Agents** (`.claude/agents/*.md`) - Specialized subagents for specific operations
+   - `maestro.md`: Meta-conductor that orchestrates all other agents
+   - `list.md`, `open.md`, `file-reader.md`, `file-writer.md`: File operations
+   - `base-research.md`, `base-analysis.md`: Information gathering and evaluation
+   - `4d-evaluation.md`: Quality assessment using 4-D framework (mandatory quality gate)
+   - `fetch.md`: External data retrieval
+   - `gemini-brain.md`: Context offloading for large-scale operations
+   - `harry.md`: Meta-orchestrator for creating/updating framework components
+   - `agent-refactorer.md`: Code refactoring specialist
+
+   **Internal Utility Agents** (invoked by Harry, not directly by users):
+   - Creator agents: `create-agent.md`, `create-commands.md`, `create-hooks.md`, `create-meta-prompts.md`, `create-subagents.md`
+   - Auditor agents: `hook-auditor.md`, `skill-auditor.md`, `slash-command-auditor.md`, `subagent-auditor.md`
+
+3. **Skills** (`.claude/skills/*/SKILL.md`) - Progressive guidance activated by context
+   - Skills provide methodology and best practices to agents
+   - Organized as: `SKILL.md` (overview <500 lines) + `assets/*.md` (deep dives <500 lines each)
+   - Auto-activated via pattern matching in `skill-rules.json`
+
+### Performance Optimization
+
+**defer_loading with Smart Caching:**
+- Reduces repetitive skill recommendations by 74% (cumulative across sessions)
+- First encounter: Full skill information provided
+- Subsequent encounters: Minimal/no output (skills cached)
+- Session-aware: 30-minute timeout resets cache
+- Domain-aware: Track recommendations by work context
+
+Benefits:
+- 74% token reduction across multi-prompt sessions
+- Faster response times (less context pollution)
+- Better UX (relevant info when needed, clean thereafter)
+
+See: `docs/DEFER_LOADING_USER_GUIDE.md` for details
+
+### Configuration Files
+
+- `.claude/agents/agent-registry.json`: Agent metadata with triggers, keywords, intent patterns
+- `.claude/skills/skill-rules.json`: Skill activation rules with prompt/file triggers
+- `.claude/context.json`: Runtime context tracking (active domain, last edited file, skill cache)
+- `.claude/settings.json`: Hook configuration and event bindings
+
+## Core Workflows
+
+### Maestro Delegation Flow
 
 ```
-maestro/
-├── MAESTRO_BLUEPRINT.md           # Complete architecture specification (~1966 lines)
-├── AGENT_DISCOVERY.md             # Agent discovery system documentation
-├── maestro.md                     # Maestro conductor persona (to be created)
-├── MAESTRO_SUBAGENT_PROTOCOL.md   # Delegation/evaluation protocol (to be created)
-│
-└── .claude/
-    ├── settings.json              # Hook configuration
-    ├── agents/                    # Subagent definitions
-    │   ├── agent-registry.json    # Agent discovery registry
-    │   ├── list.md                # Directory/file listing operations
-    │   ├── open.md                # File reading with context preservation
-    │   ├── read.md                # Deep file/codebase analysis
-    │   ├── write.md               # Code and file modifications
-    │   ├── fetch.md               # External data retrieval
-    │   ├── base-research.md       # Information gathering & analysis
-    │   ├── base-analysis.md       # Code/system evaluation
-    │   ├── 4d-evaluation.md       # Quality assessment using 4-D framework
-    │   └── skill-wizard.md        # Meta-agent for creating new skills
-    │
-    ├── skills/                    # Skill library (progressive disclosure)
-    │   ├── skill-rules.json       # Skill discovery registry
-    │   └── [skill-name]/
-    │       ├── SKILL.md           # Main entry point (<500 lines)
-    │       └── resources/         # Deep dive resources (<500 lines each)
-    │           ├── methodology.md
-    │           ├── patterns.md
-    │           └── troubleshooting.md
-    │
-    └── hooks/                     # Automation hooks
-        ├── maestro-agent-suggester.js      # Agent discovery (UserPromptSubmit)
-        ├── subagent-skill-discovery.js     # Skill discovery (UserPromptSubmit)
-        ├── work-tracker.sh                 # Track modifications (PostToolUse)
-        └── evaluation-reminder.js          # Remind to evaluate (Stop)
+User Request → Maestro Conductor (analyzes)
+  ↓
+  Specialized Agent (executes with skill guidance)
+  ↓
+  4-D Evaluation (quality gate)
+  ↓
+  EXCELLENT → Complete & Deliver
+  NEEDS REFINEMENT → Re-delegate with coaching
 ```
 
-## Implementation Phases
+### The 3P Delegation Format
 
-The Maestro framework is being implemented in 6 phases:
+When delegating to agents, Maestro uses this structure:
 
-### Phase 1: Foundation (Core Framework)
-- **Status**: Blueprint complete, implementation pending
-- **Goal**: Establish Maestro conductor with delegation-only mandate
-- **Key Files**:
-  - `maestro.md` - Enhanced conductor persona
-  - `MAESTRO_SUBAGENT_PROTOCOL.md` - Delegation/evaluation protocol
+**PRODUCT** (What to deliver):
+- Clear task objective and specific targets
+- Expected deliverables and acceptance criteria
 
-### Phase 2: Base Agents (Essential Workers)
-- **Status**: Specification complete, implementation pending
-- **Goal**: Create 8 base agents for fundamental operations
-- **Agents**: List, Open, Read, Write, Fetch, BaseResearch, BaseAnalysis, 4D-Evaluation
+**PROCESS** (How to work):
+- Step-by-step approach
+- Skills to discover and use
+- Constraints and edge cases
 
-### Phase 3: Base Skills (Agnostic Guidance)
-- **Status**: Specification complete, implementation pending
-- **Goal**: Create 8 base skills providing framework-agnostic guidance
-- **Skills**: Matching each agent, following progressive disclosure (<500 lines)
+**PERFORMANCE** (Excellence criteria):
+- Behavioral expectations
+- Evidence requirements (file paths, line numbers)
+- Return format structure
 
-### Phase 4: Discovery Systems
-- **Status**: Architecture defined, implementation pending
-- **Goal**: Implement hook system for automatic agent/skill activation
-- **Components**:
-  - Agent registry and discovery hook
-  - Skill registry and discovery hook
-  - Work tracking and evaluation reminders
+### The 4-D Evaluation Framework
 
-### Phase 5: Skill-Wizard
-- **Status**: Specification complete, implementation pending
-- **Goal**: Enable users to create custom skills following Maestro patterns
+Every subagent output passes through these quality gates:
 
-### Phase 6: Polish & Documentation
-- **Status**: Pending
-- **Goal**: Complete documentation and example workflows
+1. **Delegation**: Was the right agent/approach used?
+2. **Description**: Is work complete and well-explained?
+3. **Product Discernment**: Is it correct, elegant, complete? Does it solve the real problem?
+4. **Process Discernment**: Was reasoning sound? Any gaps or shortcuts?
+5. **Performance Discernment**: Meets excellence bar? (quality and elegance, NOT speed)
 
-## Key Design Patterns
+**Verdict:** Either `EXCELLENT` (accept) or `NEEDS REFINEMENT` (iterate with coaching)
 
-### Progressive Disclosure
-Skills are structured to avoid context bloat:
-- **SKILL.md**: <500 lines, overview + navigation
-- **resources/*.md**: <500 lines each, deep dives loaded on-demand
-- Main Maestro context stays clean (only orchestration)
-- Heavy work happens in isolated subagent contexts
+## Activation Methods
 
-### Agent Discovery System
-- `agent-registry.json` defines all agents and their triggers (keywords, intent patterns, operations)
-- `maestro-agent-suggester.js` hook analyzes user requests and suggests appropriate agents
-- Maestro receives suggestions before responding, ensuring systematic delegation
+### Mode 1: Explicit Activation
+```bash
+/maestro <your request>
+```
+Spawns the Maestro conductor who orchestrates through delegation.
 
-### Skill Discovery System
-- `skill-rules.json` defines all skills and their triggers (keywords, intent, file patterns)
-- `subagent-skill-discovery.js` hook analyzes subagent tasks and suggests relevant skills
-- Subagents receive suggestions when spawned, enabling automatic skill activation
+### Mode 2: Auto-Detection (Always Active)
+Hooks automatically suggest appropriate agents based on:
+- Keyword matching (from agent-registry.json)
+- Intent pattern detection (regex patterns)
+- File path patterns (from context tracking)
+- Operation types (create, read, update, analyze, etc.)
 
-### 4-D Evaluation Gates
-Every subagent output must pass through evaluation before acceptance:
+## Common Tasks
 
-**Product Discernment**: Is it correct, elegant, complete, solving the real problem?
-**Process Discernment**: Was the reasoning sound, thorough, using appropriate techniques?
-**Performance Discernment**: Meets excellence standards, simple yet powerful, fits codebase? (Note: "Performance" = quality/excellence, NOT execution speed)
+### Testing Hook Functionality
+```bash
+# Test agent detection
+echo "analyze this code for bugs" | node .claude/hooks/maestro-agent-suggester.js
 
-## Technology Constraints
+# Test skill detection
+echo "modify the authentication handler" | node .claude/hooks/subagent-skill-discovery.js
 
-### Native Claude Ecosystem Only
-- ✅ Task tool (spawn subagents)
-- ✅ Skill tool (activate skills)
-- ✅ Hooks (UserPromptSubmit, PostToolUse, Stop)
-- ✅ Standard file tools (Read, Write, Edit, Glob, Grep)
-- ✅ Bash, TodoWrite, AskUserQuestion
+# Test evaluation reminder
+echo "SUBAGENT REPORT: Complete" | node .claude/hooks/evaluation-reminder.js
+```
 
-### No External Dependencies
-- Scripts: Node.js (vanilla, minimal deps) + Bash
-- Configuration: JSON (agent-registry.json, skill-rules.json, settings.json)
-- Skills: Markdown with YAML frontmatter
-- Agents: Markdown with instructions
+### Debugging Hooks
+```bash
+# Check file permissions
+chmod +x .claude/hooks/*.js
+chmod +x .claude/hooks/*.sh
 
-### Minimal Node.js Dependencies
-Only essential packages:
-- `minimatch`: For glob pattern matching in skill triggers
-- Everything else: Native Node.js (fs, path, JSON)
+# Validate JSON configurations
+cat .claude/agents/agent-registry.json | jq '.'
+cat .claude/skills/skill-rules.json | jq '.'
 
-## Working with This Repository
+# Check hook dependencies
+cd .claude/hooks && npm list minimatch
+```
 
-### When Creating Agents
-Follow the base agent specification in `MAESTRO_BLUEPRINT.md`:
-1. Clear purpose and "When to Use" section
-2. Skills to discover
-3. Step-by-step autonomous execution instructions
-4. Structured return format with evidence requirements
-5. Constraints (work autonomously, use skills, return evidence)
+### Understanding defer_loading Behavior
 
-### When Creating Skills
-Follow progressive disclosure pattern:
-1. SKILL.md must be <500 lines
-2. Deep content goes in resources/*.md (<500 lines each)
-3. Include YAML frontmatter with name and description
-4. Provide Quick Start for 80% use cases
-5. Reference resources for edge cases and deep dives
-6. Must be framework-agnostic (no React/Vue/Express assumptions)
+Skills are recommended intelligently:
+- **First time in a domain:** Full skill descriptions and activation instructions
+- **Continuing in same domain:** Skills available but not re-recommended (cached)
+- **New domain or session:** Fresh recommendations appear
 
-### When Creating Hooks
-Follow Claude Code hook conventions:
-1. Executable scripts (Node.js or Bash)
-2. UserPromptSubmit: Context injection before response
-3. PostToolUse: Track modifications after tool use
-4. Stop: Reminders after response completion
-5. Must be non-blocking and lightweight
+If you don't see expected skills:
+```bash
+# Reset skill cache to get fresh recommendations
+rm .claude/context.json
+```
 
-### When Adding to Registries
-**agent-registry.json**:
-- Define triggers: keywords, intentPatterns, operations
-- Set complexity: simple | medium | complex
-- Set autonomy: high | medium | low
-- Mark internal: true for Maestro-only agents
+Check which skills are currently cached:
+```bash
+cat .claude/context.json | jq '.skillTracking.recommended'
+```
 
-**skill-rules.json**:
-- Define type: domain | guardrail
-- Set enforcement: suggest | block | warn
-- Set priority: critical | high | medium | low
-- Define promptTriggers and fileTriggers
-- Configure skipConditions if needed
+### Working with Agents
 
-## Important Principles
+When creating or modifying agents:
+- Agent files must be in `.claude/agents/*.md`
+- Register in `agent-registry.json` with triggers (keywords, intentPatterns, operations)
+- Use XML structure for clear section delineation
+- Specify tool restrictions explicitly
+- Include evidence requirements in delegation templates
 
-### Framework Agnosticism
-- NEVER assume React, Vue, Angular, Express, Django, Rails, etc.
-- Base components provide methodology, not tech-specific implementation
-- Users extend via domain-specific skills (created through skill-wizard)
-- Guidance applies universally across languages and frameworks
+### Working with Skills
 
-### Evidence-Based Verification
-- Subagents must return proof (code snippets with file:line references)
-- Evaluation requires evidence, not just assertions
-- "Tests pass" means show the test output
-- "Built successfully" means show the build output
+When creating or modifying skills:
+- Main file: `SKILL.md` (overview, <500 lines)
+- Deep dives: `assets/*.md` (detailed patterns, <500 lines each)
+- Register in `skill-rules.json` with triggers (promptTriggers, fileTriggers)
+- Use progressive disclosure: show overview first, load assets on-demand
+- Provide concrete examples and anti-patterns
 
-### Refinement Culture
-- First iteration rarely achieves excellence
-- Evaluation failures trigger coaching feedback
-- Re-delegation with specific, actionable refinements
-- No limit on iterations - continue until excellent
-- Transparency: User sees the refinement process
+## Key Principles
 
-### Context Preservation
-- Maestro context: Orchestration, delegation decisions, evaluation summaries
-- Subagent context: Specific task, file contents, skills, heavy work
-- Skills context: Progressive loading, on-demand resources
-- Goal: Main context stays manageable even for complex multi-step work
+1. **Delegation First**: All work flows through specialized agents, never direct execution by Maestro
+2. **Skills as Guidance**: Subagents discover and activate skills autonomously based on context
+3. **Quality Gates**: Every output evaluated through 4-D framework before acceptance
+4. **Iterative Refinement**: Iterate without limit until excellence achieved, never settle for "good enough"
+5. **Framework Agnostic**: Zero bias toward any language, framework, or methodology
+6. **Context Preservation with defer_loading**: Progressive disclosure keeps main context clean while enabling complex work. Skills recommended once per session/domain, then cached to reduce token overhead by 74%.
+7. **Evidence-Based**: All claims must include proof with specific file paths and line numbers
 
-## Reference Documents
+## File Locations
 
-All architectural decisions, specifications, and design patterns are documented in:
+- **Framework Core**: `.claude/` (agents, skills, hooks, commands)
+- **Documentation**: `.claude/README.md` (quick start), root `CLAUDE.md` (this file)
+- **Performance Docs**: `docs/DEFER_LOADING_USER_GUIDE.md`, `docs/DEFER_LOADING_DEVELOPER_GUIDE.md`
+- **Work Logs**: `.maestro-work-log.txt` (git-ignored, tracks all file modifications)
+- **Context Tracking**: `.claude/context.json` (runtime state, active domain, skill cache)
 
-1. **MAESTRO_BLUEPRINT.md** - Complete framework architecture (~1966 lines)
-   - Sections: What, Why, How, 4-D Methodology, Architecture, Base Components, Implementation Strategy, Technical Specifications
-   - Contains detailed specifications for all agents, skills, hooks, and registries
+## Maestro Emoji Protocol
 
-2. **AGENT_DISCOVERY.md** - Agent discovery system deep dive (~300 lines)
-   - How Maestro automatically determines which agent to use
-   - Registry structure and trigger matching logic
-   - Hook implementation details and flow diagrams
+When Maestro is active, these emoji markers provide visual workflow tracking:
 
-**When implementing any component, always reference the relevant section in MAESTRO_BLUEPRINT.md first.**
+- 🎼 Analyzing request
+- 📋 Planning delegation
+- 📤 Delegating to agent
+- 🔍 Evaluating output
+- 🔄 Refining (iteration needed)
+- ✅ Complete (excellent)
+
+## Important Notes
+
+- Hooks run automatically on events (UserPromptSubmit, PostToolUse, Stop)
+- Agent suggestions are informational, not mandatory
+- Skill activation is context-aware (prompt keywords + file patterns)
+- All agent work must return to Maestro for 4-D evaluation
+- Main conductor context stays clean; heavy processing happens in subagent contexts
+- The framework is self-modifying: use `harry` agent to create/update components
+- defer_loading reduces skill recommendation overhead by 74% across sessions

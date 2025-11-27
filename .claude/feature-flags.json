@@ -1,0 +1,18 @@
+{
+  "$schema": "Feature flags for Maestro framework",
+  "DEFER_LOADING": true,
+  "SKILL_DISCOVERY": true,
+  "AGENT_SUGGESTIONS": true,
+  "WORK_TRACKING": true,
+  "CONTEXT_TRACKING": true,
+  "DOMAIN_HISTORY_CLEANUP": true,
+
+  "_comments": {
+    "DEFER_LOADING": "Enable defer_loading with smart caching (74% token reduction)",
+    "SKILL_DISCOVERY": "Enable subagent skill discovery hook",
+    "AGENT_SUGGESTIONS": "Enable maestro agent suggestion hook",
+    "WORK_TRACKING": "Enable work-tracker.sh logging",
+    "CONTEXT_TRACKING": "Enable context.json persistence",
+    "DOMAIN_HISTORY_CLEANUP": "Enable domain history cleanup (keeps last 100 entries)"
+  }
+}

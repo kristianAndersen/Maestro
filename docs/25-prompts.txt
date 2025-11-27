@@ -1,0 +1,25 @@
+Analyze the subagent-skill-discovery.js hook for code quality and potential improvements
+Read the maestro-agent-suggester.js hook and explain how agent detection works
+Compare the work-tracker.sh hook with the other hooks to understand the pattern
+Open the skill-rules.json and show me the defer_loading configuration structure
+List all markdown files in the .claude/skills directory
+Analyze the file-writer.md agent for completeness and adherence to agent patterns
+Review the base-research.md agent and identify its core workflow steps
+Examine the 4d-evaluation.md agent and explain the evaluation framework
+Analyze the list.md agent structure and compare with file-reader.md
+Read the open.md agent and summarize its delegation pattern
+Examine the write/SKILL.md file and identify its progressive disclosure structure
+Compare read/SKILL.md with write/SKILL.md to understand the skill template pattern
+Read the base-research/SKILL.md and explain its methodology section
+Analyze the 4d-evaluation/SKILL.md for quality assessment patterns
+Open the fetch/SKILL.md and show me the error handling guidance
+Analyze settings.json hook configuration for correctness and completeness
+Read agent-registry.json and explain the agent metadata structure
+Compare the three hook files for consistency in error handling patterns
+Examine the test-skill-a and test-skill-b to understand defer_loading test structure
+Analyze the hallucination-detection skill for completeness
+Modify the README.md to add a section about defer_loading optimization
+Update the CLAUDE.md to reflect the latest skill system improvements
+Read the defer-loading-design.md and summarize the key design decisions
+Analyze the baseline-metrics.md for accuracy of token measurements
+List all agent files and identify which ones need defer_loading updates
