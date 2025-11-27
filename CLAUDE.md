@@ -95,6 +95,38 @@ User Request → Maestro Conductor (analyzes)
   NEEDS REFINEMENT → Re-delegate with coaching
 ```
 
+### Inter-Agent Delegation Flow
+
+Agents can delegate to other specialized agents when tasks require capabilities beyond their scope:
+
+```
+Agent A (receives task)
+  ↓
+  Recognizes need for specialized capability
+  ↓
+  Delegates to Agent B using Task tool + 3P format
+  ↓
+  Agent B executes and returns results
+  ↓
+  Agent A integrates results into final deliverable
+```
+
+**Common Delegation Patterns:**
+
+- **base-research → fetch**: When research requires external web data or APIs
+- **base-research → gemini-brain**: When files exceed 2000 lines or bulk operations needed
+- **base-analysis → fetch**: When evaluation requires current external documentation for baseline
+- **base-analysis → base-research**: When analysis needs comprehensive discovery phase
+- **fetch → base-analysis**: When fetched data requires deep evaluation
+- **fetch → file-writer**: When external data needs to be saved to files
+
+**Requirements for Delegation:**
+
+1. Agent must have Task tool in its tools list (frontmatter line 4)
+2. Agent must use 3P format (PRODUCT, PROCESS, PERFORMANCE) when delegating
+3. Agent must integrate delegated results into final report
+4. Agent must cite delegated work with proper attribution
+
 ### The 3P Delegation Format
 
 When delegating to agents, Maestro uses this structure:
@@ -207,12 +239,13 @@ When creating or modifying skills:
 ## Key Principles
 
 1. **Delegation First**: All work flows through specialized agents, never direct execution by Maestro
-2. **Skills as Guidance**: Subagents discover and activate skills autonomously based on context
-3. **Quality Gates**: Every output evaluated through 4-D framework before acceptance
-4. **Iterative Refinement**: Iterate without limit until excellence achieved, never settle for "good enough"
-5. **Framework Agnostic**: Zero bias toward any language, framework, or methodology
-6. **Context Preservation with defer_loading**: Progressive disclosure keeps main context clean while enabling complex work. Skills recommended once per session/domain, then cached to reduce token overhead by 74%.
-7. **Evidence-Based**: All claims must include proof with specific file paths and line numbers
+2. **Inter-Agent Delegation**: Agents can delegate to other agents when tasks require capabilities beyond their scope (e.g., base-research → fetch for web data, fetch → base-analysis for evaluation)
+3. **Skills as Guidance**: Subagents discover and activate skills autonomously based on context
+4. **Quality Gates**: Every output evaluated through 4-D framework before acceptance
+5. **Iterative Refinement**: Iterate without limit until excellence achieved, never settle for "good enough"
+6. **Framework Agnostic**: Zero bias toward any language, framework, or methodology
+7. **Context Preservation with defer_loading**: Progressive disclosure keeps main context clean while enabling complex work. Skills recommended once per session/domain, then cached to reduce token overhead by 74%.
+8. **Evidence-Based**: All claims must include proof with specific file paths and line numbers
 
 ## File Locations
 
