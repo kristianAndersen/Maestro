@@ -23,26 +23,55 @@ async function readStdin() {
 
 /**
  * Determines the project domain based on a file path.
+ * Maps file paths to Maestro framework domains.
  * @param {string} filePath - The path of the file that was modified.
- * @returns {string|null} The determined domain or null.
+ * @returns {string} The determined domain.
  */
 function getDomain(filePath) {
-    if (!filePath) return null;
+    if (!filePath) return 'unknown';
 
-    // Simple rules to map file paths to domains.
-    if (filePath.includes('src/components/') || filePath.includes('src/pages/') || filePath.endsWith('.jsx') || filePath.endsWith('.tsx')) {
-        return 'frontend';
+    // Normalize path separators for cross-platform compatibility
+    const normalizedPath = filePath.replace(/\\/g, '/');
+
+    // Maestro framework domain mapping (order matters - most specific first)
+    if (normalizedPath.match(/\.claude\/agents\/.*\.md$/)) {
+        return 'agents';
     }
-    if (filePath.includes('src/server/') || filePath.includes('api/') || filePath.endsWith('.py') || filePath.endsWith('.go') || filePath.endsWith('.rs')) {
-        return 'backend';
+    if (normalizedPath.includes('.claude/skills/')) {
+        return 'skills';
     }
-    if (filePath.includes('test/') || filePath.endsWith('.test.js') || filePath.endsWith('.spec.js')) {
+    if (normalizedPath.includes('.claude/hooks/')) {
+        return 'hooks';
+    }
+    if (normalizedPath.includes('.claude/commands/')) {
+        return 'commands';
+    }
+
+    // Testing domain (check before development to avoid false positives)
+    if (normalizedPath.includes('test/') ||
+        normalizedPath.includes('__tests__/') ||
+        normalizedPath.match(/\.(test|spec)\.(js|jsx|ts|tsx|py)$/)) {
         return 'testing';
     }
-    if (filePath.includes('docs/') || filePath.endsWith('.md')) {
+
+    // Documentation domain
+    if (normalizedPath.includes('docs/') || normalizedPath.endsWith('.md')) {
         return 'documentation';
     }
-    return 'general';
+
+    // Application development domains
+    if (normalizedPath.includes('src/') ||
+        normalizedPath.includes('lib/') ||
+        normalizedPath.match(/\.(js|jsx|ts|tsx|py|go|rs|java|rb|php|c|cpp|h|hpp)$/)) {
+        return 'development';
+    }
+
+    // Configuration files
+    if (normalizedPath.match(/\.(json|yaml|yml|toml|ini|conf|config)$/)) {
+        return 'configuration';
+    }
+
+    return 'unknown';
 }
 
 /**

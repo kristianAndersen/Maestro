@@ -3,7 +3,7 @@
 // Purpose: Provides warm-up context when Maestro mode starts
 // Trigger: UserPromptSubmit (when /maestro detected or Maestro mode active)
 
-import { readFileSync, existsSync, readdirSync } from 'fs';
+import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -67,8 +67,11 @@ function findLatestBackup(sessionsDir) {
   try {
     const files = readdirSync(sessionsDir)
       .filter(f => f.endsWith('.backup.json'))
-      .sort()
-      .reverse();
+      .sort((a, b) => {
+        const statA = statSync(join(sessionsDir, a));
+        const statB = statSync(join(sessionsDir, b));
+        return statB.mtimeMs - statA.mtimeMs; // Newest first
+      });
 
     if (files.length > 0) {
       const backupPath = join(sessionsDir, files[0]);
@@ -160,7 +163,7 @@ function main() {
       output.push('║                                                            ║');
       output.push('║ 📂 PREVIOUS SESSION AVAILABLE:                             ║');
       const prevPrompts = previousSession.summary?.promptCount || 0;
-      const prevDomain = previousSession.summary?.activeDomain || 'general';
+      const prevDomain = previousSession.summary?.activeDomain || 'unknown';
       const prevLine = `║ • ${prevPrompts} prompts, domain: ${prevDomain}`;
       output.push(prevLine.padEnd(61) + '║');
     }
