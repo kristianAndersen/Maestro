@@ -5,6 +5,10 @@
         "hooks": [
           {
             "type": "command",
+            "command": ".claude/hooks/session-change-detector.js"
+          },
+          {
+            "type": "command",
             "command": ".claude/hooks/session-initializer.js"
           },
           {

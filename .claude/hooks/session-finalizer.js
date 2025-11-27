@@ -15,6 +15,10 @@ const ARCHIVES_DIR = join(SESSIONS_DIR, 'archives');
 const CONTEXT_PATH = join(__dirname, '..', 'context.json');
 
 function main() {
+  // EMPIRICAL LOGGING: Test if SessionEnd actually fires
+  const logPath = join(__dirname, 'session-finalizer.log');
+  const timestamp = new Date().toISOString();
+
   // Read hook input from stdin
   let hookInput = {};
   try {
@@ -25,6 +29,14 @@ function main() {
   }
 
   const sessionId = hookInput.session_id || 'unknown-session';
+
+  // Log execution evidence
+  try {
+    const logEntry = `[${timestamp}] SessionEnd FIRED - sessionId: ${sessionId}\n`;
+    writeFileSync(logPath, logEntry, { flag: 'a' });
+  } catch (logErr) {
+    // Logging failed, but continue
+  }
 
   // Ensure archives directory exists
   if (!existsSync(ARCHIVES_DIR)) {
@@ -78,7 +90,14 @@ function main() {
 
   // Reset context for next session (preserve only essential data)
   try {
-    const context = JSON.parse(readFileSync(CONTEXT_PATH, 'utf-8'));
+    const contextBefore = readFileSync(CONTEXT_PATH, 'utf-8');
+    const context = JSON.parse(contextBefore);
+
+    // Log state before reset
+    try {
+      const logEntry = `[${timestamp}] BEFORE RESET - context keys: ${Object.keys(context).join(', ')}\n`;
+      writeFileSync(logPath, logEntry, { flag: 'a' });
+    } catch {}
 
     // Create fresh context preserving only cross-session data
     const freshContext = {
@@ -93,8 +112,18 @@ function main() {
     };
 
     writeFileSync(CONTEXT_PATH, JSON.stringify(freshContext, null, 2), 'utf-8');
-  } catch {
-    // Context reset failed, not critical
+
+    // Log successful reset
+    try {
+      const logEntry = `[${timestamp}] AFTER RESET - fresh context written with ${Object.keys(freshContext).length} keys\n`;
+      writeFileSync(logPath, logEntry, { flag: 'a' });
+    } catch {}
+  } catch (resetErr) {
+    // Context reset failed, not critical - but LOG IT
+    try {
+      const logEntry = `[${timestamp}] RESET FAILED - Error: ${resetErr.message}\n`;
+      writeFileSync(logPath, logEntry, { flag: 'a' });
+    } catch {}
   }
 
   // Silent exit - SessionEnd shouldn't show UI
