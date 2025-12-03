@@ -233,6 +233,41 @@
       "autonomy": "high",
       "internal": true
     },
+    "delegater": {
+      "purpose": "Multi-agent execution coordinator - analyzes dependencies and orchestrates parallel/sequential workflows",
+      "triggers": {
+        "keywords": [
+          "coordinate",
+          "multi-agent",
+          "multiple agents",
+          "parallel",
+          "sequence tasks",
+          "coordinate agents",
+          "workflow"
+        ],
+        "synonyms": [
+          "coordinate execution",
+          "manage workflow",
+          "orchestrate multiple"
+        ],
+        "intentPatterns": [
+          "coordinate.*agents",
+          "multiple.*tasks",
+          "parallel.*execution",
+          "fetch.*and.*fetch.*and",
+          "then.*compare",
+          "sequence.*of"
+        ],
+        "operations": [
+          "coordinate",
+          "sequence",
+          "parallelize"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high",
+      "internal": true
+    },
     "gemini-brain": {
       "purpose": "General-purpose context offloading for large-scale operations",
       "triggers": {

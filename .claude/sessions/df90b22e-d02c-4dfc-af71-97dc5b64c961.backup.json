@@ -1,0 +1,48 @@
+{
+  "sessionId": "df90b22e-d02c-4dfc-af71-97dc5b64c961",
+  "savedAt": "2025-11-27T19:07:59.390Z",
+  "savedBy": "SubagentStop",
+  "context": {
+    "lastSessionId": null,
+    "lastSessionEnd": "2025-11-27T18:36:02.177Z",
+    "historicalMetrics": {
+      "totalSessions": 12,
+      "totalDelegations": 0,
+      "averageCompliance": "100"
+    },
+    "evaluationTracking": {
+      "totalDelegations": 0,
+      "evaluatedDelegations": 0,
+      "skippedEvaluations": 0,
+      "complianceRate": 100
+    },
+    "skillTracking": {
+      "recommended": [
+        "maestro-orchestration",
+        "read"
+      ],
+      "used": [],
+      "sessionStart": "2025-11-27T18:36:02.189Z",
+      "sessionId": "session-1764268562190-kjtt7ri",
+      "lastPromptTime": "2025-11-27T18:51:06.362Z",
+      "promptCount": 5,
+      "domainHistory": []
+    },
+    "lastUpdated": "2025-11-27T18:51:06.363Z"
+  },
+  "recentWork": [
+    ""
+  ],
+  "summary": {
+    "promptCount": 5,
+    "sessionStart": "2025-11-27T18:36:02.189Z",
+    "activeDomain": null,
+    "lastEditedFile": null,
+    "skillsRecommended": [
+      "maestro-orchestration",
+      "read"
+    ],
+    "pendingEvaluations": 0,
+    "evaluationCompliance": 100
+  }
+}

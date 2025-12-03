@@ -97,7 +97,11 @@ PRODUCT:
 - Task: Analyze [filename] ([line_count] lines)
 - Reason: File size exceeds Claude's Read tool limit (2000 lines)
 - Target: [specific file path]
-- Expected: [Mirror the analysis requirements from your task]
+- Expected: Complete analysis report including:
+  - Pattern discoveries with line number ranges
+  - File:line references for all findings
+  - Structured summary suitable for integration into your report
+  - Evidence-based findings (not summaries or metadata)
 
 PROCESS:
 - Use Gemini CLI with file-specific scope
@@ -178,7 +182,7 @@ File: path/to/another.js:103
 
 ## Constraints
 
-- **Read-only**: NEVER write, edit, delete, or modify files
+- **Read-only**: NEVER write, edit, or modify files
 - **Autonomous work**: Don't ask Maestro for guidance mid-task - use skills instead
 - **Evidence required**: Always include file:line references for findings
 - **Thoroughness**: Be comprehensive over fast - analyze deeply

@@ -1,0 +1,25 @@
+{
+  "sessionId": "30fc7c73-0668-40d7-bfb2-1303f4763f25",
+  "savedAt": "2025-12-01T08:54:48.424Z",
+  "savedBy": "SubagentStop",
+  "context": {
+    "lastSessionId": "f6801128-ef14-4157-bd84-d63f8eb97b21",
+    "lastSessionEnd": "2025-12-01T08:53:49.850Z",
+    "historicalMetrics": {
+      "totalSessions": 15,
+      "totalDelegations": 0,
+      "averageCompliance": 100
+    }
+  },
+  "recentWork": [
+    ""
+  ],
+  "summary": {
+    "promptCount": 0,
+    "activeDomain": null,
+    "lastEditedFile": null,
+    "skillsRecommended": [],
+    "pendingEvaluations": 0,
+    "evaluationCompliance": "100"
+  }
+}

@@ -66,61 +66,22 @@ This is an **internal agent** - not invoked by users, only by Maestro's orchestr
 - Excellence criteria from PERFORMANCE section
 
 **Discover Skills:**
-- **MANDATORY:** Activate hallucination-detection skill first - this is critical for correctness
 - Check if 4D-Evaluation skill exists using Skill tool
 - If skill found, read and apply evaluation frameworks
-- Note all skill usage in return report
-
-**Hallucination Verification (REQUIRED FIRST STEP):**
-Before evaluating Product/Process/Performance, you MUST verify the work is grounded in reality:
-1. Use Read tool to check if referenced files/methods/functions actually exist
-2. Use Grep tool to verify API signatures, method parameters, configuration options
-3. Use Bash tool to test syntax validity (e.g., `python -m py_compile`, `node --check`)
-4. Apply hallucination-detection skill's checklist to every function call, import, API usage
-5. Flag any hallucinations as **CRITICAL FAILURE** in Product Discernment
-
-**Only proceed to full evaluation after hallucination check passes.**
+- Note skill usage in return report
 
 ### 2. Execution
-
-**CRITICAL: Two-Phase Evaluation Process**
-
-**Phase 1: Hallucination Detection (MANDATORY FIRST)**
-Before evaluating quality, verify the work is real and grounded:
-
-1. **Activate hallucination-detection skill** - Apply checklist systematically
-2. **Verify all code elements:**
-   - Function/method calls: Use Grep to find definitions in project
-   - API signatures: Check actual parameters match usage
-   - Configuration options: Verify against config schemas
-   - Import statements: Confirm packages exist in dependencies
-   - Library features: Validate against actual version in use
-3. **Check using tools:**
-   - Read: Examine files for actual method definitions
-   - Grep: Search for function signatures, class names
-   - Bash: Syntax validation (`python -m py_compile`, `node --check`, etc.)
-4. **Apply checklist:**
-   - [ ] Non-existent methods/functions?
-   - [ ] Incorrect parameter signatures?
-   - [ ] Made-up configuration options?
-   - [ ] Fictional library features?
-   - [ ] Wrong syntax for version?
-   - [ ] Inconsistent naming conventions?
-
-**If ANY hallucinations detected:** Return NEEDS REFINEMENT immediately with CRITICAL PRODUCT DISCERNMENT FAILURE. Do not proceed to Phase 2.
-
-**Phase 2: Quality Evaluation (After hallucination check passes)**
 
 **Evaluate across 3 Discernment dimensions:**
 
 #### Product Discernment (What was delivered)
 
 **Correctness:**
-- ✅ Hallucinations verified clear (Phase 1 complete)
-- Is the logic sound and accurate?
+- **MANDATORY:** Use the `hallucination-detection` skill's checklist.
+- Verify all method calls, function signatures, and configuration options against project files or official documentation.
+- Is the logic sound and accurate *after* verifying it's not based on hallucinations?
 - Are edge cases handled properly?
 - Does it function as intended?
-- Are there any logical errors or flaws?
 
 **Elegance:**
 - Is it simple? (nothing to remove)

@@ -1,0 +1,42 @@
+{
+  "sessionId": "f6801128-ef14-4157-bd84-d63f8eb97b21",
+  "savedAt": "2025-12-01T08:53:38.188Z",
+  "savedBy": "SubagentStop",
+  "context": {
+    "lastSessionId": null,
+    "lastSessionEnd": "2025-11-28T09:28:28.263Z",
+    "historicalMetrics": {
+      "totalSessions": 14,
+      "totalDelegations": 0,
+      "averageCompliance": "100"
+    },
+    "evaluationTracking": {
+      "totalDelegations": 0,
+      "evaluatedDelegations": 0,
+      "skippedEvaluations": 0,
+      "complianceRate": 100
+    },
+    "skillTracking": {
+      "recommended": [],
+      "used": [],
+      "sessionStart": "2025-11-28T09:28:28.275Z",
+      "sessionId": "session-1764322108276-qdoq0vq",
+      "lastPromptTime": "2025-11-28T09:28:28.276Z",
+      "promptCount": 1,
+      "domainHistory": []
+    },
+    "lastUpdated": "2025-11-28T09:28:28.276Z"
+  },
+  "recentWork": [
+    ""
+  ],
+  "summary": {
+    "promptCount": 1,
+    "sessionStart": "2025-11-28T09:28:28.275Z",
+    "activeDomain": null,
+    "lastEditedFile": null,
+    "skillsRecommended": [],
+    "pendingEvaluations": 0,
+    "evaluationCompliance": 100
+  }
+}

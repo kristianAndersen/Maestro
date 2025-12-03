@@ -1,0 +1,231 @@
+# SCALABLE CLAUDE-NATIVE ORCHESTRATION FRAMEWORK
+# Three-Layer Architecture with Single-Purpose Agents
+
+═══════════════════════════════════════════════════════════════════════════════
+## THE THREE LAYERS
+═══════════════════════════════════════════════════════════════════════════════
+
+Layer 1: STRATEGY (orchestrator)
+├── Decides: WHAT needs to be done
+├── Decides: WHICH agents/skills to use
+└── Delegates to: Layer 2 (delegater)
+
+Layer 2: COORDINATION (delegater agent + delegater skill)
+├── Analyzes: Dependencies between tasks
+├── Decides: Sequential vs Parallel execution
+├── Manages: Data flow between agents
+├── Coordinates: Calls to Layer 3 agents
+└── Returns: Aggregated results to Layer 1
+
+Layer 3: EXECUTION (specialized single-purpose agents)
+├── fetch → ONLY fetches URLs/APIs, returns raw content
+├── analyze → ONLY analyzes content
+├── transform → ONLY transforms data
+└── [future agents] → Each does ONE thing
+
+═══════════════════════════════════════════════════════════════════════════════
+## EXAMPLE FLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+User: "Fetch https://example.com and https://github.com, then compare them"
+    ↓
+orchestrator (Layer 1 - STRATEGY):
+  - skill_delegator → No special skill needed
+  - agent_delegator → Need delegater for coordination
+  - Decision: "Delegate to delegater agent"
+    ↓
+delegater agent (Layer 2 - COORDINATION):
+  - Activates delegater skill
+  - Analyzes dependencies:
+    * fetch(example.com) - independent
+    * fetch(github.com) - independent
+    * compare - depends on both fetches
+  - Execution plan:
+    * Level 1 (parallel): Both fetches
+    * Level 2 (sequential): Compare
+    ↓
+LEVEL 1 - Parallel execution:
+  fetch agent (Layer 3) ──> "Content from example.com: ..."
+  fetch agent (Layer 3) ──> "Content from github.com: ..."
+    ↓
+delegater collects both results
+    ↓
+LEVEL 2 - Sequential execution:
+  compare agent (Layer 3) ──> "Comparison: example.com has X, github.com has Y"
+    ↓
+delegater aggregates result
+    ↓
+orchestrator receives final result
+    ↓
+User gets answer
+
+═══════════════════════════════════════════════════════════════════════════════
+## SINGLE-PURPOSE AGENT PHILOSOPHY
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ OLD WAY (monolithic):
+fetch agent → fetches AND analyzes AND summarizes (doing too much!)
+
+✅ NEW WAY (single-purpose):
+fetch agent → ONLY fetches, returns raw content
+    ↓ (delegater coordinates)
+analyze agent → ONLY analyzes
+    ↓ (delegater coordinates)
+summarize agent → ONLY summarizes
+
+Benefits:
+✅ Each agent simple and focused
+✅ Reusable (fetch agent used anywhere you need fetching)
+✅ Testable (easy to verify each does its one thing)
+✅ Composable (combine like UNIX pipes)
+✅ Maintainable (change one agent without affecting others)
+
+═══════════════════════════════════════════════════════════════════════════════
+## DIRECTORY STRUCTURE (22 files)
+═══════════════════════════════════════════════════════════════════════════════
+
+.claude/
+├── agents/
+│   ├── orchestrator.md          # Layer 1: Strategy & routing
+│   ├── delegater.md             # Layer 2: Execution coordination
+│   └── tesagent.md              # Testing agent
+│
+└── skills/
+    │
+    ├── fetch/                   # Domain skill: Data retrieval
+    │   ├── SKILL.md
+    │   └── assets/
+    │       ├── methodology.md
+    │       ├── patterns.md
+    │       └── troubleshooting.md
+    │
+    ├── delegater/               # Coordination skill
+    │   ├── SKILL.md             # Core coordination patterns
+    │   └── assets/
+    │       ├── dependency_analysis.md
+    │       └── data_flow.md
+    │
+    ├── skill_delegator/         # Meta-skill: Routes to skills
+    │   ├── SKILL.md             # Generic routing (never changes)
+    │   └── assets/
+    │       ├── skill_map.md     # ⚡ INDEX (2 skills)
+    │       ├── skills/
+    │       │   ├── fetch.md     # Detail file
+    │       │   └── delegater.md # Detail file
+    │       └── examples.md
+    │
+    └── agent_delegator/         # Meta-skill: Routes to agents
+        ├── SKILL.md             # Generic routing (never changes)
+        └── assets/
+            ├── agent_map.md     # ⚡ INDEX (7 agents)
+            ├── agents/
+            │   ├── general-purpose.md
+            │   ├── Explore.md
+            │   ├── Plan.md
+            │   ├── orchestrator.md
+            │   └── delegater.md
+            └── examples.md
+
+═══════════════════════════════════════════════════════════════════════════════
+## PROGRESSIVE DISCLOSURE AT WORK
+═══════════════════════════════════════════════════════════════════════════════
+
+When delegater agent needs coordination knowledge:
+
+1. Read: skill_delegator/SKILL.md (routing logic)
+2. Read: skill_map.md (INDEX - quick scan, finds "delegater")
+3. Read: skills/delegater.md (detail file - if needed)
+4. Activate: delegater skill
+5. Read: delegater/SKILL.md (core patterns)
+6. Read: delegater/assets/*.md (only if complex case)
+
+Fast path: Indexes are small, detail files loaded only when needed!
+
+═══════════════════════════════════════════════════════════════════════════════
+## HOW TO ADD NEW CAPABILITIES
+═══════════════════════════════════════════════════════════════════════════════
+
+### Add a new SKILL (e.g., "transform"):
+
+1. Create: .claude/skills/transform/SKILL.md
+2. Add 1 line to: skill_delegator/assets/skill_map.md
+3. Create: skill_delegator/assets/skills/transform.md
+✅ Done! Framework routes to it automatically
+
+### Add a new AGENT (e.g., "summarize"):
+
+1. Create: .claude/agents/summarize.md (single-purpose: ONLY summarizes)
+2. Add 1 line to: agent_delegator/assets/agent_map.md
+3. Create: agent_delegator/assets/agents/summarize.md
+✅ Done! Framework delegates to it automatically
+
+═══════════════════════════════════════════════════════════════════════════════
+## KEY DESIGN PRINCIPLES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. PROGRESSIVE DISCLOSURE
+   ├── Indexes first (fast, lightweight)
+   ├── Core logic (unchanging algorithms)
+   └── Details on demand (only when needed)
+
+2. SINGLE RESPONSIBILITY
+   ├── Each agent does ONE thing
+   ├── Coordination is separate from execution
+   └── Strategy is separate from coordination
+
+3. SEPARATION OF CONCERNS
+   ├── Skills = KNOWLEDGE (how to do things)
+   ├── Agents = EXECUTORS (who can do things)
+   └── Delegater = COORDINATOR (optimal execution)
+
+4. SCALABILITY
+   ├── Add capabilities = add data, not code
+   ├── Indexes stay small
+   └── No limit to agents/skills
+
+5. COMPOSABILITY
+   ├── Single-purpose agents combine like UNIX pipes
+   ├── fetch | analyze | summarize
+   └── Delegater coordinates the pipeline
+
+6. 100% CLAUDE-NATIVE
+   ├── No external code dependencies
+   ├── No bash scripts required (optional only)
+   ├── Pure markdown + Claude intelligence
+   └── Works with Claude Code's native tools
+
+═══════════════════════════════════════════════════════════════════════════════
+## CURRENT CAPABILITIES
+═══════════════════════════════════════════════════════════════════════════════
+
+Skills (2):
+  ├── fetch (external data retrieval)
+  └── delegater (multi-agent coordination)
+
+Agents (7):
+  ├── general-purpose (implementation)
+  ├── Explore (codebase exploration)
+  ├── Plan (planning)
+  ├── delegater (execution coordination) ⭐ NEW
+  ├── claude-code-guide (documentation)
+  ├── orchestrator (strategy & routing)
+  └── test-agwent (testing)
+
+Meta-Skills (2):
+  ├── skill_delegator (routes to skills)
+  └── agent_delegator (routes to agents)
+
+═══════════════════════════════════════════════════════════════════════════════
+## WHAT MAKES THIS SPECIAL
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Three-layer architecture (strategy → coordination → execution)
+✅ Single-purpose agents (composable, reusable, maintainable)
+✅ Intelligent coordination (parallel when possible, sequential when needed)
+✅ Progressive disclosure (fast indexes → detailed files)
+✅ Separation of concerns (logic vs data, knowledge vs execution)
+✅ 100% Claude-native (no external dependencies)
+✅ Infinitely scalable (just add entries to indexes)
+✅ Self-documenting (examples and patterns built-in)
+
+═══════════════════════════════════════════════════════════════════════════════

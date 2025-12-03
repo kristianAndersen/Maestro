@@ -117,13 +117,40 @@ User selects → Set mode → Continue to step 3
 <step number="3" name="requirements_gathering">
 **Delegate to create-meta-prompts agent for refinement:**
 
-Use Task tool to spawn create-meta-prompts agent:
+Use Task tool with subagent_type='create-meta-prompts' and prompt:
 
-- Pass user's original request or menu selection
-- Agent refines requirements through adaptive questioning
-- Returns structured requirements document
+```
+PRODUCT:
+- Task: Refine requirements for framework component creation
+- Context: {User's original request OR menu selection with any initial details provided}
+- Target: User input: "{paste user's full original request here}"
+- Expected: Structured requirements document containing:
+  * Component type (agent/skill/hook/command)
+  * Component purpose and domain
+  * Key capabilities/operations
+  * Integration points with Maestro framework
+  * Trigger patterns (keywords/file patterns)
+  * Quality criteria and constraints
 
-Store refined requirements for next step
+PROCESS:
+- Analyze user's original request to understand intent
+- Ask adaptive questions to clarify unclear aspects
+- Identify domain-specific requirements
+- Determine framework integration needs
+- Structure requirements for creator agent consumption
+
+PERFORMANCE:
+- Requirements are specific and actionable
+- All ambiguities resolved through questioning
+- Clear scope boundaries defined
+- Includes concrete examples where applicable
+- Format ready for creator agent to consume
+```
+
+**After create-meta-prompts returns:**
+- Store refined requirements document
+- Extract component type to determine next creator agent
+- Pass complete requirements to step 4
 </step>
 
 <step number="4" name="creation_delegation">
@@ -137,18 +164,60 @@ Based on mode, delegate to:
 - create_command → create-commands agent
 - update\_\* → Same creator agents with "update" context
 
-Pass:
+**CONCRETE DELEGATION EXAMPLE:**
 
-- Refined requirements from step 3
-- Target location (.claude/agents/ or .claude/skills/)
-- Any existing component (for updates)
+Use Task tool with subagent_type='create-subagents' (or appropriate creator) and prompt:
 
-Creator agent returns:
+```
+PRODUCT:
+- Task: Create {agent/skill/hook/command} component for Maestro framework
+- Context: User needs {describe the problem this component solves}
+- Requirements Document:
+  {PASTE THE COMPLETE REFINED REQUIREMENTS FROM STEP 3 HERE}
 
-- Created/updated files
-- File locations
-- Summary of changes
-  </step>
+  Purpose: {component purpose from requirements}
+  Domain: {domain from requirements}
+  Operations: {operations list from requirements}
+  Triggers: {trigger patterns from requirements}
+  Constraints: {any size/technology/pattern constraints}
+
+- Expected: Complete component files including:
+  * Main component file at appropriate location (.claude/agents/*.md or .claude/skills/*/SKILL.md)
+  * File content with all sections properly structured
+  * Registry entry data (triggers, keywords, patterns) for integration
+  * Summary of what was created with absolute file paths
+
+PROCESS:
+- Follow Maestro component patterns and conventions
+- For agents: Include role, workflow steps, tools list, return format
+- For skills: Use progressive disclosure (SKILL.md < 500 lines + assets/*.md each < 500 lines)
+- For hooks: Implement safety checks and proper matchers
+- For commands: Clear argument handling and help text
+- **Ensure 4-D methodology integration:**
+  * Delegation: Guide agents to delegate, not execute directly
+  * Description: Require evidence (file paths, line numbers, examples)
+  * Discernment: Include quality evaluation checkpoints
+  * Diligence: Emphasize iteration until excellence achieved
+- Generate registry triggers from component description
+- Validate all sections are complete before returning
+
+PERFORMANCE:
+- Component follows Maestro architectural patterns
+- All required sections present and complete
+- Clear, actionable guidance for users/agents
+- Framework agnostic (no React/Vue/Express bias)
+- **4-D methodology enforced** (delegation, evidence, quality gates, iteration)
+- Return complete file contents, not just metadata
+- Include absolute file paths for all created files
+- Provide registry entry data ready for integration
+```
+
+**After creator agent returns:**
+- Verify you received complete file contents (not just descriptions)
+- Store created component files for audit step
+- Extract file paths for tracking
+- Pass complete component to step 5
+</step>
 
 <step number="5" name="mandatory_audit">
 **CRITICAL: Run appropriate auditor agent:**
@@ -160,15 +229,53 @@ Based on component type:
 - Command → command-auditor
 - Hook → hook-auditor (New)
 
-Auditor returns:
+**CONCRETE DELEGATION EXAMPLE:**
 
-- Score (X/100)
-- Critical issues
-- Optimization opportunities
-- Specific file:line fixes
+Use Task tool with subagent_type='subagent-auditor' (or appropriate auditor) and prompt:
 
-**Note:** This score is input to 4-D evaluation, not the final verdict.
-Continue to step 6 (4-D quality gate).
+```
+PRODUCT:
+- Task: Audit newly created {component type} for quality and completeness
+- Context: Component was just created by {creator agent name} based on user requirements
+- Component Files to Audit:
+
+  File: {absolute file path from creator output}
+  Content:
+  {PASTE COMPLETE FILE CONTENT FROM CREATOR OUTPUT HERE}
+
+  {Include all files if multiple were created}
+
+- Original Requirements:
+  {PASTE REFINED REQUIREMENTS FROM STEP 3 HERE}
+
+- Expected: Detailed audit report containing:
+  * Numeric score (X/100) for component-specific criteria
+  * Critical issues list (must-fix items with file:line references)
+  * Optimization opportunities (should-fix items with file:line references)
+  * Compliance check against Maestro patterns
+  * Specific actionable fixes for each issue
+
+PROCESS:
+- Evaluate component structure and completeness
+- Check compliance with Maestro conventions
+- Verify all required sections present
+- Assess clarity and actionability of content
+- Identify missing elements or anti-patterns
+- Generate specific file:line fix recommendations
+
+PERFORMANCE:
+- Score reflects objective quality criteria
+- Every issue includes specific file:line reference
+- Fixes are actionable and specific
+- Report distinguishes critical vs. optimization issues
+- Assessment is thorough and evidence-based
+```
+
+**After auditor returns:**
+- Store audit report with score and issues list
+- Extract file:line references for potential fixes
+- Pass auditor report + creator output to step 6
+- DO NOT make accept/reject decision yet (that's 4-D evaluation's role)
 </step>
 
 <step number="6" name="4d_quality_gate">
@@ -176,15 +283,61 @@ Continue to step 6 (4-D quality gate).
 
 After auditor completes, delegate the complete package to 4d-evaluation agent:
 
-Pass to 4d-evaluation:
-- Original task requirements (from PRODUCT section of delegation)
-- Creator agent's output (component files created)
-- Auditor's report (score, issues, file:line references)
-- Excellence criteria (from PERFORMANCE section of delegation)
+**CONCRETE DELEGATION EXAMPLE:**
 
-4d-evaluation returns verdict:
-- **EXCELLENT**: All 3 discernment dimensions pass → Continue to step 8 (registry integration)
-- **NEEDS REFINEMENT**: Gaps identified with coaching → Continue to step 7 (healing loop)
+Use Task tool with subagent_type='4d-evaluation' and prompt:
+
+```
+PRODUCT:
+- Task: Evaluate component creation quality through 4-D framework
+- Context: Harry created {component type} via {creator agent}, audited via {auditor agent}
+- Work Package to Evaluate:
+
+  ORIGINAL REQUIREMENTS (from step 3):
+  {PASTE COMPLETE REFINED REQUIREMENTS HERE}
+
+  CREATOR OUTPUT (from step 4):
+  {PASTE COMPLETE CREATOR AGENT REPORT HERE INCLUDING:
+   - Created files with full content
+   - File locations (absolute paths)
+   - Summary of changes
+   - Registry entry data}
+
+  AUDITOR REPORT (from step 5):
+  {PASTE COMPLETE AUDIT REPORT HERE INCLUDING:
+   - Score (X/100)
+   - Critical issues with file:line references
+   - Optimization opportunities
+   - Compliance assessment}
+
+- Expected: 4-D evaluation verdict with coaching:
+  * EXCELLENT or NEEDS REFINEMENT
+  * Product Discernment assessment
+  * Process Discernment assessment
+  * Performance Discernment assessment
+  * Specific coaching for refinement (if NEEDS REFINEMENT)
+  * Actionable next steps
+
+PROCESS:
+- Assess Product: Is component correct, elegant, complete? Does it solve the real problem?
+- Assess Process: Was creation approach sound? Any shortcuts or gaps?
+- Assess Performance: Does it meet Maestro excellence standards? Simple yet powerful?
+- Use auditor score as input, not final verdict
+- Generate coaching feedback if refinement needed
+- Provide specific guidance for iteration
+
+PERFORMANCE:
+- Verdict is clear: EXCELLENT or NEEDS REFINEMENT
+- Coaching is specific and actionable
+- All three discernment dimensions evaluated
+- Evidence-based assessment (file:line references)
+- Coaching enables targeted fixes in healing loop
+```
+
+**After 4d-evaluation returns:**
+- Check verdict: EXCELLENT or NEEDS REFINEMENT
+- If EXCELLENT → Continue to step 8 (registry integration)
+- If NEEDS REFINEMENT → Continue to step 7 (healing loop) with coaching feedback
 
 **Important:** Auditor score (X/100) is INPUT to 4-D evaluation, not the final verdict. The 4d-evaluation agent makes the accept/iterate decision.
 </step>
@@ -395,13 +548,26 @@ The 4-D verdict (EXCELLENT / NEEDS REFINEMENT) determines accept or iterate.
   "version": "1.0",
   "skills": {
     "new-skill-name": {
-      "type": "domain|guardrail",
+      "type": "domain|guardrail|coordination|conductor",
       "enforcement": "suggest|block|warn",
       "priority": "critical|high|medium|low",
-      "triggers": {
-        "promptTriggers": ["keyword", "phrases"],
-        "fileTriggers": ["**/*.ext", "pattern"]
-      }
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Brief one-line description for intelligent caching"
+      },
+      "promptTriggers": {
+        "keywords": ["keyword1", "keyword2"],
+        "synonyms": ["synonym1", "synonym2"],
+        "intentPatterns": ["pattern.*regex"]
+      },
+      "fileTriggers": {
+        "pathPatterns": ["**/*.ext", "pattern"]
+      },
+      "skipConditions": {
+        "sessionMarker": "skill-name-used"
+      },
+      "agentContext": ["agent-name"],
+      "domain": "domain-name"
     }
   }
 }
@@ -528,4 +694,6 @@ Before completing any workflow, verify:
 - Updating registries with invalid JSON
 - Making assumptions about user domain preferences
 - Creating components without user context
+- Passing only metadata to agents (MUST pass full work products: complete requirements, complete file contents, complete reports)
+- Using placeholder text like "{paste content here}" when actually delegating (MUST paste actual content)
   </anti_patterns>

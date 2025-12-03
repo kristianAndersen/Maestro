@@ -10,8 +10,19 @@
         "short_description": "Directory/file listing operations"
       },
       "promptTriggers": {
-        "keywords": ["list", "show", "directory", "files", "contents"],
-        "intentPatterns": ["list.*files", "show.*directory", "what.*files", "directory.*contents"]
+        "keywords": [
+          "list",
+          "show",
+          "directory",
+          "files",
+          "contents"
+        ],
+        "intentPatterns": [
+          "list.*files",
+          "show.*directory",
+          "what.*files",
+          "directory.*contents"
+        ]
       },
       "fileTriggers": {
         "pathPatterns": []
@@ -29,8 +40,19 @@
         "short_description": "File reading operations"
       },
       "promptTriggers": {
-        "keywords": ["open", "read", "view", "display", "show"],
-        "intentPatterns": ["open.*file", "read.*file", "view.*file", "show.*content"]
+        "keywords": [
+          "open",
+          "read",
+          "view",
+          "display",
+          "show"
+        ],
+        "intentPatterns": [
+          "open.*file",
+          "read.*file",
+          "view.*file",
+          "show.*content"
+        ]
       },
       "fileTriggers": {
         "pathPatterns": []
@@ -45,11 +67,38 @@
         "short_description": "Deep file/codebase analysis"
       },
       "promptTriggers": {
-        "keywords": ["analyze", "understand", "explain", "how", "why", "pattern"],
-        "intentPatterns": ["analyze.*code", "understand.*how", "explain.*why", "pattern.*in", "how.*does.*work"]
+        "keywords": [
+          "analyze",
+          "understand",
+          "explain",
+          "how",
+          "why",
+          "pattern"
+        ],
+        "intentPatterns": [
+          "analyze.*code",
+          "understand.*how",
+          "explain.*why",
+          "pattern.*in",
+          "how.*does.*work"
+        ]
       },
       "fileTriggers": {
-        "pathPatterns": ["**/*.js", "**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.py", "**/*.go", "**/*.java", "**/*.rb", "**/*.rs", "**/*.c", "**/*.cpp", "**/*.cs", "**/*.php"]
+        "pathPatterns": [
+          "**/*.js",
+          "**/*.ts",
+          "**/*.tsx",
+          "**/*.jsx",
+          "**/*.py",
+          "**/*.go",
+          "**/*.java",
+          "**/*.rb",
+          "**/*.rs",
+          "**/*.c",
+          "**/*.cpp",
+          "**/*.cs",
+          "**/*.php"
+        ]
       }
     },
     "write": {
@@ -61,12 +110,53 @@
         "short_description": "Code/file modifications"
       },
       "promptTriggers": {
-        "keywords": ["add", "modify", "fix", "create", "implement", "update", "change", "refactor"],
-        "synonyms": ["generate", "scaffold", "construct", "refactor", "tweak"],
-        "intentPatterns": ["add.*to", "fix.*bug", "implement.*feature", "create.*function", "modify.*code", "update.*file", "refactor.*code"]
+        "keywords": [
+          "add",
+          "modify",
+          "fix",
+          "create",
+          "implement",
+          "update",
+          "change",
+          "refactor"
+        ],
+        "synonyms": [
+          "generate",
+          "scaffold",
+          "construct",
+          "refactor",
+          "tweak"
+        ],
+        "intentPatterns": [
+          "add.*to",
+          "fix.*bug",
+          "implement.*feature",
+          "create.*function",
+          "modify.*code",
+          "update.*file",
+          "refactor.*code"
+        ]
       },
       "fileTriggers": {
-        "pathPatterns": ["**/*.js", "**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.py", "**/*.go", "**/*.java", "**/*.rb", "**/*.rs", "**/*.c", "**/*.cpp", "**/*.cs", "**/*.php", "**/*.json", "**/*.yaml", "**/*.yml", "**/*.md"]
+        "pathPatterns": [
+          "**/*.js",
+          "**/*.ts",
+          "**/*.tsx",
+          "**/*.jsx",
+          "**/*.py",
+          "**/*.go",
+          "**/*.java",
+          "**/*.rb",
+          "**/*.rs",
+          "**/*.c",
+          "**/*.cpp",
+          "**/*.cs",
+          "**/*.php",
+          "**/*.json",
+          "**/*.yaml",
+          "**/*.yml",
+          "**/*.md"
+        ]
       },
       "domain": "writing"
     },
@@ -79,8 +169,24 @@
         "short_description": "External data retrieval"
       },
       "promptTriggers": {
-        "keywords": ["fetch", "get", "download", "retrieve", "external", "api", "url", "http"],
-        "intentPatterns": ["fetch.*from", "get.*data", "download.*from", "retrieve.*external", "call.*api", "http.*request"]
+        "keywords": [
+          "fetch",
+          "get",
+          "download",
+          "retrieve",
+          "external",
+          "api",
+          "url",
+          "http"
+        ],
+        "intentPatterns": [
+          "fetch.*from",
+          "get.*data",
+          "download.*from",
+          "retrieve.*external",
+          "call.*api",
+          "http.*request"
+        ]
       },
       "fileTriggers": {
         "pathPatterns": []
@@ -95,9 +201,30 @@
         "short_description": "Information gathering/research"
       },
       "promptTriggers": {
-        "keywords": ["find", "search", "locate", "research", "discover", "where", "which"],
-        "synonyms": ["investigate", "look up", "find out", "explore", "check for"],
-        "intentPatterns": ["find.*in.*codebase", "search.*for", "locate.*file", "where.*is", "which.*files", "research.*how"]
+        "keywords": [
+          "find",
+          "search",
+          "locate",
+          "research",
+          "discover",
+          "where",
+          "which"
+        ],
+        "synonyms": [
+          "investigate",
+          "look up",
+          "find out",
+          "explore",
+          "check for"
+        ],
+        "intentPatterns": [
+          "find.*in.*codebase",
+          "search.*for",
+          "locate.*file",
+          "where.*is",
+          "which.*files",
+          "research.*how"
+        ]
       },
       "fileTriggers": {
         "pathPatterns": []
@@ -112,11 +239,41 @@
         "short_description": "Code/system quality evaluation"
       },
       "promptTriggers": {
-        "keywords": ["evaluate", "assess", "review", "audit", "quality", "security", "performance", "maintainability"],
-        "intentPatterns": ["evaluate.*quality", "assess.*security", "review.*code", "audit.*codebase", "analyze.*performance", "check.*maintainability"]
+        "keywords": [
+          "evaluate",
+          "assess",
+          "review",
+          "audit",
+          "quality",
+          "security",
+          "performance",
+          "maintainability"
+        ],
+        "intentPatterns": [
+          "evaluate.*quality",
+          "assess.*security",
+          "review.*code",
+          "audit.*codebase",
+          "analyze.*performance",
+          "check.*maintainability"
+        ]
       },
       "fileTriggers": {
-        "pathPatterns": ["**/*.js", "**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.py", "**/*.go", "**/*.java", "**/*.rb", "**/*.rs", "**/*.c", "**/*.cpp", "**/*.cs", "**/*.php"]
+        "pathPatterns": [
+          "**/*.js",
+          "**/*.ts",
+          "**/*.tsx",
+          "**/*.jsx",
+          "**/*.py",
+          "**/*.go",
+          "**/*.java",
+          "**/*.rb",
+          "**/*.rs",
+          "**/*.c",
+          "**/*.cpp",
+          "**/*.cs",
+          "**/*.php"
+        ]
       },
       "domain": "analysis"
     },
@@ -129,8 +286,24 @@
         "short_description": "4-D quality assessment"
       },
       "promptTriggers": {
-        "keywords": ["evaluate", "assess", "discernment", "4-D", "quality", "gate", "delegation", "description", "diligence"],
-        "intentPatterns": ["4-D.*evaluation", "quality.*gate", "evaluate.*output", "assess.*work", "discernment.*check"]
+        "keywords": [
+          "evaluate",
+          "assess",
+          "discernment",
+          "4-D",
+          "quality",
+          "gate",
+          "delegation",
+          "description",
+          "diligence"
+        ],
+        "intentPatterns": [
+          "4-D.*evaluation",
+          "quality.*gate",
+          "evaluate.*output",
+          "assess.*work",
+          "discernment.*check"
+        ]
       },
       "fileTriggers": {
         "pathPatterns": []
@@ -145,14 +318,44 @@
         "short_description": "Multi-agent orchestration guidance"
       },
       "promptTriggers": {
-        "keywords": ["orchestrate", "delegate", "multi-agent", "workflow", "coordinate", "manage", "conduct", "refinement", "coaching", "3P", "agent selection"],
-        "synonyms": ["coordinate work", "manage agents", "oversee tasks", "direct agents", "quality gate", "iterate"],
-        "intentPatterns": ["orchestrate.*workflow", "delegate.*to.*agent", "multi.*agent.*task", "coordinate.*agents", "manage.*delegation", "refine.*output", "which.*agent", "how.*to.*delegate"]
+        "keywords": [
+          "orchestrate",
+          "delegate",
+          "multi-agent",
+          "workflow",
+          "coordinate",
+          "manage",
+          "conduct",
+          "refinement",
+          "coaching",
+          "3P",
+          "agent selection"
+        ],
+        "synonyms": [
+          "coordinate work",
+          "manage agents",
+          "oversee tasks",
+          "direct agents",
+          "quality gate",
+          "iterate"
+        ],
+        "intentPatterns": [
+          "orchestrate.*workflow",
+          "delegate.*to.*agent",
+          "multi.*agent.*task",
+          "coordinate.*agents",
+          "manage.*delegation",
+          "refine.*output",
+          "which.*agent",
+          "how.*to.*delegate"
+        ]
       },
       "fileTriggers": {
         "pathPatterns": []
       },
-      "agentContext": ["maestro"]
+      "agentContext": [
+        "maestro"
+      ]
     },
     "hallucination-detection": {
       "type": "guardrail",
@@ -163,13 +366,63 @@
         "short_description": "Hallucination detection/verification"
       },
       "promptTriggers": {
-        "keywords": ["evaluate", "assess", "4-D", "quality", "discernment", "hallucination", "4D-Evaluation"],
-        "intentPatterns": ["evaluate.*work", "assess.*output", "check for hallucinations", "run.*4-D.*evaluation"]
+        "keywords": [
+          "evaluate",
+          "assess",
+          "4-D",
+          "quality",
+          "discernment",
+          "hallucination",
+          "4D-Evaluation"
+        ],
+        "intentPatterns": [
+          "evaluate.*work",
+          "assess.*output",
+          "check for hallucinations",
+          "run.*4-D.*evaluation"
+        ]
       },
       "fileTriggers": {
         "pathPatterns": []
       },
-      "agentContext": ["4d-evaluation"]
+      "agentContext": [
+        "4d-evaluation"
+      ]
+    },
+    "delegater": {
+      "type": "coordination",
+      "enforcement": "suggest",
+      "priority": "high",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Multi-agent coordination and workflow orchestration"
+      },
+      "promptTriggers": {
+        "keywords": [
+          "coordinate",
+          "multi-agent",
+          "parallel",
+          "sequential",
+          "dependency",
+          "workflow",
+          "multiple agents",
+          "execute multiple",
+          "then compare",
+          "and then"
+        ],
+        "intentPatterns": [
+          "coordinate.*agents",
+          "multiple.*tasks",
+          "parallel.*execution",
+          ".*and.*then.*",
+          "fetch.*and.*fetch",
+          "sequence.*of.*tasks",
+          "dependency.*between"
+        ]
+      },
+      "fileTriggers": {
+        "pathPatterns": []
+      }
     }
   }
 }
