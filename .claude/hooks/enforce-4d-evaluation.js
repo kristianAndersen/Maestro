@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, appendFileSync, existsSync, mkdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -13,7 +13,9 @@ const __dirname = dirname(__filename);
  * Purpose: Implements mandatory quality gates for Maestro subagent delegation
  * Trigger: Stop hook (when conversation/task ends)
  * Output: WARNING if Task tool was used but 4-D evaluation is missing
- * Tracking: Updates context.json with evaluation compliance metrics
+ * Tracking:
+ *   - Updates context.json with evaluation compliance metrics
+ *   - Appends evaluation outcomes to .claude/memory/evaluation-history.jsonl
  */
 
 // --- Read Inputs ---
@@ -70,14 +72,14 @@ function detectTaskToolUsage(context) {
 }
 
 /**
- * Check if 4-D evaluation was performed
+ * Check if 4-D evaluation was performed and extract details
  * Look for comprehensive patterns indicating proper evaluation:
  * - "4D-EVALUATION REPORT" (formal report header)
  * - "VERDICT: EXCELLENT" or "VERDICT: NEEDS REFINEMENT" (explicit verdicts)
  * - Task tool call with subagent_type="4d-evaluation"
  * - All three discernment dimensions present (Product, Process, Performance)
  * @param {string} context - Conversation context
- * @returns {boolean} True if comprehensive 4-D evaluation detected
+ * @returns {object} { performed: boolean, evaluations: array } - evaluation detection and details
  */
 function detectEvaluationPerformed(context) {
   // Check for formal 4-D evaluation report markers
@@ -101,7 +103,48 @@ function detectEvaluationPerformed(context) {
   // 1. Has formal report header OR 4d-evaluation agent was invoked, AND
   // 2. Has explicit verdict, AND
   // 3. Has all three discernment dimensions
-  return (hasEvaluationReport || has4dEvaluationAgent) && hasVerdict && hasAllDiscernments;
+  const performed = (hasEvaluationReport || has4dEvaluationAgent) && hasVerdict && hasAllDiscernments;
+
+  // Extract evaluation details for logging
+  const evaluations = [];
+  if (performed) {
+    // Try to extract evaluation details from context
+    const verdictMatches = context.matchAll(/\bVERDICT:\s*(EXCELLENT|NEEDS REFINEMENT)\b/gi);
+    for (const match of verdictMatches) {
+      const verdict = match[1].toUpperCase();
+
+      // Try to find associated agent and task context around the verdict
+      const contextWindow = context.slice(Math.max(0, match.index - 500), match.index + 500);
+
+      // Extract agent name if present
+      const agentMatch = contextWindow.match(/(?:evaluating|assessing|reviewing)\s+(?:the\s+)?(\w+(?:-\w+)?)\s+agent/i) ||
+                        contextWindow.match(/agent:\s*(\w+(?:-\w+)?)/i) ||
+                        contextWindow.match(/subagent_type=['"]?(\w+(?:-\w+)?)/i);
+      const agentUsed = agentMatch ? agentMatch[1] : 'unknown';
+
+      // Try to detect task type from context
+      const taskMatch = contextWindow.match(/Task:\s*([^\n]+)/i);
+      const taskType = taskMatch ? taskMatch[1].slice(0, 100) : 'unknown';
+
+      // Try to detect iteration count
+      const iterationMatch = contextWindow.match(/iteration\s+(\d+)/i) ||
+                            contextWindow.match(/attempt\s+(\d+)/i);
+      const iterationCount = iterationMatch ? parseInt(iterationMatch[1]) : 1;
+
+      // Check if coaching was applied
+      const coachingApplied = /coaching|refinement|feedback|improvements/i.test(contextWindow);
+
+      evaluations.push({
+        verdict,
+        agentUsed,
+        taskType,
+        iterationCount,
+        coachingApplied
+      });
+    }
+  }
+
+  return { performed, evaluations };
 }
 
 /**
@@ -203,13 +246,69 @@ function updateComplianceTracking(taskUsed, evaluationPerformed) {
   }
 }
 
+/**
+ * Log evaluation outcomes to evaluation-history.jsonl
+ * @param {array} evaluations - Array of evaluation detail objects
+ */
+function logEvaluationHistory(evaluations) {
+  if (!evaluations || evaluations.length === 0) {
+    return; // Nothing to log
+  }
+
+  // Ensure memory directory exists
+  const memoryDir = join(__dirname, '..', 'memory');
+  if (!existsSync(memoryDir)) {
+    try {
+      mkdirSync(memoryDir, { recursive: true });
+    } catch (error) {
+      // Fail gracefully - don't break workflow
+      return;
+    }
+  }
+
+  // Path to evaluation history file
+  const evaluationHistoryPath = join(memoryDir, 'evaluation-history.jsonl');
+
+  // Get current session ID from context if available
+  const sessionId = projectContext.skillTracking?.sessionId ||
+                   projectContext.lastSessionId ||
+                   'unknown';
+
+  // Append each evaluation as a JSONL entry
+  try {
+    for (const evaluation of evaluations) {
+      const logEntry = {
+        timestamp: new Date().toISOString(),
+        sessionId,
+        agentUsed: evaluation.agentUsed,
+        taskType: evaluation.taskType,
+        verdict: evaluation.verdict,
+        iterationCount: evaluation.iterationCount,
+        coachingApplied: evaluation.coachingApplied
+      };
+
+      // Append as single-line JSON followed by newline
+      appendFileSync(evaluationHistoryPath, JSON.stringify(logEntry) + '\n', 'utf-8');
+    }
+  } catch (error) {
+    // Fail gracefully - don't break workflow if logging fails
+  }
+}
+
 // --- Main Execution ---
 
 const taskUsed = detectTaskToolUsage(conversationContext);
-const evaluationPerformed = detectEvaluationPerformed(conversationContext);
+const evaluationResult = detectEvaluationPerformed(conversationContext);
+const evaluationPerformed = evaluationResult.performed;
+const evaluations = evaluationResult.evaluations;
 
 // Update compliance tracking
 updateComplianceTracking(taskUsed, evaluationPerformed);
+
+// Log evaluation outcomes to history file
+if (evaluationPerformed && evaluations.length > 0) {
+  logEvaluationHistory(evaluations);
+}
 
 // Output warning if Task tool was used but evaluation is missing
 if (taskUsed && !evaluationPerformed) {

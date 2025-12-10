@@ -108,6 +108,10 @@ function main() {
         totalSessions: (context.historicalMetrics?.totalSessions || 0) + 1,
         totalDelegations: context.evaluationTracking?.totalDelegations || 0,
         averageCompliance: context.evaluationTracking?.complianceRate || '100'
+      },
+      // Preserve user preferences across sessions (populated by reflector agent)
+      userPreferences: context.userPreferences || {
+        observedPreferences: []
       }
     };
 

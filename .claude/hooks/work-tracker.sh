@@ -13,50 +13,53 @@ if [ -z "${payload//[[:space:]]/}" ]; then
   exit 0
 fi
 
-# Extract tool name and all file/path candidates using Node for robust JSON handling
-readarray -t parsed <<<"$(printf '%s' "$payload" | node - <<'NODE'
-const fs = require('fs');
+# Extract tool name and all file/path candidates using jq for fast JSON parsing
+# Handles multiple field names and deduplicates results
+output="$(printf '%s' "$payload" | jq -r '
+  # Extract tool name from multiple possible fields
+  def tool_name:
+    .tool // .name // .command // .event // "";
 
-const raw = fs.readFileSync(0, 'utf8');
-let data;
-try {
-  data = JSON.parse(raw);
-} catch {
-  process.exit(0);
-}
+  # Extract candidate file/path values from various fields
+  def extract_candidates:
+    [
+      # Top-level fields
+      .file, .file_path, .path, .target, .uri,
+      # Array fields (files, paths, targets)
+      (if .files then .files[] else empty end |
+        if type == "string" then .
+        elif type == "object" then (.file, .file_path, .path, .target, .uri)
+        else empty end),
+      (if .paths then .paths[] else empty end |
+        if type == "string" then .
+        elif type == "object" then (.file, .file_path, .path, .target, .uri)
+        else empty end),
+      (if .targets then .targets[] else empty end |
+        if type == "string" then .
+        elif type == "object" then (.file, .file_path, .path, .target, .uri)
+        else empty end)
+    ]
+    # Filter out nulls and empty strings, trim whitespace, deduplicate
+    | map(select(. != null and . != ""))
+    | map(gsub("^\\s+|\\s+$"; ""))
+    | map(select(. != ""))
+    | unique
+    | .[];
 
-const tool = data.tool || data.name || data.command || data.event || '';
-const candidates = new Set();
+  # Output tool name first, then all file paths (one per line)
+  tool_name, extract_candidates
+' 2>/dev/null || echo "")"
 
-const add = (value) => {
-  if (typeof value === 'string' && value.trim()) {
-    candidates.add(value.trim());
-  }
-};
+# Abort if parsing failed
+if [ -z "$output" ]; then
+  exit 0
+fi
 
-['file', 'file_path', 'path', 'target', 'uri'].forEach((key) => add(data[key]));
-
-const collect = (item) => {
-  if (!item) return;
-  if (typeof item === 'string') {
-    add(item);
-    return;
-  }
-  if (typeof item === 'object') {
-    ['file', 'file_path', 'path', 'target', 'uri'].forEach((key) => add(item[key]));
-  }
-};
-
-if (Array.isArray(data.files)) data.files.forEach(collect);
-if (Array.isArray(data.paths)) data.paths.forEach(collect);
-if (Array.isArray(data.targets)) data.targets.forEach(collect);
-
-console.log(tool || '');
-for (const file of candidates) {
-  console.log(file);
-}
-NODE
-)"
+# Read output into array (compatible with older bash)
+parsed=()
+while IFS= read -r line; do
+  parsed+=("$line")
+done <<< "$output"
 
 # Abort if parsing failed
 if [ "${#parsed[@]}" -eq 0 ]; then
