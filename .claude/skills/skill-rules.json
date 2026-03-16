@@ -423,6 +423,259 @@
       "fileTriggers": {
         "pathPatterns": []
       }
+    },
+    "communicator": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Inter-session IPC messaging"
+      },
+      "promptTriggers": {
+        "keywords": [
+          "communicate",
+          "ipc",
+          "cross-session",
+          "tell session",
+          "message session"
+        ],
+        "intentPatterns": [
+          "tell.*session",
+          "send.*message.*to"
+        ]
+      },
+      "fileTriggers": {
+        "pathPatterns": [
+          ".claude/ipc/**"
+        ]
+      },
+      "agentContext": [
+        "communicator"
+      ]
+    },
+    "agent-creator": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Agent creation, improvement, and optimization"
+      },
+      "promptTriggers": {
+        "keywords": [
+          "create agent",
+          "build agent",
+          "make agent",
+          "improve agent",
+          "fix agent",
+          "update agent",
+          "new agent",
+          "agent not triggering",
+          "optimize agent",
+          "agent description",
+          "agent anatomy",
+          "agent registry"
+        ],
+        "synonyms": [
+          "agent file",
+          "subagent",
+          "agent template",
+          "agent structure"
+        ],
+        "intentPatterns": [
+          "create.*agent",
+          "build.*agent",
+          "improve.*agent",
+          "fix.*agent",
+          "agent.*not.*trigger",
+          "optimize.*agent",
+          "update.*agent",
+          "new.*agent.*for",
+          "agent.*registry"
+        ]
+      },
+      "fileTriggers": {
+        "pathPatterns": [
+          ".claude/agents/*.md",
+          ".claude/agents/agent-registry.json"
+        ]
+      },
+      "agentContext": [
+        "harry",
+        "create-subagents"
+      ]
+    },
+    "ui-ux-design": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "UI/UX design: color, typography, layout, WCAG, design tokens"
+      },
+      "promptTriggers": {
+        "keywords": [
+          "color",
+          "colour",
+          "typography",
+          "font",
+          "layout",
+          "spacing",
+          "design",
+          "ui",
+          "ux",
+          "css",
+          "palette",
+          "hierarchy",
+          "responsive",
+          "accessibility",
+          "wcag",
+          "dark mode",
+          "light mode",
+          "design system",
+          "tokens",
+          "contrast",
+          "whitespace",
+          "grid",
+          "visual design",
+          "type scale",
+          "font pairing",
+          "design tokens",
+          "color scheme",
+          "theme",
+          "theming"
+        ],
+        "synonyms": [
+          "style guide",
+          "component library",
+          "ui kit",
+          "design language",
+          "color harmony",
+          "visual hierarchy",
+          "brand colors",
+          "stylesheet"
+        ],
+        "intentPatterns": [
+          "design.*color",
+          "color.*palette",
+          "improve.*typography",
+          "fix.*contrast",
+          "wcag.*compliance",
+          "dark.*mode",
+          "light.*mode",
+          "design.*system",
+          "font.*pairing",
+          "type.*scale",
+          "spacing.*system",
+          "visual.*hierarchy",
+          "css.*tokens",
+          "color.*scheme",
+          "make.*accessible",
+          "accessibility.*color",
+          "layout.*grid",
+          "responsive.*design"
+        ]
+      },
+      "fileTriggers": {
+        "pathPatterns": [
+          "**/*.css",
+          "**/*.scss",
+          "**/*.sass",
+          "**/*.less",
+          "**/*.styl",
+          "**/tokens.{js,ts,json}",
+          "**/theme.{js,ts,json}",
+          "**/design-tokens/**",
+          "**/styles/**",
+          "**/style/**",
+          "tailwind.config.{js,ts}",
+          "**/vars.css",
+          "**/variables.css",
+          "**/tokens.css"
+        ]
+      },
+      "skipConditions": {
+        "sessionMarker": "ui-ux-design-skill-used"
+      },
+      "agentContext": [
+        "ui-ux-designer"
+      ],
+      "domain": "ui-ux-design"
+    },
+    "lighthouse": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Web performance auditing with Google Lighthouse"
+      },
+      "promptTriggers": {
+        "keywords": [
+          "lighthouse",
+          "LCP",
+          "CLS",
+          "TBT",
+          "FCP",
+          "INP",
+          "TTI",
+          "core web vitals",
+          "web vitals",
+          "performance audit",
+          "accessibility score",
+          "seo score",
+          "page speed",
+          "pagespeed",
+          "lhci",
+          "performance score",
+          "render-blocking",
+          "layout shift",
+          "largest contentful paint",
+          "cumulative layout shift",
+          "total blocking time",
+          "first contentful paint",
+          "time to interactive"
+        ],
+        "synonyms": [
+          "web performance",
+          "site speed",
+          "loading performance",
+          "wcag audit",
+          "accessibility audit",
+          "seo audit",
+          "performance budget"
+        ],
+        "intentPatterns": [
+          "run.*lighthouse",
+          "lighthouse.*audit",
+          "improve.*performance.*score",
+          "fix.*lcp",
+          "fix.*cls",
+          "fix.*tbt",
+          "reduce.*layout.*shift",
+          "improve.*accessibility.*score",
+          "improve.*seo.*score",
+          "core.*web.*vitals",
+          "lighthouse.*ci",
+          "performance.*budget",
+          "audit.*web.*app"
+        ]
+      },
+      "fileTriggers": {
+        "pathPatterns": [
+          "lighthouserc.js",
+          "lighthouserc.json",
+          ".lighthouserc.js",
+          ".lighthouserc.json",
+          "budget.json",
+          "**/lighthouse/**"
+        ]
+      },
+      "skipConditions": {
+        "sessionMarker": "lighthouse-skill-used"
+      },
+      "domain": "web-performance"
     }
   }
 }

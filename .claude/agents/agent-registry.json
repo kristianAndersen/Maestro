@@ -370,6 +370,219 @@
       "complexity": "complex",
       "autonomy": "high",
       "fallback": true
+    },
+    "excel": {
+      "purpose": "Excel data operations specialist - analyzes, calculates, and visualizes spreadsheet data",
+      "triggers": {
+        "keywords": [
+          "excel",
+          "spreadsheet",
+          "xlsx",
+          "xls",
+          "workbook",
+          "data analysis",
+          "pivot",
+          "chart",
+          "visualization",
+          "calculate",
+          "statistics"
+        ],
+        "intentPatterns": [
+          "analyze.*excel",
+          "process.*spreadsheet",
+          "read.*xlsx?",
+          "chart.*from.*excel",
+          "calculate.*in.*workbook",
+          "extract.*from.*excel",
+          "pivot.*data"
+        ],
+        "operations": [
+          "analyze",
+          "calculate",
+          "visualize",
+          "extract",
+          "transform"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high"
+    },
+    "diary-writer": {
+      "purpose": "Captures episodic memory from Maestro sessions for continual learning",
+      "triggers": {
+        "keywords": [
+          "diary",
+          "capture session",
+          "session summary",
+          "save memory",
+          "document session",
+          "session notes"
+        ],
+        "intentPatterns": [
+          "capture.*session",
+          "write.*diary",
+          "save.*session.*memory",
+          "document.*this.*session",
+          "session.*summary"
+        ],
+        "operations": [
+          "capture",
+          "document",
+          "summarize"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high",
+      "internal": false
+    },
+    "communicator": {
+      "purpose": "Inter-session messaging: register sessions, send messages, list peers, read mailboxes",
+      "triggers": {
+        "keywords": [
+          "communicate",
+          "message",
+          "tell session",
+          "notify session",
+          "send to",
+          "ipc",
+          "cross-session",
+          "register session",
+          "name session"
+        ],
+        "intentPatterns": [
+          "tell.*session",
+          "send.*message.*to",
+          "communicate.*with.*session",
+          "name.*session",
+          "register.*session"
+        ],
+        "operations": [
+          "send",
+          "register",
+          "notify",
+          "communicate",
+          "list-sessions"
+        ]
+      },
+      "complexity": "simple",
+      "autonomy": "high"
+    },
+    "ui-ux-designer": {
+      "purpose": "UI/UX design specialist — color theory, typography, layout, spacing, design tokens, WCAG accessibility",
+      "triggers": {
+        "keywords": [
+          "color",
+          "colour",
+          "typography",
+          "font",
+          "layout",
+          "spacing",
+          "design",
+          "ui",
+          "ux",
+          "css",
+          "palette",
+          "hierarchy",
+          "responsive",
+          "accessibility",
+          "wcag",
+          "dark mode",
+          "light mode",
+          "design system",
+          "tokens",
+          "contrast",
+          "whitespace",
+          "grid",
+          "visual design",
+          "type scale",
+          "font pairing",
+          "design tokens",
+          "color scheme"
+        ],
+        "synonyms": [
+          "style guide",
+          "component library",
+          "ui kit",
+          "design language",
+          "color harmony",
+          "visual hierarchy",
+          "brand colors",
+          "theme",
+          "theming",
+          "stylesheet"
+        ],
+        "intentPatterns": [
+          "design.*color",
+          "color.*palette",
+          "improve.*typography",
+          "fix.*contrast",
+          "wcag.*compliance",
+          "dark.*mode",
+          "light.*mode",
+          "design.*system",
+          "font.*pairing",
+          "type.*scale",
+          "spacing.*system",
+          "visual.*hierarchy",
+          "css.*tokens",
+          "color.*scheme",
+          "make.*accessible",
+          "accessibility.*color",
+          "layout.*grid",
+          "responsive.*design",
+          "design.*tokens"
+        ],
+        "operations": [
+          "design",
+          "style",
+          "theme",
+          "audit",
+          "improve",
+          "create"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high",
+      "domain": "ui-ux-design"
+    },
+    "reflector": {
+      "purpose": "Analyzes diary entries to extract patterns and propose CLAUDE.md improvements for continual learning",
+      "triggers": {
+        "keywords": [
+          "reflect",
+          "analyze patterns",
+          "learn from sessions",
+          "review diaries",
+          "extract insights",
+          "propose improvements",
+          "pattern analysis"
+        ],
+        "synonyms": [
+          "reflection",
+          "pattern detection",
+          "framework learning",
+          "analyze diaries",
+          "identify trends"
+        ],
+        "intentPatterns": [
+          "reflect.*on.*sessions?",
+          "analyze.*patterns?",
+          "learn.*from.*sessions?",
+          "review.*diar(y|ies)",
+          "extract.*insights",
+          "propose.*improvements",
+          "identify.*patterns"
+        ],
+        "operations": [
+          "analyze",
+          "reflect",
+          "propose",
+          "extract"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high",
+      "internal": false
     }
   }
 }
