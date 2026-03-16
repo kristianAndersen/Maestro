@@ -1,6 +1,6 @@
 ---
 name: read
-description: Activates for deep reading tasks; provides methodology for pattern recognition, code comprehension, and systematic reading
+description: Activates for deep reading tasks; provides methodology for pattern recognition, code comprehension, and systematic reading. Use this skill whenever reading files to understand how they work, investigating system architecture, comprehending complex algorithms, tracing data flows, or evaluating code quality — especially for multi-file analysis where building a mental model matters. Activate before reading anything complex, not after.
 ---
 
 # Read Skill
@@ -28,6 +28,23 @@ For 80% of analysis operations, follow these principles:
 3. **Identify patterns** - Recognize common structures and idioms
 4. **Build mental model** - Create a conceptual understanding, not just line-by-line reading
 5. **Document as you go** - Capture insights to preserve understanding
+
+## Claude Code Tool Mapping
+
+In Claude Code, use dedicated tools rather than Bash commands where possible:
+
+| Shell Command | Claude Code Tool | Notes |
+|---|---|---|
+| `tree -L 2` / `ls` | Glob or LS | `Glob("**/*", path="src")` for recursive listing |
+| `find . -name "*.py"` | Glob | `Glob("**/*.py")` |
+| `grep -rn "pattern"` | Grep | `Grep(pattern="pattern", include="*.py")` |
+| `cat file.py` | Read | `Read("file.py")` — line numbers included by default |
+| `head -n 50 file.py` | Read + limit | `Read("file.py", limit=50)` |
+| `sed -n '45,75p' file.py` | Read + offset | `Read("file.py", offset=44, limit=31)` |
+
+Use Bash for operations with no dedicated tool equivalent (e.g., `wc -l`, `sort`, pipeline operations).
+
+---
 
 ## Core Principles
 
@@ -356,9 +373,9 @@ Request Flow:
 
 For deeper guidance, load these resources as needed:
 
-- **`resources/methodology.md`** - When you need deep analysis techniques, comprehension frameworks, synthesis strategies, or systematic investigation approaches
-- **`resources/patterns.md`** - When you need concrete examples of analysis workflows, language-specific patterns, architecture templates, or pattern catalogs
-- **`resources/troubleshooting.md`** - When encountering complex code, unclear logic, conflicting information, or comprehension challenges
+- **`assets/methodology.md`** - When you need deep analysis techniques, comprehension frameworks, synthesis strategies, or systematic investigation approaches
+- **`assets/patterns.md`** - When you need concrete examples of analysis workflows, language-specific patterns, architecture templates, or pattern catalogs
+- **`assets/troubleshooting.md`** - When encountering complex code, unclear logic, conflicting information, or comprehension challenges
 
 ## Anti-Patterns
 

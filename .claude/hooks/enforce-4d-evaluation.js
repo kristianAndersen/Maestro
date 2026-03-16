@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 import { readFileSync, writeFileSync, appendFileSync, existsSync, mkdirSync } from 'fs';
 import { fileURLToPath } from 'url';
@@ -148,6 +148,59 @@ function detectEvaluationPerformed(context) {
 }
 
 /**
+ * Check if Maestro did self-assessment after 4d-evaluation (VIOLATION)
+ * Look for forbidden patterns like "My Assessment", "However, reviewing...", etc.
+ * @param {string} context - Conversation context
+ * @returns {boolean} True if self-assessment violation detected
+ */
+function detectSelfAssessmentAfterEvaluation(context) {
+  // Check if evaluation was performed first
+  const evaluationIndex = context.search(/\b4D-EVALUATION REPORT\b/i);
+  if (evaluationIndex === -1) {
+    return false; // No evaluation, so no violation possible
+  }
+
+  // Look for self-assessment patterns AFTER evaluation
+  const afterEvaluation = context.slice(evaluationIndex);
+
+  const forbiddenPatterns = [
+    /\bMy Assessment:/i,
+    /\bHowever,?\s+reviewing\s+(?:the|this)\s+(?:work|code|output|phase)\s+(?:directly|myself)/i,
+    /\bBut\s+(?:looking|reviewing|checking)\s+(?:at|the)\s+(?:work|code|output)\s+(?:directly|myself)/i,
+    /\bUpon\s+(?:direct\s+)?review/i,
+    /\bReviewing\s+the\s+(?:Phase|work|code|output)\s+\d+\s+work\s+directly/i,
+    /\bI\s+(?:believe|think|assess|conclude)\s+(?:the\s+work|it)\s+is\s+(?:acceptable|complete|fine|good|thorough)/i,
+    /\bThe\s+(?:\w+\s+)?agent\s+DID\s+complete/i // Pattern like "The base-analysis agent DID complete"
+  ];
+
+  return forbiddenPatterns.some(pattern => pattern.test(afterEvaluation));
+}
+
+/**
+ * Check if work product was properly embedded in 4d-evaluation delegation
+ * @param {string} context - Conversation context
+ * @returns {boolean} True if proper embedding detected
+ */
+function detectProperWorkProductEmbedding(context) {
+  // Look for Task tool invocation to 4d-evaluation
+  const has4dEvalInvocation = /subagent_type=["']4d-evaluation["']/i.test(context);
+  if (!has4dEvalInvocation) {
+    return true; // No 4d-evaluation used, no violation
+  }
+
+  // Look for proper embedding markers (visual separators with WORK PRODUCT text)
+  const hasEmbeddingMarkers = /━{10,}[\s\S]{0,200}?(?:WORK PRODUCT|AGENT.*PRODUCT)[\s\S]{0,2000}?━{10,}/i.test(context);
+
+  // Look for comprehensive work product sections
+  const hasTaskSection = /Task:\s*[^\n]+/i.test(context);
+  const hasActionsSection = /Actions Taken:/i.test(context);
+  const hasEvidenceSection = /Evidence:/i.test(context);
+
+  // Consider it properly embedded only if has markers AND key sections
+  return hasEmbeddingMarkers && hasTaskSection && hasActionsSection && hasEvidenceSection;
+}
+
+/**
  * Generate warning message for missing evaluation
  * @returns {string} Formatted warning
  */
@@ -194,6 +247,104 @@ function generateWarning() {
   output.push('║                                                            ║');
   output.push('║ ⚠️  DO NOT accept subagent work without evaluation         ║');
   output.push('║ 🔄 Iterate until EXCELLENT verdict achieved                ║');
+  output.push('║                                                            ║');
+  output.push('╚════════════════════════════════════════════════════════════╝');
+  output.push('');
+
+  return output.join('\n');
+}
+
+/**
+ * Generate warning for self-assessment violation (cheating)
+ * @returns {string} Formatted warning
+ */
+function generateSelfAssessmentWarning() {
+  const output = [];
+
+  output.push('');
+  output.push('╔════════════════════════════════════════════════════════════╗');
+  output.push('║ 🚨 CRITICAL VIOLATION: SELF-ASSESSMENT AFTER EVALUATION    ║');
+  output.push('╠════════════════════════════════════════════════════════════╣');
+  output.push('║                                                            ║');
+  output.push('║ ⛔ Maestro performed DIRECT EVALUATION after delegating    ║');
+  output.push('║    to 4d-evaluation agent.                                 ║');
+  output.push('║                                                            ║');
+  output.push('║ 🎯 VIOLATION DETECTED:                                     ║');
+  output.push('║                                                            ║');
+  output.push('║ Forbidden patterns found after 4d-evaluation:              ║');
+  output.push('║ • "My Assessment:"                                         ║');
+  output.push('║ • "However, reviewing the work directly..."                ║');
+  output.push('║ • "The [agent] DID complete..."                            ║');
+  output.push('║                                                            ║');
+  output.push('║ 📋 WHY THIS IS WRONG:                                      ║');
+  output.push('║                                                            ║');
+  output.push('║ 1. Violates "NEVER execute work directly" (maestro.md:54) ║');
+  output.push('║ 2. Overrides quality gate verdict (maestro.md:260-284)    ║');
+  output.push('║ 3. Breaks pure delegation model (maestro.md:10-18)        ║');
+  output.push('║ 4. Sets "good enough" precedent (maestro.md:58)           ║');
+  output.push('║                                                            ║');
+  output.push('║ ✅ CORRECT BEHAVIOR:                                       ║');
+  output.push('║                                                            ║');
+  output.push('║ When 4d-evaluation returns verdict:                        ║');
+  output.push('║ • EXCELLENT → Accept immediately, mark complete            ║');
+  output.push('║ • NEEDS REFINEMENT → Apply coaching, re-delegate           ║');
+  output.push('║                                                            ║');
+  output.push('║ NEVER add "My Assessment" or override the verdict!         ║');
+  output.push('║                                                            ║');
+  output.push('║ 🎼 REMEMBER: You are a CONDUCTOR, not an EVALUATOR        ║');
+  output.push('║    Trust your specialized agents completely.               ║');
+  output.push('║                                                            ║');
+  output.push('║ 📖 See maestro.md:286-380 for anti-pattern examples       ║');
+  output.push('║                                                            ║');
+  output.push('╚════════════════════════════════════════════════════════════╝');
+  output.push('');
+
+  return output.join('\n');
+}
+
+/**
+ * Generate warning for incomplete work product embedding
+ * @returns {string} Formatted warning
+ */
+function generateIncompleteEmbeddingWarning() {
+  const output = [];
+
+  output.push('');
+  output.push('╔════════════════════════════════════════════════════════════╗');
+  output.push('║ ⚠️  WARNING: INCOMPLETE WORK PRODUCT DELEGATION            ║');
+  output.push('╠════════════════════════════════════════════════════════════╣');
+  output.push('║                                                            ║');
+  output.push('║ 4d-evaluation was invoked, but the complete work product   ║');
+  output.push('║ was NOT properly embedded in the delegation.               ║');
+  output.push('║                                                            ║');
+  output.push('║ 🚨 PROTOCOL VIOLATION                                      ║');
+  output.push('║                                                            ║');
+  output.push('║ The 4d-evaluation agent CANNOT assess quality without      ║');
+  output.push('║ seeing the complete subagent work product.                 ║');
+  output.push('║                                                            ║');
+  output.push('║ ❌ INSUFFICIENT (What you did):                            ║');
+  output.push('║                                                            ║');
+  output.push('║ • Referenced agent by ID: "See agentId abc123"             ║');
+  output.push('║ • Provided only metadata: "File modified: X"               ║');
+  output.push('║ • Summarized work: "Agent completed task successfully"     ║');
+  output.push('║                                                            ║');
+  output.push('║ ✅ REQUIRED (What you must do):                            ║');
+  output.push('║                                                            ║');
+  output.push('║ 1. Use visual separators (━━━━) to delineate work product ║');
+  output.push('║ 2. Embed COMPLETE subagent report between separators:     ║');
+  output.push('║    • Task description                                      ║');
+  output.push('║    • Skills used                                           ║');
+  output.push('║    • Actions taken                                         ║');
+  output.push('║    • Evidence (code snippets, file paths, line numbers)    ║');
+  output.push('║    • Verification results                                  ║');
+  output.push('║    • Agent self-assessment                                 ║');
+  output.push('║                                                            ║');
+  output.push('║ 📖 REFERENCE:                                              ║');
+  output.push('║                                                            ║');
+  output.push('║ • maestro.md:159-233 (delegation format with examples)     ║');
+  output.push('║ • 4d-evaluation.md:340-388 (embedding requirements)        ║');
+  output.push('║                                                            ║');
+  output.push('║ 💡 TIP: Cannot evaluate quality without seeing the work!   ║');
   output.push('║                                                            ║');
   output.push('╚════════════════════════════════════════════════════════════╝');
   output.push('');
@@ -295,12 +446,106 @@ function logEvaluationHistory(evaluations) {
   }
 }
 
+/**
+ * Check if subagent properly activated skills or delegated to Harry
+ * Look for patterns indicating skill activation:
+ * - Skill tool invocation: <invoke name="Skill">
+ * - "Skills Used:" field in report with skill name (not "None")
+ * - Delegation to Harry for missing skills
+ * @param {string} context - Conversation context
+ * @returns {object} { skillActivated: boolean, delegatedToHarry: boolean, violationDetected: boolean }
+ */
+function detectSkillUsage(context) {
+  // Check if Skill tool was invoked
+  const skillToolUsed = /<invoke name="Skill">/i.test(context) ||
+                        /<invoke name="skill">/i.test(context) ||
+                        /Skill\(skill:\s*['"]/i.test(context);
+
+  // Check if Skills Used field shows actual skill (not "None")
+  const skillsUsedPattern = /\*\*Skills Used:\*\*\s*([^\n]+)/gi;
+  const skillsUsedMatches = [...context.matchAll(skillsUsedPattern)];
+
+  let properSkillDocumented = false;
+  if (skillsUsedMatches.length > 0) {
+    properSkillDocumented = skillsUsedMatches.some(match => {
+      const skillsLine = match[1].toLowerCase();
+      // Check if it mentions an actual skill (not "none", not empty)
+      return !skillsLine.includes('none - worked directly') &&
+             !skillsLine.includes('none - ') &&
+             !skillsLine.trim().startsWith('[') && // Not just template
+             skillsLine.length > 10; // Has substance
+    });
+  }
+
+  // Check if delegated to Harry for missing skill
+  const delegatedToHarry = /subagent_type=['"]harry['"]/i.test(context) ||
+                           /Delegating to Harry/i.test(context) ||
+                           /Task tool with subagent_type='harry'/i.test(context);
+
+  // Violation detected if:
+  // - Task tool was used (subagent spawned)
+  // - But NO skill activation AND NO delegation to Harry AND NO proper skill documentation
+  const taskUsed = detectTaskToolUsage(context);
+  const violationDetected = taskUsed &&
+                            !skillToolUsed &&
+                            !delegatedToHarry &&
+                            !properSkillDocumented;
+
+  return {
+    skillActivated: skillToolUsed || properSkillDocumented,
+    delegatedToHarry,
+    violationDetected
+  };
+}
+
+/**
+ * Generate warning for missing skill activation
+ */
+function generateSkillUsageWarning() {
+  return `
+╔════════════════════════════════════════════════════════════╗
+║ ⚠️  SKILL ACTIVATION VIOLATION DETECTED                    ║
+╠════════════════════════════════════════════════════════════╣
+║ ISSUE: Subagent worked without activating required skill  ║
+║                                                            ║
+║ VIOLATION:                                                 ║
+║ • Task tool was used to spawn subagent                     ║
+║ • Subagent did NOT activate skill using Skill tool         ║
+║ • Subagent did NOT delegate to Harry for missing skill     ║
+║ • Report shows "None - worked directly" or no skill        ║
+║                                                            ║
+║ FRAMEWORK REQUIREMENT:                                     ║
+║ All agents MUST activate their primary skill before work   ║
+║                                                            ║
+║ CORRECT WORKFLOW:                                          ║
+║ 1. Agent receives delegation from Maestro                  ║
+║ 2. Agent FIRST uses Skill tool: Skill(skill: "name")       ║
+║ 3. If skill not found → delegate to Harry to create it     ║
+║ 4. After skill loaded → apply patterns from skill          ║
+║ 5. Report "Skills Used: [skill-name] - Applied section..." ║
+║                                                            ║
+║ WHY THIS MATTERS:                                          ║
+║ • Skills contain tested patterns, not improvisation        ║
+║ • "None - worked directly" violates delegation principle   ║
+║ • Framework ensures consistency and quality                ║
+║                                                            ║
+║ ACTION REQUIRED:                                           ║
+║ Update agent to activate skill or delegate to Harry        ║
+╚════════════════════════════════════════════════════════════╝
+`;
+}
+
 // --- Main Execution ---
 
 const taskUsed = detectTaskToolUsage(conversationContext);
 const evaluationResult = detectEvaluationPerformed(conversationContext);
 const evaluationPerformed = evaluationResult.performed;
 const evaluations = evaluationResult.evaluations;
+
+// NEW: Check for protocol violations
+const selfAssessmentDetected = detectSelfAssessmentAfterEvaluation(conversationContext);
+const properEmbedding = detectProperWorkProductEmbedding(conversationContext);
+const skillUsageResult = detectSkillUsage(conversationContext);
 
 // Update compliance tracking
 updateComplianceTracking(taskUsed, evaluationPerformed);
@@ -310,10 +555,27 @@ if (evaluationPerformed && evaluations.length > 0) {
   logEvaluationHistory(evaluations);
 }
 
-// Output warning if Task tool was used but evaluation is missing
+// Output warnings for violations (in priority order)
+
+// Priority 1: Missing evaluation entirely (most critical)
 if (taskUsed && !evaluationPerformed) {
   console.log(generateWarning());
 }
 
-// Exit silently if no warning needed (successful compliance or no Task usage)
+// Priority 2: Skill activation violation (critical - breaks delegation principle)
+if (skillUsageResult.violationDetected) {
+  console.log(generateSkillUsageWarning());
+}
+
+// Priority 3: Self-assessment violation (cheating - critical)
+if (selfAssessmentDetected) {
+  console.log(generateSelfAssessmentWarning());
+}
+
+// Priority 4: Incomplete embedding (important but less severe)
+if (evaluationPerformed && !properEmbedding) {
+  console.log(generateIncompleteEmbeddingWarning());
+}
+
+// Exit silently if no warnings needed (successful compliance)
 process.exit(0);

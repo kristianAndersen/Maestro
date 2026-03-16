@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 /**
  * Subagent Skill Discovery Hook
@@ -516,7 +516,14 @@ async function main() {
     // Load project context with skill tracking
     const projectContext = loadProjectContext();
 
-    const task = input;
+    // Extract prompt from JSON if Claude Code sends JSON input
+    let task = input;
+    try {
+      const parsed = JSON.parse(input);
+      if (parsed.prompt) task = parsed.prompt;
+    } catch {
+      // input is raw text, use as-is
+    }
     const files = extractFilePaths(task);
 
     // Detect current domain from context
@@ -549,8 +556,9 @@ async function main() {
     updateSkillTracking(projectContext, recommendedSkills, sessionStatus, currentDomain);
 
   } catch (error) {
-    console.error(`# Skill Discovery Error\n\n${error.message}\n`);
-    process.exit(1);
+    // Log to stderr for debugging but exit 0 to prevent UI error noise
+    console.error(`[Skill Discovery] Warning: ${error.message}`);
+    process.exit(0);
   }
 }
 

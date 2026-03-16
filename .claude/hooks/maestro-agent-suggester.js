@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
@@ -17,10 +17,16 @@ const __dirname = dirname(__filename);
 
 // --- Read Inputs ---
 
-// Read user prompt from stdin
+// Read user prompt from stdin (Claude Code sends JSON: {"prompt": "...", "cwd": "..."})
 let userPrompt = '';
 try {
-  userPrompt = readFileSync(0, 'utf-8').trim();
+  const rawInput = readFileSync(0, 'utf-8').trim();
+  try {
+    const parsed = JSON.parse(rawInput);
+    userPrompt = parsed.prompt || rawInput;
+  } catch {
+    userPrompt = rawInput;
+  }
 } catch (error) {
   // Stdin may not be available in all contexts
 }

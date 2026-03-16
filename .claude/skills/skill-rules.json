@@ -424,34 +424,42 @@
         "pathPatterns": []
       }
     },
-    "communicator": {
+    "ccchat": {
       "type": "domain",
       "enforcement": "suggest",
       "priority": "high",
       "defer_loading": {
         "enabled": true,
-        "short_description": "Inter-session IPC messaging"
+        "short_description": "Multi-agent chat and council system"
       },
       "promptTriggers": {
         "keywords": [
-          "communicate",
-          "ipc",
-          "cross-session",
-          "tell session",
-          "message session"
+          "chat",
+          "council",
+          "ask other agents",
+          "check with peers",
+          "cross-project",
+          "ccchat",
+          "unread",
+          "message session",
+          "peer review",
+          "advisory"
         ],
         "intentPatterns": [
-          "tell.*session",
-          "send.*message.*to"
+          "ask.*peers",
+          "chat.*with.*agents",
+          "run.*council",
+          "cross.*project.*coordination",
+          "check.*with.*peers",
+          "advisory.*input",
+          "expert.*input"
         ]
       },
       "fileTriggers": {
-        "pathPatterns": [
-          ".claude/ipc/**"
-        ]
+        "pathPatterns": []
       },
       "agentContext": [
-        "communicator"
+        "ccchat"
       ]
     },
     "agent-creator": {

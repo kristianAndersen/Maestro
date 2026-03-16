@@ -5,19 +5,31 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/session-change-detector.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/session-change-detector.js"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/session-initializer.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/session-initializer.js"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/maestro-agent-suggester.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/maestro-agent-suggester.js"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/subagent-skill-discovery.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/subagent-skill-discovery.js"
+          },
+          {
+            "type": "command",
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/ipc-receiver.js"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/awesome/dev/devtest/ccchat/hooks/ccchat-poll.js"
           }
         ]
       }
@@ -33,6 +45,11 @@
           {
             "type": "command",
             "command": ".claude/hooks/context-tracker.js"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/memory-retention-cleanup.js",
+            "description": "Daily memory retention cleanup"
           }
         ]
       }
@@ -47,6 +64,18 @@
           {
             "type": "command",
             "command": ".claude/hooks/enforce-4d-evaluation.js"
+          },
+          {
+            "type": "command",
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/ipc-sender.js"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/awesome/dev/devtest/ccchat/hooks/ccchat-stop.js"
           }
         ]
       }

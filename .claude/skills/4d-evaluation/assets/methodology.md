@@ -4,21 +4,9 @@ Deep dive into 4-D methodology, assessment techniques, and comprehensive evaluat
 
 ---
 
-## Performance = Quality Clarification
+## Performance Discernment = Quality, Not Speed
 
-**CRITICAL UNDERSTANDING:**
-
-Throughout this methodology, "Performance Discernment" refers to **quality and excellence of work**, NOT execution speed or runtime performance.
-
-**Performance Discernment asks:**
-- "How well did they perform this task?"
-- "Does this work perform at an excellent level?"
-- "Is this a high-performing solution?" (quality-wise)
-
-**It does NOT ask:**
-- "How fast does this run?"
-- "What's the execution time?"
-- "Are there performance bottlenecks?"
+"Performance Discernment" means how well the agent *performed the task* — quality, excellence, craftsmanship. It has nothing to do with execution speed or runtime metrics.
 
 ---
 
@@ -125,21 +113,7 @@ Throughout this methodology, "Performance Discernment" refers to **quality and e
 
 ### Performance Discernment (Quality/Excellence)
 
-**Purpose:** Assess quality and excellence of the work.
-
-**What "Performance" Means Here:**
-
-This is about how well someone **performed their task**, measuring the **quality of their performance**.
-
-**Think of it like:**
-- A performer giving an excellent vs mediocre performance
-- An athlete performing well vs poorly
-- A student's academic performance
-
-**NOT like:**
-- A race car's speed performance
-- A computer's processing performance
-- An application's runtime performance
+**Purpose:** Assess quality and excellence of the work — how well they performed the task, not how fast.
 
 **Assessment Criteria:**
 
@@ -169,32 +143,8 @@ This is about how well someone **performed their task**, measuring the **quality
 **Evaluation Questions:**
 - Is this work excellent, or just adequate?
 - Is the solution simpler than alternatives while being complete?
-- Does it improve the overall quality of the codebase?
+- Does it improve the overall quality of what it touches?
 - Does it demonstrate care and craftsmanship?
-
-**What This Is NOT:**
-- ❌ "Does it run fast?"
-- ❌ "Is it optimized for speed?"
-- ❌ "Are there performance metrics?"
-- ❌ "How much memory does it use?"
-
-**Examples Across Domains:**
-
-**Code:**
-- ✅ "Elegant solution using appropriate design pattern"
-- ❌ "Function executes in 10ms"
-
-**Documentation:**
-- ✅ "Clear, comprehensive, well-organized"
-- ❌ "Can be read quickly"
-
-**Research:**
-- ✅ "Thorough analysis with multiple sources"
-- ❌ "Research completed in 1 hour"
-
-**Configuration:**
-- ✅ "Clean, maintainable, follows conventions"
-- ❌ "Config loads in 50ms"
 
 ### Diligence Discernment
 

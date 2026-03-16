@@ -1,6 +1,6 @@
 ---
 name: base-analysis
-description: Activates for evaluation tasks; provides frameworks for assessing quality, security, maintainability, and performance
+description: Activates for evaluation tasks; provides frameworks for assessing quality, security, maintainability, and performance. Use this skill whenever evaluating code quality or architecture, performing security assessments, reviewing changes, analyzing performance, or assessing technical debt. Don't skip it for "quick reviews" — the structured approach catches issues that informal scanning misses.
 ---
 
 # BaseAnalysis Skill
@@ -17,6 +17,20 @@ This skill automatically activates when:
 - Reviewing pull requests or changes
 - Analyzing system performance or scalability
 - Assessing technical debt or maintainability
+
+## Claude Code Tool Mapping
+
+In Claude Code, use dedicated tools for analysis operations:
+
+| Task | Tool | Example |
+|---|---|---|
+| Find patterns in code | Grep | `Grep(pattern="eval\|exec", include="*.py")` |
+| Read a file | Read | `Read("src/auth.py")` |
+| Find files by type | Glob | `Glob("**/*.py")` |
+| Check for secrets | Grep | `Grep(pattern="password\s*=", include="*.py")` |
+| Scan for SQL injection | Grep | `Grep(pattern="SELECT.*%s", include="*.py")` |
+
+---
 
 ## Quick Start
 
@@ -271,9 +285,9 @@ echo "Check for circular dependencies manually"
 
 ## Resources (Progressive Disclosure)
 
-- **`resources/methodology.md`** - Deep dive into evaluation methodologies, scoring frameworks, assessment techniques
-- **`resources/patterns.md`** - Analysis patterns for different contexts, evaluation templates, scoring rubrics
-- **`resources/troubleshooting.md`** - Handling subjective criteria, conflicting standards, incomplete information
+- **`assets/methodology.md`** - Deep dive into evaluation methodologies, scoring frameworks, assessment techniques
+- **`assets/patterns.md`** - Analysis patterns for different contexts, evaluation templates, scoring rubrics
+- **`assets/troubleshooting.md`** - Handling subjective criteria, conflicting standards, incomplete information
 
 ## Anti-Patterns
 

@@ -84,7 +84,7 @@ Code doesn't compile/run after Edit
 ```bash
 # Check syntax
 python -m py_compile file.py
-node --check file.js
+bun --check file.js
 
 # Look at what changed
 git diff file.py
@@ -156,7 +156,7 @@ grep -rn "function_name(" .
 
 # Run all tests
 pytest
-npm test
+bun test
 
 # Check specific failures
 pytest -v  # Verbose output shows which tests fail

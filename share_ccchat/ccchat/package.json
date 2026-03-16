@@ -1,0 +1,14 @@
+{
+  "name": "ccchat",
+  "version": "1.0.0",
+  "description": "Multi-agent chat: council mode (blind advisors) + peer mode (cross-project)",
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node test/smoke.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "ws": "^8.18.0"
+  }
+}

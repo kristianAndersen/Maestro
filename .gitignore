@@ -14,3 +14,12 @@ node_modules/
 .maestro-work-log.txt
 # Runtime context tracking
 .claude/context.json
+
+# Runtime artifacts
+.claude/sessions/*.backup.json
+.claude/sessions/archives/
+.claude/ipc/registry.json
+.claude/ipc/mailbox-*.json
+.claude/_stashed/
+__pycache__/
+.codex-work-log.txt

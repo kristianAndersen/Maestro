@@ -1,8 +1,8 @@
 ---
 name: delegater
-description: Multi-agent coordination patterns, dependency analysis, parallel/sequential execution strategies
+description: Multi-agent coordination patterns for Maestro and agents that delegate work. Use this skill whenever you're coordinating multiple agents, deciding whether tasks should run in parallel or sequence, passing data between agents, or building an execution plan for a multi-step workflow. Load this before delegating — don't guess at coordination strategy when this skill has the patterns ready.
 applies_to: Multi-agent workflows, task coordination, execution optimization
-version: 1.0
+version: 1.1
 ---
 
 # Delegater Skill
@@ -316,46 +316,25 @@ Final Return: summary
 
 ## Progress Tracking
 
-### When to Use TodoWrite
+### When to Use Task Tools
 
-Use TodoWrite for workflows with **3 or more steps** to provide visibility.
+For workflows with **3 or more steps**, use `TaskCreate` and `TaskUpdate` to provide visibility.
 
-### TodoWrite Pattern
+### Task Tracking Pattern
 
-**Initial State:**
-```javascript
-TodoWrite([
-  {content: "Phase 1: Data collection", status: "in_progress"},
-  {content: "Phase 2: Data processing", status: "pending"},
-  {content: "Phase 3: Report generation", status: "pending"}
-])
+**Create tasks upfront:**
+```
+TaskCreate: "Phase 1: Data collection" → status: in_progress
+TaskCreate: "Phase 2: Data processing" → status: pending
+TaskCreate: "Phase 3: Report generation" → status: pending
 ```
 
-**After Phase 1:**
-```javascript
-TodoWrite([
-  {content: "Phase 1: Data collection", status: "completed"},
-  {content: "Phase 2: Data processing", status: "in_progress"},
-  {content: "Phase 3: Report generation", status: "pending"}
-])
+**Update as each phase completes:**
 ```
-
-**After Phase 2:**
-```javascript
-TodoWrite([
-  {content: "Phase 1: Data collection", status: "completed"},
-  {content: "Phase 2: Data processing", status: "completed"},
-  {content: "Phase 3: Report generation", status: "in_progress"}
-])
-```
-
-**Final:**
-```javascript
-TodoWrite([
-  {content: "Phase 1: Data collection", status: "completed"},
-  {content: "Phase 2: Data processing", status: "completed"},
-  {content: "Phase 3: Report generation", status: "completed"}
-])
+TaskUpdate: Phase 1 → completed
+TaskUpdate: Phase 2 → in_progress
+...
+TaskUpdate: Phase 3 → completed
 ```
 
 ---
@@ -533,7 +512,7 @@ BAD:
   User/Maestro has no idea what's happening
 
 GOOD:
-  TodoWrite tracking at each major phase
+  TaskCreate/TaskUpdate tracking at each major phase
   Clear progress visibility
 ```
 
@@ -572,7 +551,7 @@ Level 2 (sequential): Synthesize findings from all 3
 
 **Implementation:**
 ```
-Step 1: TodoWrite([
+Step 1: TaskCreate/TaskUpdate([
   {content: "Research 3 files", status: "in_progress"},
   {content: "Synthesize findings", status: "pending"}
 ])
@@ -584,12 +563,12 @@ Step 2: Parallel execution (one message, 3 Task calls):
 
 Step 3: Collect results
 
-Step 4: TodoWrite update (research completed)
+Step 4: TaskCreate/TaskUpdate update (research completed)
 
 Step 5: Sequential execution:
   base-analysis("Synthesize: findings1, findings2, findings3") → synthesis
 
-Step 6: TodoWrite update (synthesis completed)
+Step 6: TaskCreate/TaskUpdate update (synthesis completed)
 
 Step 7: Return synthesis result
 ```
@@ -614,7 +593,7 @@ Pipeline: fetch → validate → transform → store
 
 **Implementation:**
 ```
-Step 1: TodoWrite([
+Step 1: TaskCreate/TaskUpdate([
   {content: "Fetch from API", status: "in_progress"},
   {content: "Validate and transform", status: "pending"},
   {content: "Store to file", status: "pending"}
@@ -622,31 +601,26 @@ Step 1: TodoWrite([
 
 Step 2: fetch agent → raw_data
 
-Step 3: TodoWrite update (fetch completed)
+Step 3: TaskCreate/TaskUpdate update (fetch completed)
 
 Step 4: validate agent with raw_data → validated_data
 
 Step 5: transform agent with validated_data → csv_data
 
-Step 6: TodoWrite update (validate+transform completed)
+Step 6: TaskCreate/TaskUpdate update (validate+transform completed)
 
 Step 7: file-writer agent with csv_data → confirmation
 
-Step 8: TodoWrite update (all completed)
+Step 8: TaskCreate/TaskUpdate update (all completed)
 
 Step 9: Return confirmation
 ```
 
 ---
 
-## Advanced Topics (Progressive Disclosure)
+## Advanced Topics
 
-For complex coordination scenarios, see:
-
-- **`assets/dependency-analysis.md`** - Advanced dependency detection algorithms
-- **`assets/parallel-optimization.md`** - Maximizing parallel execution efficiency
-- **`assets/data-flow-patterns.md`** - Complex data routing between agents
-- **`assets/error-recovery.md`** - Sophisticated error handling and retry strategies
+The skill body covers all coordination topics inline: dependency analysis (see "Dependency Analysis" section), parallel optimization (see "Optimization Techniques"), data flow patterns (see "Data Flow Management"), and error recovery (see "Error Handling Strategies"). Refer to the relevant sections above as needed.
 
 ---
 
@@ -675,7 +649,7 @@ Agent output → Extract relevant data → Include in next agent's prompt
 
 ### Progress Tracking
 ```
-3+ steps? → Use TodoWrite to show progress
+3+ steps? → Use TaskCreate/TaskUpdate to show progress
 ```
 
 ### Error Handling
@@ -696,7 +670,7 @@ Coordination is successful when:
 ✅ Data flowed correctly between all agents
 ✅ No lost outputs or missing inputs
 ✅ Final result properly aggregated and returned
-✅ Progress visible for complex workflows (TodoWrite)
+✅ Progress visible for complex workflows (TaskCreate/TaskUpdate)
 ✅ Efficient execution (maximum parallelism achieved)
 ✅ Errors handled gracefully (fail fast or continue with partial)
 

@@ -1,6 +1,6 @@
 ---
 name: write
-description: Activates for code/file modification operations; provides guidance on Edit vs Write tool selection, safety checks, and verification
+description: Activates for code/file modification operations; provides guidance on Edit vs Write tool selection, safety checks, and verification. Use this skill whenever creating new files, modifying existing ones, fixing bugs, implementing features, or updating documentation. Always activate before making changes — the read-before-write and verify-after-write patterns prevent subtle breakage that's hard to trace later.
 ---
 
 # Write Skill
@@ -110,12 +110,12 @@ cat path/to/file | grep -A 5 "changed_section"
 
 # Run syntax check
 python -m py_compile file.py  # Python
-node --check file.js  # JavaScript
+bun --check file.js  # JavaScript (using Bun)
 go build file.go  # Go
 
 # Run tests
 pytest tests/test_file.py
-npm test
+bun test  # or equivalent test command for your project
 ```
 
 ## Common Modification Patterns
@@ -227,7 +227,7 @@ cp important.py important.py.backup
 ```bash
 # Syntax check
 python -m py_compile file.py
-node --check file.js
+bun --check file.js
 
 # Lint check (optional)
 pylint file.py
@@ -249,7 +249,7 @@ git diff file.py
 python -m py_compile file.py
 
 # JavaScript
-node --check file.js
+bun --check file.js
 
 # TypeScript
 tsc --noEmit file.ts
@@ -266,7 +266,7 @@ ruby -c file.rb
 ```bash
 # Run specific test file
 pytest tests/test_module.py
-npm test -- tests/module.test.js
+bun test tests/module.test.js
 
 # Run with coverage
 pytest --cov=module tests/test_module.py
@@ -277,7 +277,7 @@ pytest --cov=module tests/test_module.py
 ```bash
 # Run integration test suite
 pytest tests/integration/
-npm run test:integration
+bun test --glob "tests/integration/**"
 ```
 
 ### Level 4: Manual Verification
@@ -319,9 +319,9 @@ tail -f application.log
 
 For deeper guidance, load these resources as needed:
 
-- **`resources/methodology.md`** - When you need advanced modification strategies, refactoring techniques, safety protocols, or testing approaches
-- **`resources/patterns.md`** - When you need concrete examples of modification patterns, language-specific templates, or common scenarios
-- **`resources/troubleshooting.md`** - When encountering merge conflicts, breaking changes, test failures, or rollback needs
+- **`assets/methodology.md`** - When you need advanced modification strategies, refactoring techniques, safety protocols, or testing approaches
+- **`assets/patterns.md`** - When you need concrete examples of modification patterns, language-specific templates, or common scenarios
+- **`assets/troubleshooting.md`** - When encountering merge conflicts, breaking changes, test failures, or rollback needs
 
 ## Anti-Patterns
 

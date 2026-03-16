@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "description": "Privacy and memory configuration for Maestro claude-mem integration",
+
+  "enabled": true,
+  "_comment_enabled": "Master switch for memory system. Set to false to completely disable conversation storage.",
+
+  "retentionDays": 30,
+  "_comment_retentionDays": "Number of days to retain conversation history (1-365). Older conversations are automatically purged. Default: 30 days.",
+
+  "sanitizeSecrets": true,
+  "_comment_sanitizeSecrets": "Whether to detect and redact sensitive data before storage. Highly recommended to keep enabled.",
+
+  "sanitizePatterns": [],
+  "_comment_sanitizePatterns": "Custom regex patterns for additional secret detection. Examples: ['\\bCUSTOM_SECRET_\\w+', 'ACME_API_[A-Z0-9]{20}']",
+
+  "excludeAgents": [],
+  "_comment_excludeAgents": "List of agent names whose conversations should not be stored. Example: ['4d-evaluation', 'base-analysis']",
+
+  "excludeFiles": [
+    "**/.env",
+    "**/.env.*",
+    "**/secrets.json",
+    "**/credentials.json",
+    "**/*.key",
+    "**/*.pem",
+    "**/*_rsa",
+    "**/id_rsa",
+    "**/id_dsa",
+    "**/id_ecdsa",
+    "**/id_ed25519"
+  ],
+  "_comment_excludeFiles": "Glob patterns for files whose contents should not be stored in memory. Protects sensitive files.",
+
+  "requireConsent": false,
+  "_comment_requireConsent": "If true, require explicit user consent before storing conversations. Default: false (implicit consent)."
+}

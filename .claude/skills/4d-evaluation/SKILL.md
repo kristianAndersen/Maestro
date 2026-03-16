@@ -1,191 +1,118 @@
 ---
 name: 4d-evaluation
-description: Activates for quality assessment using 4-D methodology; evaluates Delegation, Description, Discernment, and Diligence
+description: Quality gate for reviewing subagent outputs and deliverables. Use this skill whenever you're about to accept work from a subagent, reviewing any completed task, evaluating whether something is "done", or sensing that output feels incomplete, off, or doesn't fully match what was asked. Apply this before saying EXCELLENT or requesting refinement — don't skip it just because the work looks reasonable at a glance. This skill prevents accepting mediocre work and guides calibrated, fair pushback.
 ---
 
 # 4D-Evaluation Skill
 
 ## Purpose
 
-This skill provides the 4-D evaluation framework for assessing deliverables from subagents or any work output. It evaluates across four dimensions: Delegation, Description, Discernment (Product, Process, Performance), and Diligence.
+Evaluate deliverables from subagents or any completed work across four dimensions: Delegation, Description, Discernment (Product, Process, Performance), and Diligence. The goal is calibrated quality — push back when there's a real problem, accept when it genuinely meets the bar.
 
-## CRITICAL: Performance = Quality, NOT Speed
+## When to Push Back (Calibration)
 
-**IMPORTANT CLARIFICATION:**
+This is the most important section. Not every imperfection warrants NEEDS REFINEMENT.
 
-When we say "Performance Discernment," we mean **quality and excellence**, NOT execution speed or runtime metrics.
+**Always push back:**
+- A stated requirement isn't met
+- The logic is wrong or would break something
+- Security, data integrity, or correctness issue
 
-**Performance Discernment evaluates:**
-- ✅ Quality of the solution
-- ✅ Elegance and simplicity
-- ✅ How well it fits the codebase
-- ✅ Whether it improves overall quality
+**Usually push back:**
+- Error handling absent for a realistic failure case
+- Solution is significantly more complex than it needs to be
+- Claims made without evidence when evidence was possible
 
-**Performance Discernment does NOT evaluate:**
-- ❌ Execution speed
-- ❌ Runtime performance
-- ❌ Memory usage
-- ❌ Benchmarks or timing
+**Use judgment (consider context):**
+- Style differences that don't affect correctness
+- Minor documentation gaps on simple changes
+- Different approach than expected, but still valid
 
-Think: "How well did they **perform** the task?" not "How **fast** does it run?"
+**Don't push back:**
+- Personal preference with no real impact
+- "I'd have done it differently" without a substantive reason
+- Cosmetic issues when the work is solid
 
-## When to Use This Skill
+> If unsure, ask: *"Does this gap create a real problem, or am I pattern-matching on imperfection?"*
 
-This skill automatically activates when:
-- Evaluating subagent deliverables
-- Reviewing completed work before acceptance
-- Providing feedback for refinement
-- Assessing quality against excellence standards
+## Note on "Performance Discernment"
+
+"Performance Discernment" means **quality and excellence of the work**, not execution speed. Ask: *"How well did they perform the task?"* — not *"How fast does it run?"*
 
 ## Quick Start
 
-For 80% of evaluations, ask these questions:
+For most evaluations, these five questions are enough:
 
-1. **Delegation:** Was the right approach used?
-2. **Description:** Is the work complete and well-explained?
+1. **Delegation:** Was the right approach/agent used?
+2. **Description:** Is the work complete and clearly explained?
 3. **Product Discernment:** Is it correct, elegant, and complete?
-4. **Process Discernment:** Was the reasoning sound and thorough?
-5. **Performance Discernment:** Does it meet excellence standards? (quality, not speed!)
+4. **Process Discernment:** Was the reasoning sound?
+5. **Performance Discernment:** Is it genuinely good work — not just technically correct?
 
 ## The 4-D Framework
 
 ### Dimension 1: Delegation
 
-**Question:** Was the right agent/approach used for this task?
+Was the right agent/tool/approach used?
 
-**Evaluate:**
-- Appropriate tool/agent selection
-- Followed correct protocols
-- Used available skills
-- Delegated subtasks when appropriate
-
-**Evidence:**
-```bash
-# Check tool usage
-grep "agent used:\|tool used:" output.txt
-
-# Verify skills were discovered/used
-grep "skill:\|using skill" output.txt
-```
+- Appropriate tool or agent selected
+- Available skills discovered and used
+- Subtasks delegated when appropriate
+- Correct protocols followed
 
 ### Dimension 2: Description
 
-**Question:** Is the work complete and clearly explained?
+Is the work complete and clearly explained?
 
-**Evaluate:**
 - All requirements addressed
-- Clear explanation of what was done
+- Clear explanation of what was done and why
 - Evidence provided for claims
-- Documentation adequate
-
-**Evidence:**
-```markdown
-# Check completeness
-- [x] All requirements met
-- [x] Evidence provided
-- [x] Clear explanations
-- [x] Examples included
-```
+- No unexplained gaps
 
 ### Dimension 3: Discernment
 
 #### Product Discernment
 
-**Question:** Is the deliverable correct, elegant, and complete?
+Is the deliverable correct, elegant, and complete?
 
-**Evaluate:**
-- Correctness: Does it work? Does it solve the right problem?
-- Elegance: Is it simple yet powerful? Clean and clear?
-- Completeness: All requirements met? Edge cases handled?
-
-**Evidence:**
-```bash
-# Verify correctness
-pytest tests/  # Tests pass?
-
-# Check elegance
-wc -l implementation.py  # Reasonable size?
-grep -c "TODO\|HACK" implementation.py  # Clean code?
-
-# Verify completeness
-diff requirements.txt implemented_features.txt  # All requirements?
-```
+- **Correct:** Does it work? Does it solve the actual problem?
+- **Elegant:** Is it as simple as it can be while still being complete?
+- **Complete:** All requirements met, edge cases handled?
 
 #### Process Discernment
 
-**Question:** Was the approach sound and thorough?
+Was the approach sound?
 
-**Evaluate:**
-- Sound reasoning (logical steps)
-- Thoroughness (considered alternatives, edge cases)
-- Appropriate techniques (used right patterns/tools)
+- Logical, justified reasoning
+- Alternatives considered where relevant
+- Appropriate techniques and patterns used
 
-**Evidence:**
-```markdown
-# Review work log
-- Considered multiple approaches? ✓
-- Tested edge cases? ✓
-- Used appropriate patterns? ✓
-- Documented reasoning? ✓
-```
+#### Performance Discernment (Quality)
 
-#### Performance Discernment (QUALITY, NOT SPEED!)
+Is this genuinely good work?
 
-**Question:** Does this meet excellence standards for quality?
-
-**Evaluate:**
-- **Excellence:** Is this outstanding work? Or just "good enough"?
-- **Simplicity:** Simple solution? Or unnecessarily complex?
-- **Fit:** Matches codebase patterns? Improves overall quality?
-- **Quality:** Would you be proud to show this work?
-
-**NOT About:**
-- ❌ How fast it runs
-- ❌ Execution time
-- ❌ Memory usage
-- ❌ Performance benchmarks
-
-**Evidence:**
-```bash
-# Quality indicators
-grep -c "class \|def " file.py  # Appropriate complexity?
-git diff --stat  # Reasonable change size?
-pytest --cov  # Good test coverage?
-
-# Does it improve quality?
-# - More maintainable than before?
-# - Clearer than alternatives?
-# - Elegant solution?
-```
+- **Excellence:** Does it go beyond technically-correct to actually good?
+- **Simplicity:** Simple solution, or unnecessarily complex?
+- **Fit:** Matches context and patterns, improves overall quality?
+- **Craft:** Would you be confident putting your name on it?
 
 ### Dimension 4: Diligence
 
-**Question:** Was appropriate care and effort applied?
+Was appropriate care applied?
 
-**Evaluate:**
-- Attention to detail
-- Error handling considered
-- Edge cases addressed
-- Testing performed
-
-**Evidence:**
-```bash
-# Check thoroughness
-grep -n "if.*None\|try.*except" file.py  # Error handling?
-find tests -name "test_*.py" | wc -l  # Tests present?
-grep -c "edge case\|boundary" tests/  # Edge cases tested?
-```
+- Attention to detail — consistent quality throughout
+- Error handling considered for realistic failure cases
+- Testing or verification performed where appropriate
 
 ## Evaluation Process
 
 ### Step 1: Gather Evidence
 
-```bash
-# Collect objective data
-pytest tests/ > test_results.txt
-grep -r "TODO\|FIXME" . > todos.txt
-wc -l **/*.py > size_metrics.txt
-```
+Evidence should be concrete and specific — file paths, line numbers, examples, outputs. Not impressions.
+
+- **Code:** test results, specific line references, coverage data
+- **Documents/research:** specific claims verified, sources checked, requirements cross-referenced
+- **Plans/designs:** requirements mapped to deliverables, gaps identified
 
 ### Step 2: Assess Each Dimension
 
@@ -193,177 +120,105 @@ wc -l **/*.py > size_metrics.txt
 ## 4-D Evaluation
 
 ### Delegation: PASS/FAIL
-- Tool selection: Appropriate ✓
-- Protocol followed: Yes ✓
+[What approach was used, was it appropriate]
 
 ### Description: PASS/FAIL
-- Complete: Yes ✓
-- Clear: Yes ✓
-- Evidence: Provided ✓
+[What's present/missing, evidence quality]
 
 ### Product Discernment: PASS/FAIL
-- Correct: Tests pass ✓
-- Elegant: Simple, clear ✓
-- Complete: All requirements ✓
+- Correct: [evidence]
+- Elegant: [evidence]
+- Complete: [evidence]
 
 ### Process Discernment: PASS/FAIL
-- Sound reasoning: Logical ✓
-- Thorough: Edge cases considered ✓
-- Appropriate techniques: Yes ✓
+[Reasoning quality, alternatives considered]
 
 ### Performance Discernment (Quality): PASS/FAIL
-- Excellence: Outstanding work ✓
-- Simplicity: Clean solution ✓
-- Fit: Matches patterns ✓
-- Quality: Production-ready ✓
+[Excellence, simplicity, fit — not speed]
 
 ### Diligence: PASS/FAIL
-- Detail-oriented: Yes ✓
-- Error handling: Present ✓
-- Testing: Comprehensive ✓
+[Care, error handling, testing]
 ```
 
 ### Step 3: Determine Verdict
 
-**EXCELLENT:** All dimensions pass, work exceeds standards
-**NEEDS REFINEMENT:** One or more dimensions fail, specific improvements needed
+**EXCELLENT:** All dimensions pass. Work meets the quality bar for this context.
 
-### Step 4: Provide Coaching (if needed)
+**NEEDS REFINEMENT:** One or more dimensions fail with a real gap (see calibration above). Always include coaching.
+
+### Step 4: Coaching (when NEEDS REFINEMENT)
+
+Good coaching is specific, explains why it matters, and gives an actionable path forward.
 
 ```markdown
-## Coaching Feedback
+## Coaching
 
 ### What Needs Improvement
-[Specific issue with dimension]
+[Specific dimension + specific issue, with location if applicable]
 
 ### Why It Matters
-[Impact/importance]
+[Real impact — not just "it's not ideal"]
 
 ### How to Improve
 [Actionable steps]
 
-### Example
-[Concrete example of improvement]
+### Example (if helpful)
+[Concrete example of the better approach]
 ```
-
-## Scoring Guidelines
-
-### Product Discernment
-
-**Excellent:**
-- Solves exact problem
-- Elegant, minimal solution
-- All requirements + edge cases
-- Production-ready quality
-
-**Needs Work:**
-- Incomplete or overcomplicated
-- Missing requirements
-- Edge cases not handled
-- Quality issues present
-
-### Process Discernment
-
-**Excellent:**
-- Clear, logical reasoning
-- Considered alternatives
-- Used appropriate techniques
-- Documented thought process
-
-**Needs Work:**
-- Unclear reasoning
-- Didn't consider alternatives
-- Inappropriate techniques
-- No documentation of process
-
-### Performance Discernment (Quality)
-
-**Excellent:**
-- Simple yet powerful
-- Fits codebase beautifully
-- Raises quality bar
-- You'd be proud to show it
-
-**Needs Work:**
-- Unnecessarily complex
-- Doesn't match patterns
-- Decreases code quality
-- Feels rushed or sloppy
-
-## Resources (Progressive Disclosure)
-
-- **`resources/methodology.md`** - Deep dive into 4-D methodology, assessment techniques, scoring frameworks
-- **`resources/patterns.md`** - Evaluation patterns, coaching templates, refinement patterns, cross-domain examples
-- **`resources/troubleshooting.md`** - Handling borderline cases, conflicting criteria, coaching effectiveness
 
 ## Anti-Patterns
 
-### ❌ Confusing Performance with Speed
-```markdown
-# WRONG
-"Performance Discernment: FAIL - function takes 100ms"
+### Vague feedback
+Bad: "Needs improvement"
+Good: "Product Discernment: FAIL — missing validation for empty input (auth.py:34)"
 
-# RIGHT
-"Performance Discernment (Quality): PASS - solution is elegant and maintainable"
-```
+### No coaching
+Bad: "NEEDS REFINEMENT" with no explanation
+Good: Specific issue + why it matters + how to fix it
 
-### ❌ Vague Feedback
-```markdown
-# BAD
-"Needs improvement"
+### Pushing back on preferences
+Bad: Failing because you'd have structured it differently
+Good: Only failing when there's a real gap or problem
 
-# GOOD
-"Product Discernment: FAIL - Missing validation for negative inputs (file.py:45)"
-```
+### Accepting mediocrity
+Bad: Passing because "it mostly works"
+Good: Holding to the calibrated bar — genuinely good work, not just technically-not-broken
 
-### ❌ No Coaching
-```markdown
-# BAD
-"NEEDS REFINEMENT"
-[No explanation]
-
-# GOOD
-"NEEDS REFINEMENT
-
-Process Discernment: Didn't consider error case when API is unavailable.
-
-How to improve: Add try/except around API call, return cached data on failure.
-
-Example: [specific code example]"
-```
-
-## Quick Reference
+## Quick Reference Template
 
 ```markdown
-# 4-D Evaluation Template
+# 4-D Evaluation
 
 ## Delegation: PASS/FAIL
-- Right approach? [Evidence]
+[Evidence]
 
 ## Description: PASS/FAIL
-- Complete? [Evidence]
-- Clear? [Evidence]
+[Evidence]
 
 ## Product Discernment: PASS/FAIL
-- Correct? [Evidence]
-- Elegant? [Evidence]
-- Complete? [Evidence]
+- Correct: [evidence]
+- Elegant: [evidence]
+- Complete: [evidence]
 
 ## Process Discernment: PASS/FAIL
-- Sound reasoning? [Evidence]
-- Thorough? [Evidence]
+[Evidence]
 
 ## Performance Discernment (Quality): PASS/FAIL
-⚠️ Remember: Quality, NOT speed!
-- Excellence? [Evidence]
-- Simplicity? [Evidence]
-- Fit? [Evidence]
+[Evidence — quality, not speed]
 
 ## Diligence: PASS/FAIL
-- Thorough? [Evidence]
+[Evidence]
 
 ## Verdict: EXCELLENT | NEEDS REFINEMENT
 
 ## Coaching (if needed):
-[Specific, actionable feedback]
+[Specific, actionable, explains why it matters]
 ```
+
+## Resources (Progressive Disclosure)
+
+Load these when you need deeper guidance:
+
+- **`assets/methodology.md`** — Deep dive on each dimension and assessment techniques
+- **`assets/patterns.md`** — Example evaluations across domains (code, docs, research, config)
+- **`assets/troubleshooting.md`** — Borderline cases, conflicting criteria, calibration edge cases

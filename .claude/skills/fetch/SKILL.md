@@ -1,389 +1,206 @@
 ---
 name: fetch
-description: Activates for external data retrieval operations; provides guidance on error handling, retry logic, and validation
+description: Activates for external data retrieval operations; provides guidance on using WebFetch and WebSearch tools, knowing when to use each, handling failures gracefully, and validating responses. Use this skill whenever you need to fetch a URL, search the web for current information, retrieve documentation, verify an API signature, or get data from external sources — even if the user just says "look it up" or "check the docs".
+tools: WebFetch, WebSearch
 ---
 
 # Fetch Skill
 
 ## Purpose
 
-This skill provides comprehensive guidance for retrieving data from external sources like APIs, web pages, files, and databases. It helps you handle errors gracefully, implement retry logic, validate responses, and manage caching effectively.
+This skill provides guidance for retrieving external data using Claude Code's WebFetch and WebSearch tools. It helps you choose the right tool, extract targeted information, handle failures gracefully, and verify that what you retrieved is accurate and current.
 
 ## When to Use This Skill
 
-This skill automatically activates when:
-- Fetching data from APIs or web services
-- Scraping web pages for information
-- Reading remote files or resources
-- Querying external databases
-- Retrieving any data from outside the current process
+- Fetching a specific URL for documentation, API references, or content
+- Searching the web for current information, library versions, or best practices
+- Retrieving external documentation to verify API usage or method signatures
+- Getting data from public web pages or APIs
 
 ## Quick Start
 
-For 80% of fetch operations, follow these principles:
+1. **URL known? → WebFetch** — Give it the exact URL and a specific extraction prompt
+2. **Topic known, URL unknown? → WebSearch first** — Search to find the right URL, then WebFetch
+3. **Always include a prompt with WebFetch** — it directs extraction, otherwise you get a dump
+4. **Validate the source** — official docs beat third-party blogs, always
 
-1. **Expect failures** - External services fail; handle errors gracefully
-2. **Validate responses** - Check status codes, verify data format
-3. **Implement retries** - Transient failures are common; retry with backoff
-4. **Cache when appropriate** - Reduce load and improve performance
-5. **Set timeouts** - Don't wait forever; fail fast when service is down
+## WebFetch vs WebSearch
 
-## Core Principles
+| Situation | Tool | Why |
+|---|---|---|
+| Have a specific URL | WebFetch | Direct and efficient |
+| Know the topic, not the URL | WebSearch | Finds the right URL first |
+| API documentation | WebFetch | Go directly to the docs URL |
+| Current events, latest versions | WebSearch | Better for discovery |
+| Package docs (specific version) | WebSearch then WebFetch | Search finds the right version page |
+| GitHub README or raw file | WebFetch | Direct URL available |
+| "Is this API still the right way?" | WebSearch | Finds recent discussions and changelogs |
 
-### 1. **Graceful Degradation**
-External services fail. Design fetch operations to handle failures without crashing.
+## Core Patterns
 
-### 2. **Retry with Backoff**
-Transient failures recover. Retry failed requests with exponential backoff.
+### Pattern 1: Direct Documentation Fetch
 
-### 3. **Validation Before Trust**
-Always validate external data. Check format, type, and content before using.
-
-### 4. **Resource Management**
-Clean up connections, file handles, and other resources even when errors occur.
-
-### 5. **Observability**
-Log fetch operations for debugging. Track success rates, latency, and errors.
-
-## Fetch Patterns
-
-### Pattern 1: HTTP API Request with Error Handling
-
-```bash
-# Basic HTTP fetch with error handling
-curl -f -s -S -m 10 https://api.example.com/data || {
-  echo "API request failed"
-  exit 1
-}
-
-# With retry logic
-for i in {1..3}; do
-  if curl -f -s -m 10 https://api.example.com/data > /tmp/data.json; then
-    break
-  fi
-  echo "Retry $i failed, waiting..."
-  sleep $((i * 2))
-done
+```
+WebFetch(
+  url="https://docs.anthropic.com/en/api/messages",
+  prompt="What are the required and optional parameters for messages.create? Show the full signature."
+)
 ```
 
-### Pattern 2: Validate Response Format
+Always provide a specific `prompt` — it directs the tool to extract the relevant information rather than returning the whole page.
 
-```bash
-# Fetch and validate JSON
-data=$(curl -s https://api.example.com/data)
+### Pattern 2: Search Then Fetch
 
-# Validate it's valid JSON
-if echo "$data" | jq empty 2>/dev/null; then
-  echo "Valid JSON received"
-else
-  echo "Invalid JSON response"
-  exit 1
-fi
+```
+# Step 1: Find the right URL
+WebSearch(query="prisma 5 findUnique documentation site:prisma.io")
+
+# Step 2: Fetch the most relevant result
+WebFetch(
+  url="<best result URL>",
+  prompt="What is the findUnique method signature and what parameters does it accept?"
+)
 ```
 
-### Pattern 3: Fetch with Timeout
+### Pattern 3: Version-Specific Documentation
 
-```bash
-# Set timeout to avoid hanging
-timeout 30s curl https://slow-api.example.com/data || {
-  echo "Request timed out after 30 seconds"
-  exit 1
-}
+```
+# Search with version constraint
+WebSearch(query="express 4.x Router params documentation")
+
+# Fetch the versioned docs
+WebFetch(
+  url="<versioned URL>",
+  prompt="How do I define route parameters? Show the syntax."
+)
 ```
 
-### Pattern 4: Cache Fetch Results
+### Pattern 4: API Signature Verification
 
-```bash
-# Check cache first
-cache_file="/tmp/api_cache_$(date +%Y%m%d).json"
+When verifying that a method exists and has the right signature before using it:
 
-if [ -f "$cache_file" ] && [ $(find "$cache_file" -mmin -60 | wc -l) -gt 0 ]; then
-  # Cache hit (less than 60 minutes old)
-  cat "$cache_file"
-else
-  # Cache miss - fetch and cache
-  curl -s https://api.example.com/data | tee "$cache_file"
-fi
+```
+WebFetch(
+  url="https://docs.example.com/api/reference",
+  prompt="Does the POST /users endpoint accept a 'role' field in the request body? What are valid values?"
+)
 ```
 
-### Pattern 5: Fetch with Authentication
+### Pattern 5: Cross-Referencing Sources
 
-```bash
-# API key in header
-curl -H "Authorization: Bearer $API_KEY" \
-     https://api.example.com/protected
+For important claims, verify with at least two sources:
 
-# Basic auth
-curl -u username:password \
-     https://api.example.com/protected
+```
+# Official docs first
+WebFetch(url="<official docs>", prompt="What does jwt.sign() return?")
+
+# Then cross-check with the package README
+WebFetch(url="https://github.com/auth0/node-jsonwebtoken", prompt="What does sign() return? Show the return type.")
 ```
 
-## Error Handling
+## Handling Fetch Failures
 
-### HTTP Status Codes
+### Page Not Found / Access Denied
 
-```bash
-# Check HTTP status
-response=$(curl -s -w "\n%{http_code}" https://api.example.com/data)
-http_code=$(echo "$response" | tail -n1)
-body=$(echo "$response" | head -n-1)
+- Try the parent URL (drop the last path segment)
+- Search for the content instead: `WebSearch("site:docs.example.com <topic>")`
+- Look for the GitHub repo README as an alternative
 
-case $http_code in
-  200)
-    echo "Success"
-    ;;
-  404)
-    echo "Not found"
-    exit 1
-    ;;
-  429)
-    echo "Rate limited - wait and retry"
-    sleep 60
-    ;;
-  5*)
-    echo "Server error - retry later"
-    exit 1
-    ;;
-  *)
-    echo "Unexpected status: $http_code"
-    exit 1
-    ;;
-esac
+### Response Too Large or Vague
+
+When WebFetch returns a high-level summary instead of detail:
+
+- Add a more specific `prompt` to guide extraction
+- Fetch a more specific sub-page URL (e.g., the specific method's page vs. the full API reference)
+- Use WebSearch to find a more targeted resource
+
+### Outdated or Wrong Content
+
+- Check the URL for version indicators (`/v1/`, `/v2/`, `/5.x/`)
+- Search for the specific version: `WebSearch("library X version Y docs")`
+- Cross-reference with the project's `package.json`/`requirements.txt` to confirm which version is installed
+
+## Validation Checklist
+
+Before using fetched data:
+
+- [ ] Is the source authoritative? (official docs > maintained READMEs > third-party blogs)
+- [ ] Is the content current? (check version numbers, dates)
+- [ ] Does it actually answer your question? (don't assume partial answers are complete)
+- [ ] Does it match the version in the project's dependencies?
+
+## What to Extract vs What to Ignore
+
+**Extract:**
+- Method signatures and parameter names
+- Required vs optional fields
+- Return shapes and type information
+- Error codes and their meanings
+- Version-specific behavior changes
+
+**Ignore:**
+- Marketing copy and introductory text
+- Examples unrelated to your specific question
+- Deprecated API docs (unless debugging legacy behavior)
+
+## Context Efficiency
+
+Web content can be large. Be specific with prompts:
+
+```
+# BAD: Returns entire page with minimal filtering
+WebFetch(url="https://docs.stripe.com/api", prompt="get the docs")
+
+# GOOD: Targeted extraction
+WebFetch(
+  url="https://docs.stripe.com/api/charges/create",
+  prompt="What parameters does charges.create require? What does the response object look like?"
+)
 ```
 
-### Network Errors
+## Anti-Patterns
 
-```bash
-# Handle network failures
-if ! curl -f -s -m 10 https://api.example.com/data > /tmp/data.json 2>/tmp/error.log; then
-  # Check error type
-  if grep -q "Could not resolve host" /tmp/error.log; then
-    echo "DNS resolution failed"
-  elif grep -q "Connection refused" /tmp/error.log; then
-    echo "Connection refused"
-  elif grep -q "timeout" /tmp/error.log; then
-    echo "Request timed out"
-  else
-    echo "Network error: $(cat /tmp/error.log)"
-  fi
-  exit 1
-fi
+### Fetching Without a Specific Prompt
+
+```
+# BAD: No direction, returns too much
+WebFetch(url="https://docs.example.com/api")
+
+# GOOD: Focused extraction
+WebFetch(url="https://docs.example.com/api", prompt="How do I authenticate requests?")
 ```
 
-## Retry Strategies
+### Using WebSearch When You Have the URL
 
-### Exponential Backoff
+```
+# BAD: Unnecessary search step when URL is known
+WebSearch("express.js router documentation")
 
-```bash
-#!/bin/bash
-# Retry with exponential backoff
+# GOOD: Direct fetch when URL is known
+WebFetch(url="https://expressjs.com/en/guide/routing.html", prompt="How do I define route parameters?")
 
-max_attempts=5
-attempt=1
-
-while [ $attempt -le $max_attempts ]; do
-  if curl -f -s https://api.example.com/data > /tmp/data.json; then
-    echo "Success on attempt $attempt"
-    exit 0
-  fi
-
-  if [ $attempt -eq $max_attempts ]; then
-    echo "Failed after $max_attempts attempts"
-    exit 1
-  fi
-
-  wait_time=$((2 ** attempt))
-  echo "Attempt $attempt failed. Waiting $wait_time seconds..."
-  sleep $wait_time
-  attempt=$((attempt + 1))
-done
+# WebSearch is correct when: you don't know the URL, need current info, or are unsure of the right page
 ```
 
-### Retry with Jitter
+### Trusting One Source Uncritically
 
-```bash
-# Add randomness to prevent thundering herd
-max_attempts=3
+```
+# BAD: One fetch, take it as truth
+WebFetch(url="some-blog.com/how-to-use-jwt")  → take as authoritative
 
-for attempt in $(seq 1 $max_attempts); do
-  if fetch_data; then
-    exit 0
-  fi
-
-  # Exponential backoff with jitter
-  base_wait=$((2 ** attempt))
-  jitter=$((RANDOM % base_wait))
-  wait_time=$((base_wait + jitter))
-
-  echo "Waiting $wait_time seconds..."
-  sleep $wait_time
-done
+# GOOD: Use official sources, verify signatures
+WebFetch(url="https://github.com/auth0/node-jsonwebtoken#readme", prompt="What is the sign() function signature?")
 ```
 
-## Data Validation
+### Ignoring Version Alignment
 
-### Validate JSON Structure
-
-```bash
-# Fetch and validate expected structure
-data=$(curl -s https://api.example.com/user/123)
-
-# Check required fields exist
-if echo "$data" | jq -e '.id, .name, .email' > /dev/null; then
-  echo "Valid user data"
-else
-  echo "Missing required fields"
-  exit 1
-fi
-
-# Validate data types
-if echo "$data" | jq -e '.id | type == "number"' > /dev/null; then
-  echo "ID is number"
-else
-  echo "ID should be number"
-  exit 1
-fi
 ```
-
-### Validate Content
-
-```bash
-# Check data is not empty
-data=$(curl -s https://api.example.com/data)
-
-if [ -z "$data" ]; then
-  echo "Empty response"
-  exit 1
-fi
-
-# Check minimum size
-if [ ${#data} -lt 10 ]; then
-  echo "Response too small (likely error)"
-  exit 1
-fi
-```
-
-## Caching Strategies
-
-### Time-Based Cache
-
-```bash
-cache_file="/tmp/cache_${resource_id}.json"
-cache_duration=3600  # 1 hour in seconds
-
-if [ -f "$cache_file" ]; then
-  cache_age=$(($(date +%s) - $(stat -c%Y "$cache_file" 2>/dev/null || stat -f%m "$cache_file")))
-
-  if [ $cache_age -lt $cache_duration ]; then
-    echo "Cache hit"
-    cat "$cache_file"
-    exit 0
-  fi
-fi
-
-echo "Cache miss - fetching"
-curl -s https://api.example.com/resource | tee "$cache_file"
-```
-
-### Conditional Requests (ETag)
-
-```bash
-# Store ETag from previous request
-etag_file="/tmp/etag_${resource_id}.txt"
-
-if [ -f "$etag_file" ]; then
-  etag=$(cat "$etag_file")
-  response=$(curl -s -w "\n%{http_code}" -H "If-None-Match: $etag" https://api.example.com/data)
-  http_code=$(echo "$response" | tail -n1)
-
-  if [ "$http_code" = "304" ]; then
-    echo "Not modified - use cached data"
-    cat "/tmp/cache_${resource_id}.json"
-    exit 0
-  fi
-fi
-
-# Fetch and update cache
-new_data=$(curl -s -D /tmp/headers https://api.example.com/data)
-new_etag=$(grep -i "^ETag:" /tmp/headers | cut -d' ' -f2)
-echo "$new_etag" > "$etag_file"
-echo "$new_data" | tee "/tmp/cache_${resource_id}.json"
+# BAD: Fetching latest docs when project uses an older version
+# GOOD: Check package.json first, then fetch version-specific docs
 ```
 
 ## Resources (Progressive Disclosure)
 
-- **`resources/methodology.md`** - Advanced fetch strategies, error recovery techniques, caching approaches
-- **`resources/patterns.md`** - Concrete examples of API patterns, web scraping, data validation templates
-- **`resources/troubleshooting.md`** - Network errors, rate limiting, timeout handling, authentication issues
-
-## Anti-Patterns
-
-### ❌ No Error Handling
-```bash
-# BAD
-data=$(curl https://api.example.com/data)
-process_data "$data"
-
-# GOOD
-if data=$(curl -f -s https://api.example.com/data); then
-  process_data "$data"
-else
-  echo "Fetch failed"
-  exit 1
-fi
-```
-
-### ❌ No Timeout
-```bash
-# BAD: Might hang forever
-curl https://slow-api.example.com/data
-
-# GOOD: Fail after reasonable time
-curl -m 30 https://slow-api.example.com/data
-```
-
-### ❌ No Retry Logic
-```bash
-# BAD: Single attempt
-curl https://api.example.com/data || exit 1
-
-# GOOD: Retry with backoff
-for i in {1..3}; do
-  curl https://api.example.com/data && break
-  sleep $((i * 2))
-done
-```
-
-### ❌ No Response Validation
-```bash
-# BAD: Trust external data
-data=$(curl https://api.example.com/data)
-process "$data"  # Might be error HTML!
-
-# GOOD: Validate format
-data=$(curl https://api.example.com/data)
-echo "$data" | jq empty || exit 1  # Verify JSON
-process "$data"
-```
-
-## Quick Reference
-
-```bash
-# Fetch with full error handling
-curl -f -s -S -m 30 https://api.example.com/data
-
-# Retry with backoff
-for i in {1..3}; do
-  curl -f -s https://api.example.com/data && break
-  sleep $((2 ** i))
-done
-
-# Validate JSON
-echo "$data" | jq empty
-
-# Check HTTP status
-curl -s -w "%{http_code}" https://api.example.com/data
-
-# Use cache
-[ -f cache.json ] && [ $(find cache.json -mmin -60 | wc -l) -gt 0 ] && cat cache.json || curl -s url | tee cache.json
-```
+- **`assets/methodology.md`** — Advanced fetch strategies, multi-page documentation navigation, dealing with paywalled or rate-limited content
+- **`assets/patterns.md`** — Concrete examples: API verification workflows, documentation research patterns, cross-referencing multiple sources
+- **`assets/troubleshooting.md`** — Network errors, access denied, stale content, large page handling, conflicting information from different sources

@@ -181,7 +181,7 @@ case $ext in
     python -m py_compile "$file" && echo "✓ Syntax valid"
     ;;
   js)
-    node --check "$file" && echo "✓ Syntax valid"
+    bun --check "$file" && echo "✓ Syntax valid"
     ;;
   go)
     go build "$file" && echo "✓ Syntax valid"
@@ -195,7 +195,7 @@ case $ext in
     pytest "tests/test_$(basename ${file%.py}).py" -v
     ;;
   js)
-    npm test -- "$(basename ${file%.js}).test.js"
+    bun test "tests/test_$(basename ${file%.js}).test.js"
     ;;
 esac
 

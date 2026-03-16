@@ -1,360 +1,184 @@
 ---
 name: open
-description: Activates for file reading operations; provides guidance on partial vs full reads, memory efficiency, and context preservation
+description: Activates for file reading operations; provides guidance on when to use full vs partial reads, how to navigate large files with offset/limit, and how to preserve context across multi-file reading operations. Use this skill whenever reading files to understand their content, deciding whether to read a whole file or specific sections, or working with files that may be too large to load entirely at once.
 ---
 
 # Open Skill
 
 ## Purpose
 
-This skill provides comprehensive guidance for file reading operations. It helps you decide between partial and full file reads, optimize memory usage, preserve context effectively, and handle various file formats when working with file content exploration tasks.
+This skill provides guidance for reading files efficiently using the Read tool in Claude Code. It helps you decide between full and partial reads, use offset/limit for large files, and preserve context when working across multiple files.
 
 ## When to Use This Skill
 
-This skill automatically activates when:
-- Reading file contents for analysis or processing
-- Deciding between full and partial file reads
-- Working with large files that may not fit in memory
-- Preserving context across multiple file operations
-- Handling different file formats and encodings
+- Reading file contents for analysis, debugging, or understanding
+- Deciding whether to read a file fully or just specific sections
+- Working with large files that exceed the default 2000-line limit
+- Reading multiple related files while preserving context
 
 ## Quick Start
 
-For 80% of file reading operations, follow these principles:
+For 80% of file reading operations:
 
-1. **Read only what you need** - Partial reads for large files, full reads for small files
-2. **Check file size first** - Use `stat` or `ls -lh` before reading
-3. **Use appropriate tools** - `cat` for full, `head`/`tail` for partial, `less` for interactive
-4. **Consider encoding** - UTF-8 is standard, but verify for special cases
-5. **Preserve line context** - Include line numbers for reference when analyzing code
+1. **Try the full read first** — the Read tool covers most files in one shot
+2. **Check if output was truncated** — if there are more lines, use `offset` to read the rest
+3. **Grep before reading for targeted lookups** — if you're looking for something specific, find the line first, then read around it
+4. **Read in parallel** — multiple independent files can be read in the same turn
 
 ## Core Principles
 
-### 1. **Size-Aware Reading**
-Always check file size before deciding how to read. Large files require different strategies than small files.
+### 1. Full Read by Default
 
-### 2. **Progressive Loading**
-Load what you need first, then expand. Don't load everything upfront if you only need a sample.
+Most files fit within the 2000-line default. Start with a full read — don't prematurely optimize with partial reads unless you know the file is large.
 
-### 3. **Context Preservation**
-Maintain enough surrounding context to understand what you're reading. Isolated snippets lose meaning.
+### 2. Use Offset/Limit for Large Files
 
-### 4. **Memory Efficiency**
-Be mindful of memory constraints, especially with large files or batch operations.
+When output is truncated, use the `offset` and `limit` parameters to read subsequent sections:
 
-### 5. **Format Recognition**
-Detect file format and encoding early to use appropriate reading strategies.
-
-## Tool Selection Matrix
-
-| Scenario | Tool | Command Example | When to Use |
-|----------|------|-----------------|-------------|
-| Full small file | `cat` | `cat file.txt` | File < 1MB, need all content |
-| First N lines | `head` | `head -n 50 file.txt` | Preview, sample, headers |
-| Last N lines | `tail` | `tail -n 100 log.txt` | Recent entries, logs |
-| Interactive viewing | `less` | `less large-file.txt` | Large files, need search/navigation |
-| Specific line range | `sed` | `sed -n '100,200p' file.txt` | Extract specific sections |
-| With line numbers | `cat -n` | `cat -n source.py` | Code analysis, reference |
-| Binary file inspection | `hexdump` | `hexdump -C file.bin \| head` | Binary data, debugging |
-| Structured data | `jq`/`yq` | `jq '.' data.json` | JSON/YAML parsing |
-
-## Common Patterns
-
-### Pattern 1: Smart File Reading Based on Size
-
-```bash
-# Check size and read appropriately
-file="document.txt"
-size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file")
-
-if [ $size -lt 1048576 ]; then
-  # < 1MB: full read
-  cat "$file"
-else
-  # >= 1MB: partial read with preview
-  echo "File is large ($size bytes). Showing first 100 lines:"
-  head -n 100 "$file"
-fi
+```
+Read(file_path, offset=2000, limit=2000)  → lines 2001-4000
+Read(file_path, offset=4000, limit=2000)  → lines 4001-6000
 ```
 
-### Pattern 2: Context-Preserving Code Reading
+### 3. Grep Before Reading for Targeted Lookups
 
-```bash
-# Read with line numbers for reference
-cat -n source.js
+When looking for a specific function, class, or variable, use Grep first to find the line number. Then read with context around that location instead of loading the whole file.
 
-# Read specific function with context
-grep -n "function.*targetFunc" source.js
-sed -n '45,75p' source.js  # Read lines 45-75 around function
+### 4. Preserve Line Number Context
+
+When referencing code in analysis or reports, use `file_path:line_number` format. The Read tool provides line numbers — use them.
+
+## Tool Selection
+
+| Scenario | Tool | How |
+|---|---|---|
+| Read a file (any size) | Read | `Read(file_path)` |
+| Read from line 500 onward | Read + offset | `Read(file_path, offset=499, limit=200)` |
+| Find a function/class location | Grep | `Grep(pattern="def authenticate")` then Read |
+| List files before reading | Glob | `Glob(pattern="**/*.py")` then Read |
+| Read a PDF | Read + pages | `Read(file_path, pages="1-5")` |
+| Large file, unknown structure | Grep + Read | Grep for key terms, Read around matches |
+
+## Reading Patterns
+
+### Pattern 1: Standard File Read
+
+```
+Read("/path/to/file.py")
+→ Returns full file with line numbers, up to 2000 lines
 ```
 
-### Pattern 3: Log File Analysis
+No configuration needed for most files.
 
-```bash
-# Most recent log entries
-tail -n 100 application.log
+### Pattern 2: Large File Navigation
 
-# Follow log in real-time
-tail -f application.log
+```
+# First section (lines 1-2000)
+Read("/path/to/large.py")
 
-# Search and show context
-grep -A 5 -B 5 "ERROR" application.log  # 5 lines before/after
+# Continue if truncated (note: offset is 0-indexed lines to skip)
+Read("/path/to/large.py", offset=2000, limit=2000)
+
+# Jump to a known section
+Read("/path/to/large.py", offset=500, limit=100)
 ```
 
-### Pattern 4: Sampling Large Files
+### Pattern 3: Targeted Section Read
 
-```bash
-# First, middle, last strategy
-echo "=== First 10 lines ==="
-head -n 10 largefile.txt
+```
+# Find the function location first
+Grep(pattern="def authenticate", include="*.py")
+→ Returns: src/auth.py:45
 
-echo "=== Sample from middle ==="
-total_lines=$(wc -l < largefile.txt)
-middle=$((total_lines / 2))
-sed -n "${middle},$((middle + 10))p" largefile.txt
-
-echo "=== Last 10 lines ==="
-tail -n 10 largefile.txt
+# Read just around that function
+Read("src/auth.py", offset=44, limit=60)
 ```
 
-### Pattern 5: Format-Specific Reading
+### Pattern 4: Multi-File Reading Strategy
 
-```bash
-# JSON: Pretty-print and navigate
-jq '.' config.json
-jq '.dependencies' package.json
+When reading multiple related files:
 
-# YAML: Parse and extract
-yq eval '.services' docker-compose.yml
+1. Start with the entry point or most central file
+2. Follow imports/references to identify the next files to read
+3. Note key findings (file:line) before moving on
+4. Read all independent files in the same turn (parallel reads save time)
 
-# CSV: Column extraction
-cut -d, -f1,3 data.csv | head -20
+### Pattern 5: Structured Data Files
 
-# Markdown: Extract headers
-grep "^#" README.md
+For JSON, YAML, TOML — Read handles them all. For locating a specific key, Grep is faster:
+
+```
+Grep(pattern="database_url", include="*.yaml")
+→ Returns: config/settings.yaml:12
+Read("config/settings.yaml", offset=10, limit=20)
 ```
 
-## Reading Strategies by File Type
-
-### Source Code Files
-- **Use:** `cat -n` for line-numbered view
-- **Context:** Include surrounding functions/classes
-- **Pattern:** Read full file if < 500 lines, otherwise target specific sections
-
-### Log Files
-- **Use:** `tail` for recent entries, `grep` for filtering
-- **Context:** Include timestamp and surrounding log entries
-- **Pattern:** Time-based or pattern-based filtering
-
-### Configuration Files
-- **Use:** Specialized parsers (`jq`, `yq`) for structured formats
-- **Context:** Understand full structure before extracting values
-- **Pattern:** Validate format, then extract specific keys
-
-### Data Files
-- **Use:** `head` for schema/header inspection
-- **Context:** Sample rows to understand structure
-- **Pattern:** Schema first, then samples, then full read if needed
-
-### Binary Files
-- **Use:** `hexdump`, `xxd`, `strings`
-- **Context:** Identify magic numbers, file signatures
-- **Pattern:** Header inspection, selective reading, not full dumps
-
-## Memory Efficiency Guidelines
-
-### For Small Files (< 1MB)
-```bash
-# Safe to read fully
-content=$(cat small-file.txt)
-# Process in memory
-```
-
-### For Medium Files (1MB - 100MB)
-```bash
-# Stream processing
-cat medium-file.txt | while read line; do
-  process_line "$line"
-done
-
-# Or use pagination
-less medium-file.txt
-```
-
-### For Large Files (> 100MB)
-```bash
-# Never load entirely into memory
-# Use streaming tools
-tail -f huge.log | grep "pattern"
-
-# Or process in chunks
-split -l 10000 huge.txt chunk_
-for chunk in chunk_*; do
-  process_chunk "$chunk"
-done
-```
-
-## Context Preservation Techniques
-
-### Technique 1: Line Number References
-
-```bash
-# Always include line numbers for code
-cat -n script.py > script-numbered.txt
-
-# Reference format: file:line
-echo "Error in script.py:45"
-```
-
-### Technique 2: Surrounding Context
-
-```bash
-# Show context around matches
-grep -C 3 "function targetFunc" code.js  # 3 lines before/after
-
-# Extract with context markers
-sed -n '40,60p' code.js | nl -ba -v 40  # Lines 40-60 with numbers starting at 40
-```
-
-### Technique 3: Metadata Preservation
-
-```bash
-# Include file info with content
-echo "File: $filename"
-echo "Size: $(stat -c%s "$filename")"
-echo "Modified: $(stat -c%y "$filename")"
-echo "---"
-cat "$filename"
-```
-
-## Edge Cases
-
-### Encoding Issues
-- Check encoding: `file -bi filename`
-- Convert if needed: `iconv -f ISO-8859-1 -t UTF-8 file.txt`
-- Handle non-UTF8: Specify encoding in tools that support it
-
-### Files Without Newlines
-- Binary files may lack line endings
-- Use `cat -v` to show non-printing characters
-- Use `od` or `hexdump` for binary inspection
-
-### Very Long Lines
-- Some tools struggle with lines > 4KB
-- Use `fold` to wrap: `fold -w 80 file.txt`
-- Or process in chunks
-
-### Special Characters
-- Control characters: `cat -v` makes them visible
-- Null bytes: Can break text tools, use binary tools
-- Unicode: Ensure terminal and tools support UTF-8
-
-## Resources (Progressive Disclosure)
-
-For deeper guidance, load these resources as needed:
-
-- **`resources/methodology.md`** - When you need advanced read strategies, memory management techniques, progressive loading patterns, or format-specific approaches
-- **`resources/patterns.md`** - When you need concrete examples of read patterns, file format templates, context preservation strategies, or streaming patterns
-- **`resources/troubleshooting.md`** - When encountering encoding issues, performance problems, corrupt files, or edge case handling challenges
-
-## Anti-Patterns
-
-### ❌ Reading Entire Large Files Into Memory
-```bash
-# BAD: Loads 500MB into memory
-content=$(cat huge-log.txt)
-echo "$content" | grep "ERROR"
-
-# GOOD: Stream processing
-grep "ERROR" huge-log.txt
-```
-
-### ❌ Ignoring File Size
-```bash
-# BAD: Blindly reading unknown file
-cat mystery-file.txt
-
-# GOOD: Check size first
-ls -lh mystery-file.txt
-# Then decide: full read, partial read, or sample
-```
-
-### ❌ Losing Context
-```bash
-# BAD: No line numbers, no context
-grep "error" code.js
-
-# GOOD: With line numbers and context
-grep -n -C 3 "error" code.js
-```
-
-### ❌ Wrong Tool for Format
-```bash
-# BAD: Using cat for JSON
-cat config.json  # Unformatted, hard to read
-
-# GOOD: Use appropriate parser
-jq '.' config.json  # Pretty-printed, validated
-```
-
-## Quick Reference
-
-### Decision Tree: How to Read?
+## Decision Guide
 
 ```
 Need to read a file?
-  ├─ What's the size?
-  │   ├─ < 1MB → Full read (cat)
-  │   ├─ 1-100MB → Partial/stream (head/tail/less)
-  │   └─ > 100MB → Chunked processing
-  ├─ What format?
-  │   ├─ Text → cat/less
-  │   ├─ JSON → jq
-  │   ├─ YAML → yq
-  │   ├─ CSV → cut/awk
-  │   ├─ Binary → hexdump/xxd
-  │   └─ Logs → tail/grep
-  └─ Need context?
-      ├─ Yes → Include line numbers (cat -n)
-      └─ No → Plain read
+  ├─ Looking for something specific?
+  │   └─ Grep first → Read with offset around the match
+  ├─ Unknown file, want to understand it?
+  │   └─ Read full → read more sections if truncated
+  ├─ Know it's a large file (>2000 lines)?
+  │   └─ Read in sections: offset=0, then 2000, then 4000...
+  ├─ Reading many files?
+  │   └─ Read all in the same turn for parallel execution
+  └─ Need a specific line range?
+      └─ Read(file_path, offset=<start_line-1>, limit=<count>)
 ```
 
-### Quick Commands Cheatsheet
+## Context Efficiency
 
-```bash
-# Check size before reading
-ls -lh file.txt
-stat file.txt
+- **Every Read loads into context** — file content consumes tokens
+- **Read targeted sections** — if you only need one class, don't load 3000 lines
+- **Don't re-read unnecessarily** — use line number references from the first read rather than reading again
+- **Parallel reads** — read multiple independent files in the same response turn
 
-# Full read with line numbers
-cat -n file.txt
+## Edge Cases
 
-# First/last N lines
-head -n 50 file.txt
-tail -n 100 file.txt
+### File Not Found
 
-# Specific line range
-sed -n '100,200p' file.txt
+Read returns an error if the path is wrong. Use Glob to verify the path first if uncertain.
 
-# Interactive viewing
-less file.txt
+### Binary Files / Images
 
-# Search with context
-grep -C 5 "pattern" file.txt
+The Read tool handles images (renders them visually) and PDFs (extracts text). For large PDFs, use the `pages` parameter to read specific page ranges — required for PDFs over 10 pages.
 
-# JSON/YAML
-jq '.' file.json
-yq eval '.' file.yaml
+### Very Long Lines
 
-# Binary inspection
-hexdump -C file.bin | head
-strings file.bin
+Lines over 2000 characters are truncated. Minified code or data dumps may lose content mid-line. For these, use Grep to extract specific values.
+
+## Anti-Patterns
+
+### Reading Everything to Find One Thing
+
+```
+# BAD: Loading 3000 lines to find one function
+Read("large_service.py")  → reads 2000 lines, function might not even be there
+
+# GOOD: Find it first
+Grep("def process_payment", "*.py")
+Read("large_service.py", offset=<line-5>, limit=60)
 ```
 
-### Size Thresholds
+### Re-reading Files Already in Context
 
-- **< 1KB:** Trivial, read fully
-- **1KB - 100KB:** Small, safe to read fully
-- **100KB - 1MB:** Medium, consider partial reads
-- **1MB - 100MB:** Large, use streaming or partitioning
-- **> 100MB:** Very large, mandatory streaming, no full loads
+```
+# BAD: Reading the same file again to check a detail
+# GOOD: Reference the line numbers from the first read
+```
+
+### Sequential Reads When Parallel Is Possible
+
+```
+# BAD: Read file1, wait, Read file2, wait, Read file3
+# GOOD: Read all three files in the same turn
+```
+
+## Resources (Progressive Disclosure)
+
+- **`assets/methodology.md`** — Advanced read strategies, systematic file exploration patterns, reading order for different project types
+- **`assets/patterns.md`** — Concrete examples by project type (Django, React, Go, etc.), structured data patterns, log file navigation
+- **`assets/troubleshooting.md`** — Truncation handling, encoding issues, large file strategies, binary file reading

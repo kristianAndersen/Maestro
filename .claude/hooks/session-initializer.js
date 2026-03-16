@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 // Session Initializer Hook for Maestro
 // Purpose: Provides warm-up context when Maestro mode starts
 // Trigger: UserPromptSubmit (when /maestro detected or Maestro mode active)
@@ -103,10 +103,16 @@ function isMaestroActivation(prompt) {
 
 function main() {
   try {
-    // Read user prompt from stdin
+    // Read user prompt from stdin (Claude Code sends JSON: {"prompt": "...", "cwd": "..."})
     let userPrompt = '';
     try {
-      userPrompt = readFileSync(0, 'utf-8').trim();
+      const rawInput = readFileSync(0, 'utf-8').trim();
+      try {
+        const parsed = JSON.parse(rawInput);
+        userPrompt = parsed.prompt || rawInput;
+      } catch {
+        userPrompt = rawInput;
+      }
     } catch {
       // Silent exit if stdin not available
       process.exit(0);

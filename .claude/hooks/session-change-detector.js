@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 /**
  * Session Change Detector Hook
@@ -21,14 +21,14 @@
  * - Preserve: historicalMetrics, evaluation compliance data
  */
 
-import { readFileSync, writeFileSync, existsSync, appendFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, appendFileSync, mkdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const CONTEXT_FILE_PATH = join(__dirname, '..', 'context.json');
-const LOG_FILE_PATH = join(__dirname, 'session-change-detector.log');
+const LOG_FILE_PATH = join(__dirname, '..', 'logs', 'session-change-detector.log');
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
 
 /**
@@ -36,8 +36,18 @@ const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
  */
 function log(message) {
   try {
+    const logsDir = join(__dirname, '..', 'logs');
+    if (!existsSync(logsDir)) {
+      mkdirSync(logsDir, { recursive: true });
+    }
     const timestamp = new Date().toISOString();
     appendFileSync(LOG_FILE_PATH, `[${timestamp}] ${message}\n`, 'utf8');
+    // Rotate: keep last 100 lines
+    const content = readFileSync(LOG_FILE_PATH, 'utf8');
+    const lines = content.split('\n').filter(l => l.length > 0);
+    if (lines.length > 100) {
+      writeFileSync(LOG_FILE_PATH, lines.slice(-100).join('\n') + '\n', 'utf8');
+    }
   } catch (error) {
     // Silent fail - logging is best effort
   }

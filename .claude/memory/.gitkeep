@@ -1,0 +1,8 @@
+# Memory Directory
+
+This directory stores Maestro's episodic memory and learning artifacts.
+
+Structure:
+- diary/ - Session summaries capturing episodic memory
+- reflections/ - Pattern analysis extracted from diary entries
+- evaluation-history.jsonl - JSONL log of all 4-D evaluation outcomes

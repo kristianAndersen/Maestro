@@ -75,7 +75,7 @@ Hooks trigger automatically on:
 
 ### Prerequisites
 
-- **Node.js** >= 18.0.0
+- **Bun** >= 1.0.0 (for hooks; [install here](https://bun.sh))
 - **Claude Code** (from [claude.ai/code](https://claude.ai/code))
 
 ### Installation
@@ -87,15 +87,15 @@ cd Maestro
 
 # 2. Install hook dependencies
 cd .claude/hooks
-npm install
+bun install
 
 # 3. Verify the installation
-npm run verify
+bun run verify
 
 # 4. (Optional) Test individual components
-npm run test:agent-detection
-npm run test:skill-detection
-npm run test:evaluation-reminder
+bun run test:agent-detection
+bun run test:skill-detection
+bun run test:evaluation-reminder
 ```
 
 That's it! The framework is ready to use.
@@ -393,7 +393,7 @@ Edit `.claude/skills/skill-rules.json`:
 
 3. **Test hooks manually:**
    ```bash
-   echo "analyze this code" | node .claude/hooks/maestro-agent-suggester.js
+   echo "analyze this code" | bun .claude/hooks/maestro-agent-suggester.js
    ```
 
 ### Agent Detection Not Working
@@ -405,7 +405,7 @@ Edit `.claude/skills/skill-rules.json`:
 
 2. **Test detection manually:**
    ```bash
-   echo "your request here" | node .claude/hooks/maestro-agent-suggester.js
+   echo "your request here" | bun .claude/hooks/maestro-agent-suggester.js
    ```
 
 ### Skill Detection Not Working
@@ -417,12 +417,12 @@ Edit `.claude/skills/skill-rules.json`:
 
 2. **Check minimatch dependency:**
    ```bash
-   cd .claude/hooks && npm list minimatch
+   cd .claude/hooks && bun pm ls minimatch
    ```
 
 3. **Reinstall dependencies if needed:**
    ```bash
-   cd .claude/hooks && npm install
+   cd .claude/hooks && bun install
    ```
 
 ### Skills Not Being Recommended

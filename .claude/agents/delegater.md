@@ -4,6 +4,7 @@ role: Multi-Agent Execution Coordinator
 tools: Task, Read, TodoWrite, Skill, Bash, Grep
 mandate: "Coordinate multi-agent execution with dependency analysis and parallel/sequential orchestration"
 version: 1.0
+model: sonnet
 ---
 
 # Delegater: Multi-Agent Execution Coordinator

@@ -1,6 +1,6 @@
 ---
 name: base-research
-description: Activates for information gathering tasks; provides research methodology, source evaluation, and synthesis guidance
+description: Activates for information gathering tasks; provides research methodology, source evaluation, and synthesis guidance. Use this skill whenever investigating unfamiliar topics, gathering information to make decisions, finding documentation or examples, researching best practices, or systematically discovering how a system works — including codebase exploration where you need to understand before acting.
 tools: Read, Grep, Glob, Bash, LS, WebSearch, WebFetch
 ---
 
@@ -19,6 +19,20 @@ This skill automatically activates when:
 - Understanding how something works
 - Finding documentation or examples
 - Researching best practices or solutions
+
+## Claude Code Tool Mapping
+
+In Claude Code, use dedicated tools for research operations:
+
+| Task | Tool | Example |
+|---|---|---|
+| Find files by pattern | Glob | `Glob("**/*.md", path="docs")` |
+| Search content in files | Grep | `Grep(pattern="authentication", include="*.py")` |
+| Read a file | Read | `Read("docs/authentication.md")` |
+| Fetch external docs | WebFetch | `WebFetch(url="...", prompt="explain X")` |
+| Search the web | WebSearch | `WebSearch(query="best practice for X")` |
+
+---
 
 ## Quick Start
 
@@ -255,9 +269,9 @@ How to implement caching?
 
 ## Resources (Progressive Disclosure)
 
-- **`resources/methodology.md`** - Advanced research strategies, source evaluation frameworks, synthesis techniques
-- **`resources/patterns.md`** - Research workflow examples, documentation patterns, note-taking templates
-- **`resources/troubleshooting.md`** - Handling conflicting sources, incomplete information, verification strategies
+- **`assets/methodology.md`** - Advanced research strategies, source evaluation frameworks, synthesis techniques
+- **`assets/patterns.md`** - Research workflow examples, documentation patterns, note-taking templates
+- **`assets/troubleshooting.md`** - Handling conflicting sources, incomplete information, verification strategies
 
 ## Anti-Patterns
 

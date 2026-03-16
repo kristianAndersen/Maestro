@@ -1,6 +1,28 @@
 # 4D-Evaluation Skill: Troubleshooting
 
-Handling borderline cases, conflicting criteria, and common evaluation challenges.
+Handling borderline cases, conflicting criteria, and calibration challenges.
+
+---
+
+## Calibration: When to Push Back
+
+Not every gap warrants NEEDS REFINEMENT. This table helps calibrate:
+
+| Situation | Action |
+|-----------|--------|
+| Requirement stated, not met | Always push back |
+| Logic is wrong / would break something | Always push back |
+| Security or correctness issue | Always push back |
+| Error handling missing for realistic failure | Usually push back |
+| Significantly over-engineered solution | Usually push back |
+| Claims without evidence when evidence was possible | Usually push back |
+| Style difference, doesn't affect correctness | Use judgment |
+| Minor doc gap on simple change | Use judgment |
+| Different approach, but still valid | Use judgment |
+| Personal preference, no real impact | Don't push back |
+| Cosmetic when work is otherwise solid | Don't push back |
+
+> Gut check: *"Does this gap create a real problem, or am I pattern-matching on imperfection?"*
 
 ---
 

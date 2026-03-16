@@ -1,0 +1,34 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/awesome/dev/devtest/ccchat/hooks/ccchat-poll.js"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/awesome/dev/devtest/ccchat/hooks/ccchat-stop.js"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/awesome/dev/devtest/ccchat/hooks/ccchat-leave.js"
+          }
+        ]
+      }
+    ]
+  }
+}

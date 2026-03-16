@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 // Session Persister Hook for Maestro
 // Purpose: Saves session state before context compaction or session end
 // Triggers: PreCompact, SubagentStop
@@ -75,7 +75,7 @@ function main() {
     writeFileSync(backupPath, JSON.stringify(backup, null, 2), 'utf-8');
   } catch (e) {
     console.error(`Failed to save session backup: ${e.message}`);
-    process.exit(1);
+    process.exit(0);
   }
 
   // Output confirmation (only for PreCompact/SessionEnd, not SubagentStop)

@@ -1,0 +1,5 @@
+# Session Diary Entries
+
+Each file captures episodic memory from a Maestro session:
+- Format: YYYY-MM-DD-session-N.md
+- Content: Accomplishments, delegation patterns, design decisions, challenges, user preferences, evaluation outcomes

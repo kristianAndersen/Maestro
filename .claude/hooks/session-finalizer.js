@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 // Session Finalizer Hook for Maestro
 // Purpose: Archives session data and cleans up when session ends
 // Trigger: SessionEnd
@@ -15,11 +15,6 @@ const ARCHIVES_DIR = join(SESSIONS_DIR, 'archives');
 const CONTEXT_PATH = join(__dirname, '..', 'context.json');
 
 function main() {
-  // EMPIRICAL LOGGING: Test if SessionEnd actually fires
-  const logPath = join(__dirname, 'session-finalizer.log');
-  const timestamp = new Date().toISOString();
-
-  // Read hook input from stdin
   let hookInput = {};
   try {
     const stdin = readFileSync(0, 'utf-8').trim();
@@ -30,14 +25,6 @@ function main() {
 
   const sessionId = hookInput.session_id || 'unknown-session';
 
-  // Log execution evidence
-  try {
-    const logEntry = `[${timestamp}] SessionEnd FIRED - sessionId: ${sessionId}\n`;
-    writeFileSync(logPath, logEntry, { flag: 'a' });
-  } catch (logErr) {
-    // Logging failed, but continue
-  }
-
   // Ensure archives directory exists
   if (!existsSync(ARCHIVES_DIR)) {
     mkdirSync(ARCHIVES_DIR, { recursive: true });
@@ -47,8 +34,8 @@ function main() {
   const backupPath = join(SESSIONS_DIR, `${sessionId}.backup.json`);
 
   if (existsSync(backupPath)) {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const archivePath = join(ARCHIVES_DIR, `${sessionId}-${timestamp}.json`);
+    const archiveTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const archivePath = join(ARCHIVES_DIR, `${sessionId}-${archiveTimestamp}.json`);
 
     try {
       renameSync(backupPath, archivePath);
@@ -93,12 +80,6 @@ function main() {
     const contextBefore = readFileSync(CONTEXT_PATH, 'utf-8');
     const context = JSON.parse(contextBefore);
 
-    // Log state before reset
-    try {
-      const logEntry = `[${timestamp}] BEFORE RESET - context keys: ${Object.keys(context).join(', ')}\n`;
-      writeFileSync(logPath, logEntry, { flag: 'a' });
-    } catch {}
-
     // Create fresh context preserving only cross-session data
     const freshContext = {
       lastSessionId: sessionId,
@@ -116,18 +97,9 @@ function main() {
     };
 
     writeFileSync(CONTEXT_PATH, JSON.stringify(freshContext, null, 2), 'utf-8');
-
-    // Log successful reset
-    try {
-      const logEntry = `[${timestamp}] AFTER RESET - fresh context written with ${Object.keys(freshContext).length} keys\n`;
-      writeFileSync(logPath, logEntry, { flag: 'a' });
-    } catch {}
   } catch (resetErr) {
-    // Context reset failed, not critical - but LOG IT
-    try {
-      const logEntry = `[${timestamp}] RESET FAILED - Error: ${resetErr.message}\n`;
-      writeFileSync(logPath, logEntry, { flag: 'a' });
-    } catch {}
+    // Context reset failed, not critical
+    console.error(`Context reset failed: ${resetErr.message}`);
   }
 
   // Silent exit - SessionEnd shouldn't show UI

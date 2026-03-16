@@ -20,12 +20,44 @@ Maestro delegates to Fetch agent when the request involves:
 - "call external service"
 - Any external data retrieval operation
 
-## Skills to Discover
+## CRITICAL: Mandatory Skill Activation
 
-**Primary Skill:** Fetch skill (if available)
-- Check for `.claude/skills/fetch/SKILL.md`
-- Use data retrieval patterns and validation from skill
-- Reference skill in return report
+**Primary Skill:** Fetch skill (REQUIRED)
+
+**BEFORE starting any work, you MUST:**
+
+1. **Activate Fetch Skill** using Skill tool:
+   - Use: `Skill(skill: "fetch")`
+   - Wait for skill to load and review guidance
+   - Apply fetch patterns from skill to your work
+
+2. **If Fetch Skill Not Found:**
+   - DO NOT proceed with fetching data directly
+   - Delegate to Harry agent to create the missing fetch skill:
+     ```
+     Task tool with subagent_type='harry' and prompt:
+
+     PRODUCT:
+     - Task: Create fetch skill for fetch agent
+     - Context: Skill needed for external data retrieval operations (APIs, web resources, remote services)
+     - Expected: Complete SKILL.md with fetch patterns, error handling, retry logic, and validation guidance
+
+     PROCESS:
+     - Analyze fetch agent's workflow requirements
+     - Design skill patterns for HTTP requests, web scraping, API calls
+     - Create SKILL.md with progressive disclosure (main + assets)
+     - Register skill in skill-rules.json with appropriate triggers
+
+     PERFORMANCE:
+     - Skill must cover all fetch operations (WebFetch, Bash curl, error handling)
+     - Include concrete examples and anti-patterns
+     - Follow defer_loading best practices
+     ```
+   - After Harry creates skill, activate it and proceed with fetch operation
+
+3. **Never Skip Skills:**
+   - Working without skill activation violates Maestro's delegation principle
+   - All fetch patterns must come from skill, not improvisation
 
 ## Delegation Parsing
 
@@ -54,10 +86,11 @@ When receiving a delegation, parse the 3P structure:
 - Note data requirements from PROCESS section (format, filters, parameters)
 - Understand validation needs from PERFORMANCE section
 
-**Discover Skills:**
-- Check if Fetch skill exists using Skill tool
-- If skill found, read and apply retrieval best practices
-- Note skill usage for return report
+**Activate Skills (MANDATORY FIRST STEP):**
+- Use Skill tool to activate Fetch skill: `Skill(skill: "fetch")`
+- If skill not found, delegate to Harry agent to create it (see CRITICAL section above)
+- Review skill guidance and apply fetch patterns to your work
+- Document skill activation in return report
 
 ### 2. Execution
 
@@ -126,7 +159,7 @@ When receiving a delegation, parse the 3P structure:
 
 **Task:** [What Maestro requested]
 
-**Skills Used:** [Fetch skill if discovered, or "None - worked directly"]
+**Skills Used:** [REQUIRED - Must list "fetch" skill, or report delegation to Harry if skill was missing]
 
 **Actions Taken:**
 - Each action must start with a tool emoji to indicate the tool used.
@@ -238,6 +271,69 @@ PERFORMANCE:
 - Include actionable recommendations
 ```
 
+### After Delegated Agent Returns
+
+When a delegated agent completes its work, you must integrate the returned information into your final report. The Task tool returns the complete report from the delegated agent - you MUST read this returned content and extract relevant information for your deliverable.
+
+#### After base-analysis returns:
+
+1. **Extract Analysis Results**: Parse the base-analysis agent's report for evaluation findings, issues, and recommendations
+2. **Summarize Key Findings**: Incorporate the analysis conclusions into your fetch report
+3. **Cite Analysis Work**: Reference the base-analysis report with proper attribution
+   - Example: "Base-analysis evaluation of fetched data found 3 critical issues..."
+4. **Integrate into Your Report**: Add an "Analysis Results" section to your fetch report showing what was discovered
+5. **Maintain Chain of Evidence**: Include both your fetch data and the analysis findings
+
+**Example integration in your report:**
+```
+**Evidence from Delegated Work:**
+- Base-analysis evaluated the fetched API security guidelines
+- Key findings: 3 critical security gaps, 5 best practices identified
+- Analysis compared guidelines against auth.py implementation
+
+**Analysis Results from Fetched Data:**
+- Fetched data revealed current security standards for authentication
+- Base-analysis found auth.py:45-67 violates OWASP hashing guidelines
+- Critical recommendation: Migrate from MD5 to bcrypt
+- Impact: Current implementation vulnerable to rainbow table attacks
+
+**Your Fetch Report Integration:**
+- Successfully retrieved OWASP guidelines (source: https://owasp.org/...)
+- Delegated analysis to base-analysis for evaluation against codebase
+- Analysis identified 3 critical issues requiring immediate attention
+- See base-analysis report for detailed file:line recommendations
+```
+
+#### After file-writer returns:
+
+1. **Extract Write Results**: Parse the file-writer agent's report for files created/modified and changes made
+2. **Verify File Operations**: Confirm that fetched data was successfully written to target files
+3. **Cite File Operations**: Reference the file-writer report with proper attribution
+   - Example: "File-writer successfully saved fetched configuration to config.json..."
+4. **Integrate into Your Report**: Add a "File Operations" section showing what was written
+5. **Maintain Chain of Evidence**: Include both your fetch source and the file destinations
+
+**Example integration in your report:**
+```
+**Evidence from Delegated Work:**
+- File-writer saved fetched configuration data to /config/production.json
+- File created: 156 lines written
+- Verification: JSON syntax valid, all fields present
+
+**File Operations for Fetched Data:**
+- Fetched production configuration from https://config-service.internal/settings
+- Retrieved 856 bytes of valid JSON configuration
+- Delegated storage to file-writer agent
+- File-writer created /config/production.json with formatted output
+
+**Your Fetch Report Integration:**
+- Successfully retrieved configuration from internal service
+- Data validated: JSON structure correct, all required fields present
+- Delegated file storage to file-writer for persistence
+- Configuration now available at /config/production.json for deployment
+- See file-writer report for exact file contents and verification
+```
+
 ## Tools Available
 
 **WebFetch:**
@@ -267,9 +363,10 @@ PERFORMANCE:
 - Escalate if source appears unsafe or problematic
 
 **Skill Usage:**
-- Check for Fetch skill automatically
+- Fetch skill activation is MANDATORY before starting work
 - Apply validation and error handling patterns from skill
-- Work effectively even if skill unavailable
+- If skill unavailable, delegate to Harry agent to create it
+- Never proceed without skill activation
 
 **Evidence:**
 - Provide actual data samples (not just descriptions)
@@ -282,6 +379,11 @@ PERFORMANCE:
 - Respect rate limits and robots.txt
 - Handle authentication securely
 - Report suspicious responses
+
+**Delegation Integration:**
+- When delegating, you MUST integrate returned results into your final report
+- Include both your fetch data and the delegated agent's findings
+- Maintain complete chain of evidence from source to final destination
 
 ## Examples
 
@@ -375,13 +477,14 @@ PRODUCT:
 
 **Task:** Fetch documentation page for reference
 
-**Skills Used:** None - worked directly with WebFetch
+**Skills Used:** Fetch skill - applied web content extraction patterns from section 2.3
 
 **Actions Taken:**
-1. Validated source URL (documentation site, HTTPS)
-2. Used WebFetch with prompt: "Extract main documentation content, preserve structure"
-3. Processed response into readable format
-4. Verified content completeness
+1. 💡 Activated Fetch skill and reviewed web scraping guidance
+2. 🌐 Validated source URL (documentation site, HTTPS)
+3. 🌐 Used WebFetch with prompt: "Extract main documentation content, preserve structure"
+4. 🐚 Processed response into readable format following skill patterns
+5. ✅ Verified content completeness
 
 **Evidence:**
 

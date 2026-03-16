@@ -1,6 +1,6 @@
 ---
 name: list
-description: Activates for directory/file listing operations; provides tool selection, filtering patterns, and output formatting guidance
+description: Activates for directory/file listing operations; provides tool selection (Glob, LS), filtering patterns, and output formatting guidance. Use this skill whenever listing directories, exploring file structures, finding files by pattern, discovering what file types exist, or getting a structural overview of a codebase — even simple "what files are here" questions benefit from this guidance.
 tools: Read, Bash, LS, Glob, Tree
 ---
 
@@ -24,9 +24,9 @@ This skill automatically activates when:
 
 For 80% of listing operations, follow these principles:
 
-1. **Use `ls` for simple directory contents** - Quick single-directory viewing
-2. **Use `find` for recursive pattern matching** - When you need to search deeply
-3. **Use `tree` for hierarchical visualization** - Understanding structure at a glance
+1. **Use Glob for recursive pattern matching** - `Glob("**/*.py")` for file discovery by pattern
+2. **Use LS for simple directory contents** - Quick single-directory viewing
+3. **Use Bash tree for hierarchical visualization** - Understanding structure at a glance
 4. **Filter early, format late** - Apply filters first, then shape output
 5. **Be specific with patterns** - Narrow scope to avoid overwhelming output
 
@@ -178,9 +178,9 @@ ls -lt | head -20
 
 For deeper guidance, load these resources as needed:
 
-- **`resources/methodology.md`** - When you need advanced filtering strategies, organization techniques, performance optimization, or complex use case patterns
-- **`resources/patterns.md`** - When you need framework-specific patterns, output format templates, or pattern library for common scenarios
-- **`resources/troubleshooting.md`** - When encountering permission errors, performance issues, encoding problems, or edge case handling challenges
+- **`assets/methodology.md`** - When you need advanced filtering strategies, organization techniques, performance optimization, or complex use case patterns
+- **`assets/patterns.md`** - When you need framework-specific patterns, output format templates, or pattern library for common scenarios
+- **`assets/troubleshooting.md`** - When encountering permission errors, performance issues, encoding problems, or edge case handling challenges
 
 ## Anti-Patterns
 
