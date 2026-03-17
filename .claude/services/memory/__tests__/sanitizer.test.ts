@@ -171,7 +171,7 @@ klmnopqrstuvwxyz1234567890ABCDEFGHIJ
     it('should handle multiple secret types in one text', () => {
       const content = `
         Email: admin@example.com
-        API Key: STRIPPED_TEST_KEY_2
+        API Key: STRIPPED_TEST_KEY_1
         JWT: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abc123
       `;
 
@@ -232,7 +232,7 @@ klmnopqrstuvwxyz1234567890ABCDEFGHIJ
     });
 
     it('should handle unicode content correctly', () => {
-      const content = '密码: STRIPPED_TEST_KEY_2';
+      const content = '密码: STRIPPED_TEST_KEY_1';
 
       const result = sanitizeContent(content, defaultConfig);
 
@@ -244,7 +244,7 @@ klmnopqrstuvwxyz1234567890ABCDEFGHIJ
     it('should handle very long content efficiently', () => {
       // Create ~100KB of content
       const normalText = 'This is normal text. '.repeat(5000);
-      const content = normalText + 'API Key: STRIPPED_TEST_KEY_2';
+      const content = normalText + 'API Key: STRIPPED_TEST_KEY_1';
 
       const startTime = Date.now();
       const result = sanitizeContent(content, defaultConfig);
@@ -265,7 +265,7 @@ klmnopqrstuvwxyz1234567890ABCDEFGHIJ
     });
 
     it('should return true when API key detected', () => {
-      const content = 'My key is STRIPPED_TEST_KEY_2';
+      const content = 'My key is STRIPPED_TEST_KEY_1';
 
       const result = containsSecrets(content, defaultConfig);
 
@@ -282,7 +282,7 @@ klmnopqrstuvwxyz1234567890ABCDEFGHIJ
 
     it('should return false when sanitization is disabled', () => {
       const config = { ...defaultConfig, sanitizeSecrets: false };
-      const content = 'API Key: STRIPPED_TEST_KEY_2';
+      const content = 'API Key: STRIPPED_TEST_KEY_1';
 
       const result = containsSecrets(content, config);
 
@@ -446,7 +446,7 @@ c2gtZWQyNTUxOQAAACDjr0sD9YFY6K8eXYN0JjZfD8iJ7YfL4R7tKBp2SjGCUA==
         User: I need to configure my API.
         Assistant: Sure! I can help you with that.
         ${' '.repeat(10000)}
-        User: My API key is STRIPPED_TEST_KEY_2
+        User: My API key is STRIPPED_TEST_KEY_1
       `;
 
       const startTime = Date.now();
@@ -459,7 +459,7 @@ c2gtZWQyNTUxOQAAACDjr0sD9YFY6K8eXYN0JjZfD8iJ7YfL4R7tKBp2SjGCUA==
 
     it('should handle 100KB content efficiently', () => {
       const largeContent = 'Normal text content. '.repeat(5000) +
-        'API Key: STRIPPED_TEST_KEY_2';
+        'API Key: STRIPPED_TEST_KEY_1';
 
       const startTime = Date.now();
       const result = sanitizeContent(largeContent, defaultConfig);
