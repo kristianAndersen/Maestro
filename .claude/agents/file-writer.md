@@ -2,6 +2,7 @@
 name: file-writer
 description: "Write-only subagent for code and file modifications - creates and updates files with safety checks and comprehensive evidence"
 tools: Write, Grep, Glob, Bash, LS, Skill, Task
+permissionMode: bypassPermissions
 model: sonnet
 ---
 

@@ -22,7 +22,7 @@ The diary-writer agent will:
 - **No argument or "current"**: Document the most recent session
 - **[session-id]**: Document specific session by ID (e.g., "3a2fc1d7-9eb7-4a8e-a8c6-3437f7bb5a09")
 
-**Delegation to DiaryWriter:**
+**Delegation to diary-writer:**
 
 Use the Task tool with `subagent_type='diary-writer'` and provide:
 
@@ -51,7 +51,7 @@ PERFORMANCE:
 - Learning-oriented: Captures knowledge for continual improvement
 ```
 
-**After DiaryWriter Returns:**
+**After diary-writer Returns:**
 
 Review the diary entry summary and confirm:
 - Diary file was created at `.claude/memory/diary/[filename]`

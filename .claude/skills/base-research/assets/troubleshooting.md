@@ -1,4 +1,4 @@
-# BaseResearch Skill: Troubleshooting
+# base-research Skill: Troubleshooting
 
 Handling research challenges and verification strategies.
 

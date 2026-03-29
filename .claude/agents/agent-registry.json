@@ -23,7 +23,8 @@
       },
       "complexity": "complex",
       "autonomy": "high",
-      "internal": false
+      "internal": false,
+      "defaultModel": "sonnet"
     },
     "list": {
       "purpose": "Directory and file listing operations",
@@ -47,7 +48,8 @@
         ]
       },
       "complexity": "simple",
-      "autonomy": "high"
+      "autonomy": "high",
+      "defaultModel": "haiku"
     },
     "open": {
       "purpose": "File reading with context preservation",
@@ -70,34 +72,62 @@
         ]
       },
       "complexity": "simple",
-      "autonomy": "high"
+      "autonomy": "high",
+      "defaultModel": "haiku"
     },
     "file-reader": {
       "purpose": "Deep file and codebase analysis",
       "triggers": {
         "keywords": [
-          "analyze",
+          "analyze file",
+          "inspect",
           "understand",
-          "explain",
+          "explain code",
           "how does",
           "what does"
         ],
         "intentPatterns": [
-          "analyze.*code",
+          "analyze.*file",
+          "inspect.*code",
           "understand.*how",
           "explain.*this"
         ],
         "operations": [
           "analyze",
-          "research",
+          "inspect",
           "investigate"
         ]
       },
       "complexity": "medium",
-      "autonomy": "high"
+      "autonomy": "high",
+      "defaultModel": "haiku"
     },
     "file-writer": {
-      "purpose": "Code and file modifications",
+      "purpose": "Code and file modifications (superseded by m-file-writer for all write operations)",
+      "triggers": {
+        "keywords": [
+          "simple write",
+          "quick write",
+          "basic write",
+          "legacy write"
+        ],
+        "synonyms": [],
+        "intentPatterns": [],
+        "operations": [
+          "write",
+          "edit",
+          "modify",
+          "create"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "medium",
+      "domain": "writing",
+      "deprecated": true,
+      "defaultModel": "haiku"
+    },
+    "m-file-writer": {
+      "purpose": "Resilient file writer with retry, verification, and fallback — use for ALL write operations",
       "triggers": {
         "keywords": [
           "add",
@@ -106,20 +136,42 @@
           "update",
           "fix",
           "create",
-          "implement"
+          "implement",
+          "write",
+          "edit",
+          "generate",
+          "scaffold",
+          "construct",
+          "refactor",
+          "tweak",
+          "reliable write",
+          "critical write",
+          "resilient write",
+          "safe write",
+          "verified write"
         ],
         "synonyms": [
           "generate",
           "scaffold",
           "construct",
           "refactor",
-          "tweak"
+          "tweak",
+          "guaranteed write",
+          "robust write"
         ],
         "intentPatterns": [
           "add.*to",
           "modify.*file",
           "fix.*bug",
-          "implement.*feature"
+          "implement.*feature",
+          "create.*file",
+          "write.*to",
+          "update.*file",
+          "edit.*code",
+          "critical.*write",
+          "reliable.*create",
+          "must.*succeed.*write",
+          "resilient.*file"
         ],
         "operations": [
           "write",
@@ -130,7 +182,8 @@
       },
       "complexity": "medium",
       "autonomy": "medium",
-      "domain": "writing"
+      "domain": "writing",
+      "defaultModel": "haiku"
     },
     "fetch": {
       "purpose": "External data retrieval",
@@ -154,7 +207,8 @@
         ]
       },
       "complexity": "simple",
-      "autonomy": "high"
+      "autonomy": "high",
+      "defaultModel": "haiku"
     },
     "base-research": {
       "purpose": "Information gathering and codebase exploration",
@@ -185,24 +239,28 @@
         ]
       },
       "complexity": "medium",
-      "autonomy": "high"
+      "autonomy": "high",
+      "defaultModel": "sonnet"
     },
     "base-analysis": {
       "purpose": "Code and system evaluation",
       "triggers": {
         "keywords": [
+          "analyze",
           "evaluate",
           "assess",
           "review",
-          "check quality",
-          "analyze"
+          "check quality"
         ],
         "intentPatterns": [
+          "analyze.*code",
+          "analyze.*system",
           "evaluate.*code",
           "assess.*quality",
           "review.*implementation"
         ],
         "operations": [
+          "analyze",
           "evaluate",
           "assess",
           "review"
@@ -210,7 +268,8 @@
       },
       "complexity": "medium",
       "autonomy": "high",
-      "domain": "analysis"
+      "domain": "analysis",
+      "defaultModel": "sonnet"
     },
     "4d-evaluation": {
       "purpose": "Quality assessment using 4-D framework",
@@ -229,9 +288,10 @@
           "evaluate"
         ]
       },
-      "complexity": "simple",
+      "complexity": "medium",
       "autonomy": "high",
-      "internal": true
+      "internal": true,
+      "defaultModel": "sonnet"
     },
     "delegater": {
       "purpose": "Multi-agent execution coordinator - analyzes dependencies and orchestrates parallel/sequential workflows",
@@ -266,7 +326,8 @@
       },
       "complexity": "medium",
       "autonomy": "high",
-      "internal": true
+      "internal": true,
+      "defaultModel": "sonnet"
     },
     "gemini-brain": {
       "purpose": "General-purpose context offloading for large-scale operations",
@@ -301,7 +362,8 @@
         ]
       },
       "complexity": "medium",
-      "autonomy": "high"
+      "autonomy": "high",
+      "defaultModel": "sonnet"
     },
     "agent-refactorer": {
       "purpose": "Code refactoring specialist - restructures code for improved quality",
@@ -339,7 +401,8 @@
         ]
       },
       "complexity": "medium",
-      "autonomy": "high"
+      "autonomy": "high",
+      "defaultModel": "sonnet"
     },
     "harry": {
       "purpose": "Meta-orchestrator for creating and managing framework components",
@@ -369,7 +432,8 @@
       },
       "complexity": "complex",
       "autonomy": "high",
-      "fallback": true
+      "fallback": true,
+      "defaultModel": "sonnet"
     },
     "excel": {
       "purpose": "Excel data operations specialist - analyzes, calculates, and visualizes spreadsheet data",
@@ -380,6 +444,8 @@
           "xlsx",
           "xls",
           "workbook",
+          "analyze data",
+          "analyze spreadsheet",
           "data analysis",
           "pivot",
           "chart",
@@ -389,6 +455,8 @@
         ],
         "intentPatterns": [
           "analyze.*excel",
+          "analyze.*spreadsheet",
+          "analyze.*data",
           "process.*spreadsheet",
           "read.*xlsx?",
           "chart.*from.*excel",
@@ -405,7 +473,8 @@
         ]
       },
       "complexity": "medium",
-      "autonomy": "high"
+      "autonomy": "high",
+      "defaultModel": "sonnet"
     },
     "diary-writer": {
       "purpose": "Captures episodic memory from Maestro sessions for continual learning",
@@ -433,7 +502,8 @@
       },
       "complexity": "medium",
       "autonomy": "high",
-      "internal": false
+      "internal": false,
+      "defaultModel": "haiku"
     },
     "communicator": {
       "purpose": "Inter-session messaging: register sessions, send messages, list peers, read mailboxes",
@@ -465,7 +535,41 @@
         ]
       },
       "complexity": "simple",
-      "autonomy": "high"
+      "autonomy": "high",
+      "defaultModel": "haiku"
+    },
+    "ccchat": {
+      "purpose": "Multi-agent chat — communicate with peer agents across sessions via ccchat protocol",
+      "triggers": {
+        "keywords": [
+          "chat",
+          "ccchat",
+          "ask peers",
+          "council",
+          "cross-project",
+          "message agents",
+          "inter-session"
+        ],
+        "synonyms": [
+          "peer chat",
+          "agent chat",
+          "cross-session chat"
+        ],
+        "intentPatterns": [
+          "chat with.*agent",
+          "ask.*peers",
+          "send.*message.*agent",
+          "check.*messages"
+        ],
+        "operations": [
+          "communicate",
+          "chat",
+          "message"
+        ]
+      },
+      "complexity": "simple",
+      "autonomy": "high",
+      "defaultModel": "haiku"
     },
     "ui-ux-designer": {
       "purpose": "UI/UX design specialist — color theory, typography, layout, spacing, design tokens, WCAG accessibility",
@@ -497,7 +601,9 @@
           "type scale",
           "font pairing",
           "design tokens",
-          "color scheme"
+          "color scheme",
+          "analyze design",
+          "audit design"
         ],
         "synonyms": [
           "style guide",
@@ -512,6 +618,8 @@
           "stylesheet"
         ],
         "intentPatterns": [
+          "analyze.*design",
+          "audit.*design",
           "design.*color",
           "color.*palette",
           "improve.*typography",
@@ -543,7 +651,45 @@
       },
       "complexity": "medium",
       "autonomy": "high",
-      "domain": "ui-ux-design"
+      "domain": "ui-ux-design",
+      "defaultModel": "sonnet"
+    },
+    "ai-pulse": {
+      "purpose": "Search Twitter/X for Claude/AI news, fetch linked articles, and deliver prioritized digest",
+      "triggers": {
+        "keywords": [
+          "ai-pulse",
+          "ai pulse",
+          "twitter",
+          "x.com",
+          "news",
+          "digest",
+          "pulse"
+        ],
+        "synonyms": [
+          "ai news",
+          "twitter search",
+          "x search",
+          "news digest",
+          "ai digest"
+        ],
+        "intentPatterns": [
+          "search twitter",
+          "latest ai news",
+          "what's new in claude",
+          "ai pulse",
+          "news about claude"
+        ],
+        "operations": [
+          "search",
+          "fetch",
+          "summarize",
+          "digest"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high",
+      "defaultModel": "haiku"
     },
     "reflector": {
       "purpose": "Analyzes diary entries to extract patterns and propose CLAUDE.md improvements for continual learning",
@@ -582,7 +728,45 @@
       },
       "complexity": "medium",
       "autonomy": "high",
-      "internal": false
+      "internal": false,
+      "defaultModel": "sonnet"
+    },
+    "figma": {
+      "purpose": "Figma design operations — read, create, modify designs via websocket bridge",
+      "triggers": {
+        "keywords": [
+          "figma",
+          "design",
+          "banner",
+          "frame",
+          "canvas",
+          "layout",
+          "mockup",
+          "prototype",
+          "wireframe",
+          "clone banner",
+          "create banner"
+        ],
+        "intentPatterns": [
+          ".*figma.*",
+          "create.*banner",
+          "clone.*banner",
+          "modify.*design",
+          "read.*design",
+          "new.*version.*banner",
+          "design.*in.*figma"
+        ],
+        "operations": [
+          "design",
+          "create",
+          "clone",
+          "modify",
+          "read"
+        ]
+      },
+      "complexity": "medium",
+      "autonomy": "high",
+      "defaultModel": "sonnet"
     }
   }
 }

@@ -1,26 +1,21 @@
 ---
 name: base-analysis
-description: Activates for evaluation tasks; provides frameworks for assessing quality, security, maintainability, and performance. Use this skill whenever evaluating code quality or architecture, performing security assessments, reviewing changes, analyzing performance, or assessing technical debt. Don't skip it for "quick reviews" — the structured approach catches issues that informal scanning misses.
+description: Evaluation and quality assessment methodology. Use whenever evaluating code quality, performing security assessments, reviewing architecture, analyzing performance, or assessing technical debt.
 ---
 
-# BaseAnalysis Skill
+# base-analysis Skill
 
-## Purpose
+## Quick Start
 
-This skill provides comprehensive guidance for analyzing and evaluating code, systems, and deliverables. It helps you assess quality, identify issues, evaluate security, measure maintainability, and provide constructive feedback.
+For 80% of analysis operations, follow these principles:
 
-## When to Use This Skill
+1. **Use objective criteria** — Base judgments on measurable standards
+2. **Look for patterns** — Identify systemic issues, not just symptoms
+3. **Consider context** — Requirements and constraints matter
+4. **Provide evidence** — Support conclusions with specific examples
+5. **Be constructive** — Focus on improvement, not just criticism
 
-This skill automatically activates when:
-- Evaluating code quality or architecture
-- Performing security assessments
-- Reviewing pull requests or changes
-- Analyzing system performance or scalability
-- Assessing technical debt or maintainability
-
-## Claude Code Tool Mapping
-
-In Claude Code, use dedicated tools for analysis operations:
+## Tool Mapping
 
 | Task | Tool | Example |
 |---|---|---|
@@ -28,75 +23,23 @@ In Claude Code, use dedicated tools for analysis operations:
 | Read a file | Read | `Read("src/auth.py")` |
 | Find files by type | Glob | `Glob("**/*.py")` |
 | Check for secrets | Grep | `Grep(pattern="password\s*=", include="*.py")` |
-| Scan for SQL injection | Grep | `Grep(pattern="SELECT.*%s", include="*.py")` |
 
----
+## Quality Dimensions
 
-## Quick Start
+**Functionality:** Does it work correctly? Edge cases handled?
+**Readability:** Clear, understandable code? Descriptive names?
+**Maintainability:** Easy to modify? Well-documented? Manageable dependencies?
+**Testability:** Can it be tested? Are tests present and adequate?
+**Security:** Inputs validated? Credentials protected? Common vulnerabilities avoided?
 
-For 80% of analysis operations, follow these principles:
-
-1. **Use objective criteria** - Base judgments on measurable standards
-2. **Look for patterns** - Identify systemic issues, not just symptoms
-3. **Consider context** - Requirements and constraints matter
-4. **Provide evidence** - Support conclusions with specific examples
-5. **Be constructive** - Focus on improvement, not just criticism
-
-## Core Principles
-
-### 1. **Evidence-Based Assessment**
-Base conclusions on concrete evidence: code snippets, metrics, test results.
-
-### 2. **Holistic Evaluation**
-Consider multiple dimensions: functionality, quality, security, maintainability, performance.
-
-### 3. **Context Awareness**
-Evaluate against project requirements and constraints, not idealized standards.
-
-### 4. **Actionable Feedback**
-Provide specific, implementable recommendations, not vague critiques.
-
-### 5. **Balanced Perspective**
-Acknowledge strengths and weaknesses; avoid purely positive or negative assessments.
-
-## Analysis Frameworks
-
-### Framework: Quality Dimensions
-
-**Functionality:**
-- Does it work correctly?
-- Does it meet requirements?
-- Are edge cases handled?
-
-**Readability:**
-- Is code clear and understandable?
-- Are names descriptive?
-- Is structure logical?
-
-**Maintainability:**
-- Can it be easily modified?
-- Is it well-documented?
-- Are dependencies manageable?
-
-**Testability:**
-- Can it be tested?
-- Are tests present?
-- Is test coverage adequate?
-
-**Security:**
-- Are inputs validated?
-- Are credentials protected?
-- Are common vulnerabilities avoided?
-
-### Framework: Code Review Checklist
+## Code Review Checklist
 
 ```bash
 # 1. Functionality
 grep -n "TODO\|FIXME\|BUG" file.py  # Incomplete work?
-pytest tests/  # Do tests pass?
 
 # 2. Code Quality
-wc -l file.py  # Function length reasonable?
+wc -l file.py  # Size reasonable?
 grep -c "^def \|^class " file.py  # Complexity manageable?
 
 # 3. Security
@@ -105,223 +48,38 @@ grep -n "password\|secret\|key" file.py  # Hardcoded secrets?
 
 # 4. Best Practices
 grep -n "^import" file.py  # Proper imports?
-grep -n "# type:" file.py  # Type hints present?
 ```
 
-### Framework: Security Assessment
+### Security Assessment
 
-**OWASP Top 10 Check:**
-1. Injection (SQL, command, XSS)
-2. Broken authentication
-3. Sensitive data exposure
-4. XML external entities
-5. Broken access control
-6. Security misconfiguration
-7. Cross-site scripting
-8. Insecure deserialization
-9. Using components with known vulnerabilities
-10. Insufficient logging
+For full security scan scripts (OWASP Top 10, code quality bash patterns, architecture analysis), load `assets/methodology.md`.
 
-```bash
-# Security scan
-grep -rn "eval\|exec" .  # Code injection
-grep -rn "password.*=\|api_key.*=" .  # Hardcoded secrets
-grep -rn "SELECT.*+\|DELETE.*+" .  # SQL injection
-grep -rn "innerHTML\|dangerouslySetInnerHTML" .  # XSS
-```
+## 3-Pass Iterative Refinement
 
-## Analysis Patterns
+**Pass 1 — Surface scan:** Structure, naming, obvious issues, missing tests.
 
-### Pattern: Code Quality Analysis
+**Pass 2 — Deep review:** Logic correctness, security patterns, edge cases, integration points.
 
-```bash
-#!/bin/bash
-# Analyze code quality
-
-file="$1"
-
-echo "=== Code Quality Analysis: $file ==="
-
-# Size metrics
-lines=$(wc -l < "$file")
-echo "Lines: $lines"
-[ $lines -gt 300 ] && echo "⚠️  Large file (>300 lines)"
-
-# Complexity indicators
-functions=$(grep -c "^def \|^function " "$file")
-echo "Functions: $functions"
-
-# Documentation
-docstrings=$(grep -c '"""' "$file")
-echo "Docstrings: $docstrings"
-[ $docstrings -lt $functions ] && echo "⚠️  Missing docstrings"
-
-# Code smells
-long_lines=$(awk 'length > 100' "$file" | wc -l)
-[ $long_lines -gt 0 ] && echo "⚠️  $long_lines lines exceed 100 chars"
-
-todos=$(grep -c "TODO\|FIXME" "$file")
-[ $todos -gt 0 ] && echo "⚠️  $todos TODO/FIXME comments"
-
-# Test coverage
-test_file="tests/test_$(basename $file)"
-[ ! -f "$test_file" ] && echo "⚠️  No test file found"
-```
-
-### Pattern: Security Analysis
-
-```bash
-#!/bin/bash
-# Security analysis
-
-echo "=== Security Analysis ==="
-
-# Check for secrets
-echo "Checking for hardcoded secrets..."
-grep -rn "password\s*=\|api_key\s*=\|secret\s*=" . | grep -v "test\|example"
-
-# Check for dangerous functions
-echo "Checking for dangerous functions..."
-grep -rn "eval(\|exec(\|system(" .
-
-# Check for SQL injection
-echo "Checking for SQL injection risks..."
-grep -rn "SELECT.*%s\|DELETE.*%s" .
-
-# Check dependencies
-echo "Checking for vulnerable dependencies..."
-# Use safety, snyk, or similar tools
-```
-
-### Pattern: Architecture Analysis
-
-```bash
-#!/bin/bash
-# Analyze architecture
-
-echo "=== Architecture Analysis ==="
-
-# Layer separation
-echo "Checking layer structure..."
-find . -type d -name "controllers" -o -name "services" -o -name "models"
-
-# Dependency direction
-echo "Checking dependencies..."
-for file in src/**/*.py; do
-  imports=$(grep "^from\|^import" "$file" | wc -l)
-  [ $imports -gt 15 ] && echo "⚠️  $file has $imports imports (high coupling)"
-done
-
-# Circular dependencies (manual review needed)
-echo "Check for circular dependencies manually"
-```
+**Pass 3 — Synthesis:** Prioritize findings, form recommendations, draft verdict.
 
 ## Evaluation Criteria
 
-### Code Quality Scoring
+For the 4-tier scoring rubric and the full Assessment Template, load `assets/patterns.md`.
 
-**Excellent (90-100%):**
-- Clear, well-documented code
-- Comprehensive tests
-- No code smells
-- Follows best practices
+## Inter-Agent Delegation
 
-**Good (70-89%):**
-- Generally clear code
-- Adequate tests
-- Minor code smells
-- Mostly follows best practices
+When analysis requires capabilities beyond your scope:
+- **Need external docs for baseline?** → Delegate to `fetch` agent
+- **Need comprehensive discovery first?** → Delegate to `base-research` agent
+- **Need to save analysis results?** → Delegate to `file-writer` agent
 
-**Needs Improvement (50-69%):**
-- Some unclear code
-- Limited tests
-- Notable code smells
-- Some best practices violated
-
-**Poor (<50%):**
-- Unclear, complex code
-- Minimal/no tests
-- Significant code smells
-- Many best practices violated
-
-### Assessment Template
-
-```markdown
-# Code Analysis: [Component Name]
-
-## Summary
-[One paragraph overview of assessment]
-
-## Strengths
-- [Specific positive aspect with example]
-- [Another strength]
-
-## Issues Identified
-
-### Critical (Fix Immediately)
-- [Issue with severity justification]
-  - Location: file.py:123
-  - Impact: [Why it matters]
-  - Recommendation: [How to fix]
-
-### Important (Fix Soon)
-- [Issue]
-
-### Minor (Consider Fixing)
-- [Issue]
-
-## Metrics
-- Lines of code: X
-- Test coverage: Y%
-- Complexity score: Z
-
-## Recommendations
-1. [Actionable recommendation]
-2. [Another recommendation]
-
-## Verdict
-[APPROVED | NEEDS WORK | BLOCKED]
-```
-
-## Resources (Progressive Disclosure)
-
-- **`assets/methodology.md`** - Deep dive into evaluation methodologies, scoring frameworks, assessment techniques
-- **`assets/patterns.md`** - Analysis patterns for different contexts, evaluation templates, scoring rubrics
-- **`assets/troubleshooting.md`** - Handling subjective criteria, conflicting standards, incomplete information
+Use 3P format (Product, Process, Performance) when delegating.
 
 ## Anti-Patterns
 
-### ❌ Analysis Without Evidence
-```bash
-# BAD: Vague criticism
-"This code is bad"
-
-# GOOD: Specific with evidence
-"Function complexity is high (file.py:45) - 50 lines with 5 levels of nesting"
-```
-
-### ❌ Ignoring Context
-```bash
-# BAD: Rigid standards
-"This violates clean code principles"
-
-# GOOD: Context-aware
-"Given performance requirements, optimization trades readability (acceptable)"
-```
-
-### ❌ Only Finding Problems
-```markdown
-# BAD: Pure criticism
-Problems:
-- Issue 1
-- Issue 2
-
-# GOOD: Balanced
-Strengths:
-- Well-tested
-Issues:
-- Issue 1 (with fix suggestion)
-```
+- **❌ Analysis without evidence** — "This code is bad" → Say WHERE and WHY with line numbers
+- **❌ Ignoring context** — Consider performance requirements before applying rigid standards
+- **❌ Only finding problems** — Balance strengths with issues; include fix suggestions
 
 ## Quick Reference
 
@@ -334,15 +92,10 @@ Issues:
 # 5. Security scan: grep dangerous patterns
 # 6. Synthesize findings
 # 7. Provide actionable feedback
-
-# Quality checks
-wc -l file.py  # Size
-grep -c "^def " file.py  # Complexity
-grep "TODO\|FIXME" file.py  # Incomplete work
-pytest --cov  # Test coverage
-
-# Security checks
-grep "eval\|exec\|system" .  # Dangerous functions
-grep "password.*=\|key.*=" .  # Secrets
-grep "SELECT.*+" .  # SQL injection
 ```
+
+## Assets (Load When Needed)
+
+- **`assets/methodology.md`** — OWASP Top 10, full bash scripts for code quality / security / architecture analysis, systematic review phases, risk-based assessment. Load for comprehensive audits.
+- **`assets/patterns.md`** — 4-tier scoring rubric, Assessment Template, Component Analysis template, Architecture Review template, PR review format, security audit format. Load when you need report templates or scoring frameworks.
+- **`assets/troubleshooting.md`** — Handling subjective criteria, conflicting standards, incomplete information, verification strategies. Load when facing difficult judgment calls.

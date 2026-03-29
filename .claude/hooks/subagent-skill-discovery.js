@@ -11,11 +11,19 @@
  * Phase 2 smart caching: Session-aware output with 40-60% cumulative token reduction
  */
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, renameSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { minimatch } from 'minimatch';
-import { isEnabled } from '../lib/feature-flags.js';
+// Feature flags - resilient import with explicit failure logging
+let isEnabled;
+try {
+  const featureFlags = await import('../lib/feature-flags.js');
+  isEnabled = featureFlags.isEnabled;
+} catch (error) {
+  console.error(`[Skill Discovery] ERROR: Failed to load feature-flags.js: ${error.message}. All feature flags will default to disabled. Skills may not be recommended correctly.`);
+  isEnabled = () => false;
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -213,8 +221,10 @@ function updateSkillTracking(context, recommendedSkills, sessionStatus, currentD
     // Update timestamp
     context.lastUpdated = new Date().toISOString();
 
-    // Write back to context.json
-    writeFileSync(contextPath, JSON.stringify(context, null, 2), 'utf-8');
+    // Write back to context.json (atomic: tmp + rename prevents race conditions).
+    const tmpPath = contextPath + '.tmp';
+    writeFileSync(tmpPath, JSON.stringify(context, null, 2), 'utf-8');
+    renameSync(tmpPath, contextPath);
   } catch {
     // Fail silently, tracking is optional
   }
@@ -289,6 +299,35 @@ function matchSkill(skillConfig, task, context = {}) {
   }
 
   return matches;
+}
+
+
+/**
+ * Detect if the current prompt is a subagent task (3P delegation format).
+ *
+ * Since UserPromptSubmit only exposes `prompt` and `cwd` (no session_id or
+ * agent_id), we cannot directly identify subagent context from hook metadata.
+ * Instead, we detect the 3P delegation format that Maestro uses for all Task
+ * delegations: a prompt containing PRODUCT/PROCESS/PERFORMANCE headers.
+ *
+ * If this is a subagent prompt, we skip the session dedup cache so the
+ * subagent gets fresh skill recommendations (it has its own isolated context
+ * window and hasn't seen any skills the conductor received).
+ *
+ * v2 note: Replace with session_id scoping if Claude Code adds agent context
+ * to UserPromptSubmit hook input in a future version.
+ *
+ * @param {string} prompt - The raw prompt string
+ * @returns {boolean} True if this looks like a subagent 3P delegation prompt
+ */
+function isSubagentPrompt(prompt) {
+  if (!prompt || typeof prompt !== 'string') return false;
+  // 3P format requires at least two of three headers to avoid false positives
+  const hasProduct = /\bPRODUCT\b[:\s]/i.test(prompt);
+  const hasProcess = /\bPROCESS\b[:\s]/i.test(prompt);
+  const hasPerformance = /\bPERFORMANCE\b[:\s]/i.test(prompt);
+  const headerCount = [hasProduct, hasProcess, hasPerformance].filter(Boolean).length;
+  return headerCount >= 2;
 }
 
 /**
@@ -534,7 +573,11 @@ async function main() {
 
     // Detect explicit skill requests
     const isExplicitRequest = isExplicitSkillRequest(task);
-    const forceRecommend = isExplicitRequest || sessionStatus === true;
+    // If this is a subagent prompt (3P delegation format), bypass the session
+    // dedup cache — the subagent has its own isolated context window and needs
+    // fresh skill recommendations regardless of what the conductor already saw.
+    const isSubagent = isSubagentPrompt(task);
+    const forceRecommend = isExplicitRequest || sessionStatus === true || isSubagent;
 
     // Combine file and project context
     const context = {

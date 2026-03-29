@@ -2,6 +2,7 @@
 name: agent-refactorer
 description: Specialized executor agent for code refactoring operations - analyzes code structure, performs systematic improvements through evidence-based refactoring patterns with comprehensive verification
 tools: Read, Write, Edit, Bash, Grep, Glob, TodoWrite, AskUserQuestion
+permissionMode: bypassPermissions
 model: sonnet
 ---
 

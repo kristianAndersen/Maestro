@@ -1,6 +1,6 @@
 ---
 name: list
-description: Activates for directory/file listing operations; provides tool selection (Glob, LS), filtering patterns, and output formatting guidance. Use this skill whenever listing directories, exploring file structures, finding files by pattern, discovering what file types exist, or getting a structural overview of a codebase — even simple "what files are here" questions benefit from this guidance.
+description: Activates for directory/file listing operations. Use this skill whenever listing directories, exploring file structures, finding files by pattern, discovering what file types exist, or getting a structural overview of a codebase — even simple "what files are here" questions benefit from this guidance.
 tools: Read, Bash, LS, Glob, Tree
 ---
 
@@ -19,6 +19,22 @@ This skill automatically activates when:
 - Finding files matching specific patterns
 - Generating directory trees or file inventories
 - Scanning for specific file types across directories
+
+## Claude Code Tool Mapping
+
+Always prefer Claude Code native tools over shell commands. Shell commands via Bash have overhead and bypass Claude Code's optimized file system access.
+
+| Shell Command                         | Claude Code Equivalent                      | Notes                                       |
+| ------------------------------------- | ------------------------------------------- | ------------------------------------------- |
+| `find . -name "*.js"`                 | `Glob(pattern: "**/*.js")`                  | Glob is the primary tool for pattern search |
+| `find . -name "*.js" -o -name "*.ts"` | `Glob(pattern: "**/*.{js,ts}")`             | Glob supports brace expansion               |
+| `grep -r "pattern"`                   | `Grep(pattern: "pattern")`                  | Grep searches file contents natively        |
+| `ls directory/`                       | `LS` tool or `Glob(pattern: "directory/*")` | LS for simple view, Glob for pattern filter |
+| `ls -la`                              | `LS` tool                                   | LS handles metadata display                 |
+| `tree -L 2`                           | `Bash: tree -L 2`                           | No native equivalent; Bash is correct here  |
+| `du -sh */`                           | `Bash: du -sh */`                           | No native equivalent; Bash is correct here  |
+
+**Rule of thumb:** Reach for Glob and Grep first. Only fall back to Bash for operations with no native Claude Code equivalent (tree, du, size/date predicates).
 
 ## Quick Start
 
@@ -54,15 +70,15 @@ Use consistent glob patterns and naming conventions across operations for predic
 
 ## Tool Selection Matrix
 
-| Scenario              | Tool            | Command Example                                     | When to Use                           |
-| --------------------- | --------------- | --------------------------------------------------- | ------------------------------------- |
-| Single directory list | `ls`            | `ls -la /path`                                      | Quick view, basic metadata            |
-| Recursive file search | `find`          | `find . -name "*.js"`                               | Pattern matching, complex filters     |
-| Directory tree        | `tree`          | `tree -L 2 /path`                                   | Visual hierarchy, structure overview  |
-| File counting         | `find` + `wc`   | `find . -type f \| wc -l`                           | Statistics, inventory                 |
-| Size-based listing    | `du`            | `du -sh */ \| sort -h`                              | Disk usage, large file identification |
-| Recent files          | `ls` + sort     | `ls -lt \| head -20`                                | Finding recent changes                |
-| Pattern with content  | `grep` + `find` | `find . -name "*.md" -exec grep -l "pattern" {} \;` | Content-based discovery               |
+| Scenario              | Tool           | Example                                             | When to Use                           |
+| --------------------- | -------------- | --------------------------------------------------- | ------------------------------------- |
+| Single directory list | `LS`           | `LS(path: "/path")`                                 | Quick view, basic metadata            |
+| Recursive file search | `Glob`         | `Glob(pattern: "**/*.js")`                          | Pattern matching, file discovery      |
+| Directory tree        | `Bash: tree`   | `Bash: tree -L 2 /path`                             | Visual hierarchy, structure overview  |
+| File counting         | `Glob` + count | `Glob(pattern: "**/*.ts")` then count results       | Statistics, inventory                 |
+| Size-based listing    | `Bash: du`     | `Bash: du -sh */ \| sort -h`                        | Disk usage, large file identification |
+| Recent files          | `Bash: ls -lt` | `Bash: ls -lt \| head -20`                          | Finding recent changes                |
+| Pattern with content  | `Grep`         | `Grep(pattern: "pattern", glob: "**/*.md")`         | Content-based discovery               |
 
 ## Common Patterns
 
@@ -231,15 +247,17 @@ find /var/log -name "*.log" -mtime -7 | head -50
 ```
 Need to list files?
   ├─ Single directory only?
-  │   └─ Use: ls
+  │   └─ Use: LS tool
   ├─ Recursive with patterns?
-  │   └─ Use: find
+  │   └─ Use: Glob(pattern: "**/<pattern>")
+  ├─ Search file contents?
+  │   └─ Use: Grep(pattern: "...", glob: "**/*.ext")
   ├─ Visual tree structure?
-  │   └─ Use: tree
+  │   └─ Use: Bash — tree
   ├─ Size/disk usage?
-  │   └─ Use: du
+  │   └─ Use: Bash — du
   └─ Complex filtering (size/date/type)?
-      └─ Use: find with predicates
+      └─ Use: Bash — find with predicates
 ```
 
 ### Common Glob Patterns
@@ -250,7 +268,7 @@ Need to list files?
 | `?`      | Single character            | `file?.txt` matches file1.txt, fileA.txt |
 | `[abc]`  | One of: a, b, or c          | `file[123].txt`                          |
 | `[!abc]` | Not a, b, or c              | `file[!0-9].txt`                         |
-| `**`     | Any directories (recursive) | `**/*.js` (in find context)              |
+| `**`     | Any directories (recursive) | `**/*.js` matches all JS files anywhere  |
 
 ### Quick Commands Cheatsheet
 

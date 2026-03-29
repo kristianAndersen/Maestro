@@ -1,3 +1,8 @@
+---
+name: ui-ux-design
+description: Use this skill whenever designing color schemes, choosing typography, building layout systems, auditing for WCAG compliance, creating design tokens, or working on visual design decisions. Activate for any task involving colors, fonts, spacing, contrast ratios, responsive design, or design system components.
+---
+
 # UI/UX Design Skill
 
 Applied visual design for interfaces. Provides specific values, ratios, standards, and CSS implementation patterns for color, typography, layout, and design systems. Framework-agnostic.

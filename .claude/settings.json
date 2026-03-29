@@ -1,27 +1,33 @@
 {
+  "agent": "maestro",
+  "statusLine": {
+    "type": "command",
+    "command": "/Users/awesome/dev/devtest/Maestro/.claude/hooks/statusline.sh",
+    "padding": 1
+  },
   "hooks": {
     "UserPromptSubmit": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/session-change-detector.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/session-change-detector.js"
           },
           {
             "type": "command",
-            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/session-initializer.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/session-initializer.js"
           },
           {
             "type": "command",
-            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/maestro-agent-suggester.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/maestro-agent-suggester.js"
           },
           {
             "type": "command",
-            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/subagent-skill-discovery.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/subagent-skill-discovery.js"
           },
           {
             "type": "command",
-            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/ipc-receiver.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/ipc-receiver.js"
           }
         ]
       },
@@ -29,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node /Users/awesome/dev/devtest/ccchat/hooks/ccchat-poll.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun $HOME/dev/devtest/ccchat-improve/hooks/poll.js"
           }
         ]
       }
@@ -40,16 +46,26 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/work-tracker.sh"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH /Users/awesome/dev/devtest/Maestro/.claude/hooks/work-tracker.sh"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/context-tracker.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/context-tracker.js"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/memory-retention-cleanup.js",
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/memory-retention-cleanup.js",
             "description": "Daily memory retention cleanup"
+          }
+        ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/delegation-logger.js",
+            "description": "Log Task dispatches for agent name resolution at SubagentStop"
           }
         ]
       }
@@ -59,15 +75,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/evaluation-reminder.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/evaluation-reminder.js"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/enforce-4d-evaluation.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/enforce-4d-evaluation.js"
           },
           {
             "type": "command",
-            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun .claude/hooks/ipc-sender.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/ipc-sender.js"
+          },
+          {
+            "type": "command",
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/skill-extraction-detector.js"
           }
         ]
       },
@@ -75,7 +95,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node /Users/awesome/dev/devtest/ccchat/hooks/ccchat-stop.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun $HOME/dev/devtest/ccchat-improve/hooks/stop.js"
           }
         ]
       }
@@ -85,7 +105,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/session-persister.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/session-persister.js"
           }
         ]
       }
@@ -95,7 +115,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/session-finalizer.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/diary-capture.js"
+          },
+          {
+            "type": "command",
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/session-finalizer.js"
           }
         ]
       }
@@ -105,10 +129,183 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/session-persister.js"
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/subagent-error-reporter.js"
+          },
+          {
+            "type": "command",
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/session-persister.js"
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/pre-delegation-validator.js",
+            "description": "Validate delegation context before Task tool fires (v2 item #8)"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Read",
+      "Write",
+      "Edit",
+      "Grep",
+      "Glob",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(bun *)",
+      "Bash(node *)",
+      "Bash(tsc *)",
+      "Bash(python3 *)",
+      "Bash(python *)",
+      "Bash(pip3 *)",
+      "Bash(pip install *)",
+      "Bash(cargo *)",
+      "Bash(go *)",
+      "Bash(ruby *)",
+      "Bash(java *)",
+      "Bash(javac *)",
+      "Bash(deno *)",
+      "Bash(pnpm *)",
+      "Bash(yarn *)",
+      "Bash(brew list*)",
+      "Bash(brew info*)",
+      "Bash(brew --prefix*)",
+      "Bash(make *)",
+      "Bash(cmake *)",
+      "Bash(jest *)",
+      "Bash(vitest *)",
+      "Bash(pytest *)",
+      "Bash(eslint *)",
+      "Bash(prettier *)",
+      "Bash(biome *)",
+      "Bash(tsc --noEmit*)",
+      "Bash(swc *)",
+      "Bash(esbuild *)",
+      "Bash(vite *)",
+      "Bash(turbo *)",
+      "Bash(nx *)",
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git branch*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout *)",
+      "Bash(git stash*)",
+      "Bash(git show*)",
+      "Bash(git remote*)",
+      "Bash(git rev-parse*)",
+      "Bash(git ls-files*)",
+      "Bash(git ls-tree*)",
+      "Bash(git fetch*)",
+      "Bash(git tag*)",
+      "Bash(git merge *)",
+      "Bash(git cherry-pick *)",
+      "Bash(git revert *)",
+      "Bash(git blame *)",
+      "Bash(git shortlog*)",
+      "Bash(git describe*)",
+      "Bash(git config --get*)",
+      "Bash(git config --list*)",
+      "Bash(git worktree *)",
+      "Bash(git switch *)",
+      "Bash(git restore --staged *)",
+      "Bash(gh pr *)",
+      "Bash(gh issue *)",
+      "Bash(gh repo view*)",
+      "Bash(gh repo clone*)",
+      "Bash(gh api *)",
+      "Bash(gh run *)",
+      "Bash(gh workflow *)",
+      "Bash(gh release *)",
+      "Bash(gh gist *)",
+      "Bash(gh search *)",
+      "Bash(gh auth status*)",
+      "Bash(mkdir *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(chmod *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(touch *)",
+      "Bash(mktemp*)",
+      "Bash(find *)",
+      "Bash(file *)",
+      "Bash(stat *)",
+      "Bash(du *)",
+      "Bash(df *)",
+      "Bash(ln *)",
+      "Bash(readlink *)",
+      "Bash(tree *)",
+      "Bash(tar *)",
+      "Bash(unzip *)",
+      "Bash(gzip *)",
+      "Bash(gunzip *)",
+      "Bash(pwd*)",
+      "Bash(which *)",
+      "Bash(where *)",
+      "Bash(whoami*)",
+      "Bash(date*)",
+      "Bash(env*)",
+      "Bash(printenv*)",
+      "Bash(dirname *)",
+      "Bash(basename *)",
+      "Bash(realpath *)",
+      "Bash(type *)",
+      "Bash(uname*)",
+      "Bash(sw_vers*)",
+      "Bash(id *)",
+      "Bash(id)",
+      "Bash(hostname*)",
+      "Bash(uptime*)",
+      "Bash(ps aux*)",
+      "Bash(ps -ef*)",
+      "Bash(lsof *)",
+      "Bash(open *)",
+      "Bash(pbcopy*)",
+      "Bash(pbpaste*)",
+      "Bash(sort *)",
+      "Bash(uniq *)",
+      "Bash(cut *)",
+      "Bash(tr *)",
+      "Bash(awk *)",
+      "Bash(sed *)",
+      "Bash(jq *)",
+      "Bash(diff *)",
+      "Bash(tee *)",
+      "Bash(xargs *)",
+      "Bash(printf *)",
+      "Bash(echo *)",
+      "Bash(comm *)",
+      "Bash(paste *)",
+      "Bash(column *)",
+      "Bash(fold *)",
+      "Bash(expand *)",
+      "Bash(rev *)",
+      "Bash(nl *)",
+      "Bash(md5 *)",
+      "Bash(shasum *)",
+      "Bash(base64 *)",
+      "Bash(od *)",
+      "Bash(xxd *)",
+      "Bash(iconv *)",
+      "Bash(cat *|*)",
+      "Bash(echo *|*)",
+      "Bash(git *|*)",
+      "Bash(ls *|*)",
+      "Bash(find *|*)",
+      "Bash(ps *|*)"
     ]
   }
 }

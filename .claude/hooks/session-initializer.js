@@ -49,7 +49,7 @@ function parseWorkLog(logPath) {
       if (entries.length >= 5) break; // Last 5 entries
 
       // Match patterns like "• .claude/hooks/file.js (action)"
-      const fileMatch = line.match(/^•\s+([^\s]+\.[a-z]{2,4})/i);
+      const fileMatch = line.match(/^\[[\d\-T:.Z]+\]\s+\w+:\s+(\S+\.[a-z]{2,4}\S*)/i);
       if (fileMatch) {
         entries.push(fileMatch[1]);
       }
@@ -117,6 +117,18 @@ function main() {
       // Silent exit if stdin not available
       process.exit(0);
     }
+
+    // Check for pending diary staging files (runs regardless of Maestro activation)
+    const DIARY_STAGING_DIR = join(__dirname, '..', 'memory', 'diary', 'staging');
+    try {
+      if (existsSync(DIARY_STAGING_DIR)) {
+        const stagingFiles = readdirSync(DIARY_STAGING_DIR)
+          .filter(f => f.endsWith('.json'));
+        if (stagingFiles.length > 0) {
+          console.log(`\n📓 ${stagingFiles.length} diary ${stagingFiles.length === 1 ? 'entry' : 'entries'} pending capture — run /diary to process staged sessions.\n`);
+        }
+      }
+    } catch { /* silent */ }
 
     // Only proceed if Maestro activation detected
     if (!isMaestroActivation(userPrompt)) {

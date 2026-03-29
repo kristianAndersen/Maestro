@@ -3,7 +3,7 @@
 > An AI orchestration framework that makes Claude Code operate like a symphony conductor - delegating work to specialized agents, evaluating outputs through quality gates, and iterating until excellence is achieved.
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org)
+[![Bun](https://img.shields.io/badge/bun-%3E%3D1.0.0-brightgreen.svg)](https://bun.sh)
 [![Claude Code](https://img.shields.io/badge/Claude-Code-orange.svg)](https://claude.ai/code)
 
 ---
@@ -216,6 +216,10 @@ Located in `.claude/hooks/*.{js,sh}`, hooks trigger automatically on Claude Code
 | `work-tracker.sh` | PostToolUse | Logs all file modifications |
 | `evaluation-reminder.js` | Stop | Reminds to run 4-D evaluation |
 | `enforce-4d-evaluation.js` | Stop | Enforces mandatory quality gates |
+| `delegation-logger.js` | PostToolUse | Logs delegation completions with taskHash correlation |
+| `subagent-error-reporter.js` | SubagentStop | Captures subagent completion/failure metadata |
+| `diary-capture.js` | Stop | Captures session memory for diary entries |
+| `pre-delegation-validator.js` | PreToolUse | Validates delegation context before dispatch |
 
 ### 2. Agents Layer (Specialized Subagents)
 
@@ -223,22 +227,37 @@ Located in `.claude/agents/*.md`, each agent specializes in specific operations:
 
 **Core Agents:**
 - `maestro.md` - Meta-conductor that orchestrates all other agents
+- `m-file-writer.md` - Resilient file writer with retry and verification (**primary write agent**)
 - `file-reader.md` - Deep file/codebase analysis
-- `file-writer.md` - Code and file modifications
 - `base-research.md` - Information gathering and exploration
 - `base-analysis.md` - Code/system evaluation
 - `4d-evaluation.md` - Quality assessment (mandatory quality gate)
 - `agent-refactorer.md` - Code refactoring specialist
 
+**Specialized Agents:**
+- `ai-pulse.md` - Twitter/X AI news aggregation
+- `figma.md` - Figma design operations
+- `ui-ux-designer.md` - Color theory, typography, layout, WCAG compliance
+- `excel.md` - Excel/spreadsheet data operations
+- `diary-writer.md` - Episodic session memory capture
+- `reflector.md` - Diary analysis and improvement proposals
+- `agent-creator.md` - Agent creation and registry optimization
+
 **Utility Agents:**
-- `list.md`, `open.md` - File operations
+- `list.md`, `open.md` - File listing and reading
 - `fetch.md` - External data retrieval
 - `gemini-brain.md` - Context offloading for large-scale operations
 - `harry.md` - Meta-orchestrator for creating/updating framework components
+- `communicator.md` - Inter-session messaging
+
+**Debate Persona Agents:**
+- `emilio.md` - Cross-functional integrator PM
+- `ludvig.md` - Pragmatic systems leader
+- `nicola.md` - Systems-minded investigator-builder
 
 **Internal Agents** (invoked by Harry):
-- Creator agents: `create-agent.md`, `create-hooks.md`, etc.
-- Auditor agents: `hook-auditor.md`, `skill-auditor.md`, etc.
+- Creator agents: `create-agent.md`, `create-hooks.md`, `create-commands.md`, `create-subagents.md`, `create-meta-prompts.md`
+- Auditor agents: `hook-auditor.md`, `skill-auditor.md`, `slash-command-auditor.md`, `subagent-auditor.md`
 
 ### 3. Skills Layer (Progressive Guidance)
 
@@ -310,8 +329,8 @@ Suggestions are informational - you can choose to use them or proceed differentl
 | Agent | Purpose | When to Use |
 |-------|---------|-------------|
 | **maestro** | Meta-conductor | Orchestrating complex multi-step workflows |
+| **m-file-writer** | Resilient file writes | Creating/updating files (primary write agent) |
 | **file-reader** | Deep analysis | Understanding codebases, complex files |
-| **file-writer** | Code modifications | Creating/updating files with safety checks |
 | **base-research** | Information gathering | Exploring unknowns, learning patterns |
 | **base-analysis** | Evaluation | Assessing code quality, finding issues |
 | **4d-evaluation** | Quality gates | Evaluating deliverables for excellence |
@@ -319,6 +338,12 @@ Suggestions are informational - you can choose to use them or proceed differentl
 | **fetch** | External data | Retrieving data from APIs, URLs |
 | **gemini-brain** | Large-scale ops | Context offloading for massive codebases |
 | **harry** | Framework updates | Creating/modifying Maestro components |
+| **ai-pulse** | AI news digest | Aggregating Twitter/X AI news |
+| **figma** | Design operations | Figma canvas manipulation |
+| **ui-ux-designer** | Design specialist | Color, typography, layout, accessibility |
+| **excel** | Spreadsheet ops | Excel data analysis and transformation |
+| **diary-writer** | Session memory | Capturing episodic session memory |
+| **reflector** | Learning loop | Analyzing diaries, proposing improvements |
 
 ### Skills
 
@@ -332,6 +357,13 @@ Suggestions are informational - you can choose to use them or proceed differentl
 | **base-analysis** | Evaluation frameworks | Analyzing code/systems |
 | **4d-evaluation** | Quality criteria | Running quality assessments |
 | **hallucination-detection** | Accuracy checks | Preventing AI hallucinations |
+| **maestro-orchestration** | Conductor guidance | Delegating and orchestrating |
+| **delegater** | Multi-agent coordination | Running parallel/sequential agents |
+| **ui-ux-design** | Design methodology | Color, typography, layout tasks |
+| **ai-pulse** | News aggregation | AI news digest requests |
+| **excel** | Spreadsheet patterns | Excel/data operations |
+| **figma** | Design operations | Figma canvas work |
+| **lighthouse** | Performance auditing | Web performance/accessibility audits |
 
 ---
 
@@ -492,6 +524,8 @@ Use the `harry` meta-orchestrator:
 5. **Framework Agnostic**: Zero bias toward any language, framework, or methodology
 6. **Context Preservation**: Progressive disclosure keeps main context clean while enabling complex work
 7. **Evidence-Based**: All claims must include proof with specific file paths and line numbers
+8. **Resilient Writes**: All file writes go through m-file-writer with retry logic, ghost write detection, and read-after-write verification
+9. **Observability**: All delegations, evaluations, and subagent runs are logged with taskHash correlation for debugging and compliance measurement
 
 ---
 
@@ -511,4 +545,4 @@ Check the [documentation](#documentation) above or ask Maestro directly:
 
 ---
 
-**Built with ❤️ using [Claude Code](https://claude.ai/code)**
+**Built with love using [Claude Code](https://claude.ai/code)**

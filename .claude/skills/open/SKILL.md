@@ -1,6 +1,6 @@
 ---
 name: open
-description: Activates for file reading operations; provides guidance on when to use full vs partial reads, how to navigate large files with offset/limit, and how to preserve context across multi-file reading operations. Use this skill whenever reading files to understand their content, deciding whether to read a whole file or specific sections, or working with files that may be too large to load entirely at once.
+description: Activates for file reading operations. Use this skill whenever reading files to understand their content, deciding whether to read a whole file or specific sections, or working with files that may be too large to load entirely at once.
 ---
 
 # Open Skill

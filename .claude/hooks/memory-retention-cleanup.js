@@ -17,14 +17,14 @@
  */
 
 import { Database } from 'bun:sqlite';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, appendFileSync } from 'fs';
 
-// Dynamically import TypeScript modules
-const { loadConfig } = await import('../services/memory/privacy-config.ts');
-const { enforceRetentionPolicy, getDatabaseSize } = await import('../services/database/retention.ts');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-const LAST_RUN_FILE = join(process.cwd(), '.claude', 'memory', '.last-retention-cleanup');
+const LAST_RUN_FILE = join(__dirname, '..', 'memory', '.last-retention-cleanup');
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 /**
@@ -36,6 +36,10 @@ async function main() {
     if (!shouldRunCleanup()) {
       return; // Not time yet, exit silently
     }
+
+    // Dynamically import TypeScript modules (only when cleanup actually runs)
+    const { loadConfig } = await import('../services/memory/privacy-config.ts');
+    const { enforceRetentionPolicy, getDatabaseSize } = await import('../services/database/retention.ts');
 
     console.log('[memory-retention] Starting daily retention cleanup');
 
@@ -55,7 +59,7 @@ async function main() {
     }
 
     // Open database
-    const dbPath = join(process.cwd(), '.claude', 'memory', 'conversations.db');
+    const dbPath = join(__dirname, '..', 'memory', 'conversations.db');
     if (!existsSync(dbPath)) {
       console.warn('[memory-retention] Database not found, skipping cleanup');
       updateLastRunTimestamp(); // prevent re-running until next day
@@ -78,7 +82,7 @@ async function main() {
     const spaceReclaimed = sizeBefore - sizeAfter;
 
     // Log results
-    const logPath = join(process.cwd(), '.claude', 'logs', 'retention.log');
+    const logPath = join(__dirname, '..', 'logs', 'retention.log');
     const logEntry = `${new Date().toISOString()} | Deleted ${deletedCount} conversations | Reclaimed ${formatBytes(spaceReclaimed)} | Retention: ${config.retentionDays} days\n`;
 
     appendLog(logPath, logEntry);
@@ -93,7 +97,7 @@ async function main() {
     console.error('[memory-retention] Cleanup failed:', errorMsg);
 
     // Log error
-    const logPath = join(process.cwd(), '.claude', 'logs', 'retention.log');
+    const logPath = join(__dirname, '..', 'logs', 'retention.log');
     const logEntry = `${new Date().toISOString()} | ERROR: ${errorMsg}\n`;
     try {
       appendLog(logPath, logEntry);
@@ -140,7 +144,7 @@ function shouldRunCleanup() {
  * Update last run timestamp
  */
 function updateLastRunTimestamp() {
-  const dir = join(process.cwd(), '.claude', 'memory');
+  const dir = join(__dirname, '..', 'memory');
 
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true });
@@ -153,7 +157,7 @@ function updateLastRunTimestamp() {
  * Append entry to log file
  */
 function appendLog(logPath, entry) {
-  const logDir = join(process.cwd(), '.claude', 'logs');
+  const logDir = join(__dirname, '..', 'logs');
 
   if (!existsSync(logDir)) {
     mkdirSync(logDir, { recursive: true });

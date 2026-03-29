@@ -244,7 +244,7 @@ Understanding:
 
 ↓ (C depends on B)
 
-Task C: @file-writer
+Task C: @m-file-writer
 **PRODUCT:** Add comprehensive logging
 
 **Context from Task B:**
@@ -298,7 +298,7 @@ Task C results: Takes 800ms, 15 DB queries
 
 ↓ (D depends on both B and C)
 
-Task D: @file-writer
+Task D: @m-file-writer
 **PRODUCT:** Optimize profile endpoint
 
 **Context from Task B:**
@@ -417,9 +417,9 @@ Group endpoints by domain
 ↓ Evaluate all
 
 Stage 3 (Parallel):
-├─ @file-writer: Add caching to user endpoints
-├─ @file-writer: Add caching to content endpoints
-└─ @file-writer: Add caching to admin endpoints
+├─ @m-file-writer: Add caching to user endpoints
+├─ @m-file-writer: Add caching to content endpoints
+└─ @m-file-writer: Add caching to admin endpoints
 ↓ Evaluate all
 
 Deliver: Caching implemented across all 25 endpoints

@@ -1,6 +1,6 @@
-# BaseAnalysis Skill: Methodology
+# base-analysis Skill: Methodology
 
-Evaluation methodologies, assessment frameworks, and scoring techniques.
+Evaluation methodologies, assessment frameworks, scoring techniques, and analysis bash patterns. Load this asset when you need systematic review protocols, security scan patterns, or architecture analysis scripts.
 
 ## Evaluation Methodologies
 
@@ -110,4 +110,113 @@ for file in src/*.py; do
   imports=$(grep -c "^import\|^from" "$file")
   echo "$file: $imports dependencies"
 done | sort -t: -k2 -rn | head -5
+```
+
+## Security Assessment
+
+### OWASP Top 10 Check
+
+1. Injection (SQL, command, XSS)
+2. Broken authentication
+3. Sensitive data exposure
+4. XML external entities
+5. Broken access control
+6. Security misconfiguration
+7. Cross-site scripting
+8. Insecure deserialization
+9. Using components with known vulnerabilities
+10. Insufficient logging
+
+```bash
+# Security scan
+grep -rn "eval\|exec" .             # Code injection
+grep -rn "password.*=\|api_key.*=" . # Hardcoded secrets
+grep -rn "SELECT.*+\|DELETE.*+" .    # SQL injection
+grep -rn "innerHTML\|dangerouslySetInnerHTML" . # XSS
+```
+
+## Analysis Script Patterns
+
+### Pattern: Code Quality Analysis
+
+```bash
+#!/bin/bash
+# Analyze code quality
+
+file="$1"
+
+echo "=== Code Quality Analysis: $file ==="
+
+# Size metrics
+lines=$(wc -l < "$file")
+echo "Lines: $lines"
+[ $lines -gt 300 ] && echo "⚠️  Large file (>300 lines)"
+
+# Complexity indicators
+functions=$(grep -c "^def \|^function " "$file")
+echo "Functions: $functions"
+
+# Documentation
+docstrings=$(grep -c '"""' "$file")
+echo "Docstrings: $docstrings"
+[ $docstrings -lt $functions ] && echo "⚠️  Missing docstrings"
+
+# Code smells
+long_lines=$(awk 'length > 100' "$file" | wc -l)
+[ $long_lines -gt 0 ] && echo "⚠️  $long_lines lines exceed 100 chars"
+
+todos=$(grep -c "TODO\|FIXME" "$file")
+[ $todos -gt 0 ] && echo "⚠️  $todos TODO/FIXME comments"
+
+# Test coverage
+test_file="tests/test_$(basename $file)"
+[ ! -f "$test_file" ] && echo "⚠️  No test file found"
+```
+
+### Pattern: Security Analysis
+
+```bash
+#!/bin/bash
+# Security analysis
+
+echo "=== Security Analysis ==="
+
+# Check for secrets
+echo "Checking for hardcoded secrets..."
+grep -rn "password\s*=\|api_key\s*=\|secret\s*=" . | grep -v "test\|example"
+
+# Check for dangerous functions
+echo "Checking for dangerous functions..."
+grep -rn "eval(\|exec(\|system(" .
+
+# Check for SQL injection
+echo "Checking for SQL injection risks..."
+grep -rn "SELECT.*%s\|DELETE.*%s" .
+
+# Check dependencies
+echo "Checking for vulnerable dependencies..."
+# Use safety, snyk, or similar tools
+```
+
+### Pattern: Architecture Analysis
+
+```bash
+#!/bin/bash
+# Analyze architecture
+
+echo "=== Architecture Analysis ==="
+
+# Layer separation
+echo "Checking layer structure..."
+find . -type d -name "controllers" -o -name "services" -o -name "models"
+
+# Dependency direction
+echo "Checking dependencies..."
+for file in src/**/*.py; do
+  imports=$(grep "^from\|^import" "$file" | wc -l)
+  [ $imports -gt 15 ] && echo "⚠️  $file has $imports imports (high coupling)"
+done
+
+# Circular dependencies (manual review needed)
+echo "Check for circular dependencies manually"
 ```

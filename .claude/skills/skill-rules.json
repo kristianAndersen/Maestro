@@ -56,6 +56,9 @@
       },
       "fileTriggers": {
         "pathPatterns": []
+      },
+      "skipConditions": {
+        "sessionMarker": "open-skill-used"
       }
     },
     "read": {
@@ -152,10 +155,8 @@
           "**/*.cpp",
           "**/*.cs",
           "**/*.php",
-          "**/*.json",
           "**/*.yaml",
-          "**/*.yml",
-          "**/*.md"
+          "**/*.yml"
         ]
       },
       "domain": "writing"
@@ -259,21 +260,7 @@
         ]
       },
       "fileTriggers": {
-        "pathPatterns": [
-          "**/*.js",
-          "**/*.ts",
-          "**/*.tsx",
-          "**/*.jsx",
-          "**/*.py",
-          "**/*.go",
-          "**/*.java",
-          "**/*.rb",
-          "**/*.rs",
-          "**/*.c",
-          "**/*.cpp",
-          "**/*.cs",
-          "**/*.php"
-        ]
+        "pathPatterns": []
       },
       "domain": "analysis"
     },
@@ -424,44 +411,6 @@
         "pathPatterns": []
       }
     },
-    "ccchat": {
-      "type": "domain",
-      "enforcement": "suggest",
-      "priority": "high",
-      "defer_loading": {
-        "enabled": true,
-        "short_description": "Multi-agent chat and council system"
-      },
-      "promptTriggers": {
-        "keywords": [
-          "chat",
-          "council",
-          "ask other agents",
-          "check with peers",
-          "cross-project",
-          "ccchat",
-          "unread",
-          "message session",
-          "peer review",
-          "advisory"
-        ],
-        "intentPatterns": [
-          "ask.*peers",
-          "chat.*with.*agents",
-          "run.*council",
-          "cross.*project.*coordination",
-          "check.*with.*peers",
-          "advisory.*input",
-          "expert.*input"
-        ]
-      },
-      "fileTriggers": {
-        "pathPatterns": []
-      },
-      "agentContext": [
-        "ccchat"
-      ]
-    },
     "agent-creator": {
       "type": "domain",
       "enforcement": "suggest",
@@ -611,13 +560,117 @@
       ],
       "domain": "ui-ux-design"
     },
+    "excel": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Excel/spreadsheet data operations — use when reading, analyzing, or transforming .xlsx/.xls files"
+      },
+      "promptTriggers": {
+        "keywords": [
+          "excel",
+          "spreadsheet",
+          "xlsx",
+          "xls",
+          "workbook",
+          "worksheet",
+          "pivot",
+          "pivot table",
+          "data analysis",
+          "chart from data",
+          "statistics",
+          "pandas",
+          "openpyxl",
+          "sheet",
+          "tabular data",
+          "csv export"
+        ],
+        "synonyms": [
+          "spreadsheet data",
+          "excel file",
+          "workbook data",
+          "table data",
+          "data table"
+        ],
+        "intentPatterns": [
+          "analyze.*xlsx",
+          "analyze.*xls",
+          "read.*excel",
+          "open.*excel",
+          "excel.*analysis",
+          "spreadsheet.*analysis",
+          "chart.*from.*data",
+          "visualize.*data",
+          "pivot.*table",
+          "data.*from.*sheet",
+          "extract.*from.*excel",
+          "statistics.*from",
+          "summarize.*data"
+        ]
+      },
+      "fileTriggers": {
+        "pathPatterns": [
+          "**/*.xlsx",
+          "**/*.xls"
+        ]
+      },
+      "skipConditions": {
+        "sessionMarker": "excel-skill-used"
+      },
+      "agentContext": [
+        "excel"
+      ],
+      "domain": "data-operations"
+    },
+    "ai-pulse": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Twitter/X AI news search and digest methodology"
+      },
+      "promptTriggers": {
+        "keywords": [
+          "ai-pulse",
+          "ai pulse",
+          "twitter search",
+          "x search",
+          "news digest",
+          "ai news",
+          "pulse"
+        ],
+        "intentPatterns": [
+          "search twitter for",
+          "latest claude news",
+          "ai pulse",
+          "what's new"
+        ],
+        "synonyms": [
+          "twitter news",
+          "x news",
+          "ai digest"
+        ]
+      },
+      "fileTriggers": {
+        "pathPatterns": []
+      },
+      "skipConditions": {
+        "sessionMarker": "ai-pulse-skill-used"
+      },
+      "agentContext": [
+        "ai-pulse"
+      ]
+    },
     "lighthouse": {
       "type": "domain",
       "enforcement": "suggest",
       "priority": "high",
       "defer_loading": {
         "enabled": true,
-        "short_description": "Web performance auditing with Google Lighthouse"
+        "short_description": "Web performance auditing — use when measuring page speed, accessibility scores, or Core Web Vitals"
       },
       "promptTriggers": {
         "keywords": [
@@ -683,7 +736,50 @@
       "skipConditions": {
         "sessionMarker": "lighthouse-skill-used"
       },
-      "domain": "web-performance"
+      "domain": "web-performance",
+      "agentContext": [
+        "base-analysis"
+      ]
+    },
+    "figma": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "defer_loading": {
+        "enabled": true,
+        "short_description": "Figma design operations — use when reading or modifying Figma files, extracting design tokens, or syncing designs"
+      },
+      "promptTriggers": {
+        "keywords": [
+          "figma",
+          "banner",
+          "design",
+          "canvas",
+          "frame",
+          "mockup",
+          "prototype",
+          "clone",
+          "layout"
+        ],
+        "intentPatterns": [
+          ".*figma.*",
+          "create.*banner",
+          "clone.*banner",
+          "modify.*design",
+          "design.*layout"
+        ]
+      },
+      "fileTriggers": {
+        "pathPatterns": [
+          ".claude/scripts/figma-bridge.js"
+        ]
+      },
+      "skipConditions": {
+        "sessionMarker": "figma-skill-used"
+      },
+      "agentContext": [
+        "figma"
+      ]
     }
   }
 }

@@ -2,6 +2,7 @@
 name: harry
 description: Meta-orchestrator for creating, updating, auditing, and healing Maestro framework components (agents, skills, hooks, commands). Use when user needs to build new framework components, modify existing components, or when requested agents/skills don't exist. MUST BE USED when user invokes /harry command or when Maestro cannot find matching agent for domain-specific request.
 tools: Task, AskUserQuestion, Read, Write, Edit, Grep, Glob, Skill
+permissionMode: bypassPermissions
 model: sonnet
 ---
 
@@ -81,7 +82,7 @@ You are a CONDUCTOR, not an executor. You orchestrate creation workflows by dele
      ```
    - After creating skill, activate it and proceed with user's original request
 
-3. **Never Skip Skills:**
+4. **Never Skip Skills:**
    - Working without skill activation violates Maestro's delegation principle
    - All orchestration patterns must come from skill, not improvisation
    - ALWAYS document skill activation in your workflow report
@@ -276,7 +277,7 @@ Based on component type:
 
 - Agent → subagent-auditor
 - Skill → skill-auditor
-- Command → command-auditor
+- Command → slash-command-auditor
 - Hook → hook-auditor (New)
 
 **CONCRETE DELEGATION EXAMPLE:**
@@ -550,7 +551,7 @@ Auditors provide domain-specific evaluation of created components. They are spec
 
 1. **skill-auditor** - Evaluates SKILL.md structure, completeness, examples
 2. **subagent-auditor** - Evaluates agent.md workflow, constraints, return format
-3. **command-auditor** - Evaluates command.md clarity, argument handling
+3. **slash-command-auditor** - Evaluates command.md clarity, argument handling
 4. **hook-auditor** - Validates hook safety, permissions, matchers, JSON
 
 **Auditor Output (input to 4-D evaluation):**

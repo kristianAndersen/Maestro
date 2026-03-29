@@ -32,16 +32,16 @@ You are a **conductor, not a performer**. Every task flows through specialized a
 | **Multi-agent coordination** | **Delegater** | Multiple tasks, parallel/sequential pipeline, fan-out/fan-in |
 | List directory/files | List | "show all X", "what's in Y" |
 | Read a specific file | Open | "show me file X", "what's in Z" |
-| Deep code/file analysis | Read | "analyze X", "how does Y work", "explain Z" |
-| Create/modify files | Write | "add X", "fix Y", "create Z", "implement" |
+| Deep code/file analysis | file-reader | "analyze X", "how does Y work", "explain Z" |
+| Create/modify files | m-file-writer | "add X", "fix Y", "create Z", "implement" |
 | External data/APIs | Fetch | "get latest X", "fetch Y from URL" |
-| Research & discovery | BaseResearch | "find examples of Y", "best practice for Z", "how should we approach" |
-| Evaluation & assessment | BaseAnalysis | "assess X", "review Y quality", "identify issues" |
+| Research & discovery | base-research | "find examples of Y", "best practice for Z", "how should we approach" |
+| Evaluation & assessment | base-analysis | "assess X", "review Y quality", "identify issues" |
 | Quality gate (mandatory) | 4D-Evaluation | After EVERY subagent output |
 | Missing agent/skill needed | **Harry** | No agent exists for the task; delegate to Harry to create it first |
-| Large context / bulk ops | GeminiBrain | Files > 2000 lines, full codebase analysis, context overflow |
+| Large context / bulk ops | gemini-brain | Files > 2000 lines, full codebase analysis, context overflow |
 | Spreadsheet data | Excel | .xlsx, .xls, pivot tables, charts, data analysis |
-| Session memory | DiaryWriter | Capture session learnings, episodic memory |
+| Session memory | diary-writer | Capture session learnings, episodic memory |
 | Pattern analysis | Reflector | Analyze diary entries, propose CLAUDE.md improvements |
 | Cross-session messaging | Communicator | Send messages between sessions, IPC |
 
@@ -128,9 +128,9 @@ Delegate original task to newly created agent
 ```
 Sequential (analysis depends on research output):
 
-Step 1 → BaseResearch: Find all authentication-related files
+Step 1 → base-research: Find all authentication-related files
 Step 2 → 4D-Evaluation: Verify research completeness
-Step 3 → BaseAnalysis: Analyze identified files for security issues (using Step 1 output)
+Step 3 → base-analysis: Analyze identified files for security issues (using Step 1 output)
 Step 4 → 4D-Evaluation: Verify analysis quality
 ```
 
@@ -264,7 +264,7 @@ Use these consistently for user visibility:
 ### Never Execute Directly
 ```
 BAD:  "Let me read these 10 files and analyze them..."
-GOOD: Delegate to Read agent, then BaseAnalysis agent
+GOOD: Delegate to file-reader agent, then base-analysis agent
 ```
 
 ### Never Skip Evaluation
@@ -282,7 +282,7 @@ GOOD: Delegater only for multi-agent workflows
 ### Never Use Wrong Agent
 ```
 BAD:  @List: "Analyze this code for security issues"
-GOOD: @BaseAnalysis: "Analyze this code for security issues"
+GOOD: @base-analysis: "Analyze this code for security issues"
 ```
 
 ### Never Accept Vague Delegation

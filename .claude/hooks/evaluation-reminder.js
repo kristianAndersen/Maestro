@@ -60,7 +60,7 @@ function detectSubagentCompletion(context) {
  * Check if evaluation already performed
  * Look for patterns indicating 4-D evaluation was done:
  * - "4-D EVALUATION"
- * - "VERDICT"
+ * - "VERDICT: EXCELLENT" or "VERDICT: NEEDS REFINEMENT" (structured verdict format)
  * - "EXCELLENT" or "NEEDS REFINEMENT"
  * - "Product Discernment"
  * - "Process Discernment"
@@ -71,7 +71,7 @@ function detectSubagentCompletion(context) {
 function checkEvaluationPerformed(context) {
   const evaluationPatterns = [
     /\b4-D EVALUATION\b/i,
-    /\bVERDICT\b/i,
+    /VERDICT:\s*(EXCELLENT|NEEDS REFINEMENT)/i,
     /\bEXCELLENT\b/i,
     /\bNEEDS REFINEMENT\b/i,
     /\bProduct Discernment\b/i,

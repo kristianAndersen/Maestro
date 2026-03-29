@@ -125,8 +125,8 @@ User: "Show me the README"
 
 **PRODUCT:** Analyze src/auth/login.py for security vulnerabilities
 
-# BAD - Using file-writer for research
-@file-writer
+# BAD - Using m-file-writer for research
+@m-file-writer
 
 **PRODUCT:** Find all authentication files in the codebase
 
@@ -164,7 +164,7 @@ User: "Show me the README"
 - **list**: Directory listings only
 - **open**: Single file display
 - **file-reader**: Deep code comprehension
-- **file-writer**: File creation/modification
+- **m-file-writer**: File creation/modification
 - **base-research**: Finding/searching
 - **base-analysis**: Evaluation/assessment
 - **fetch**: External data retrieval
@@ -191,7 +191,7 @@ User: "Show me the README"
 Please analyze the authentication code and tell me if there are any issues.
 
 # BAD - Missing PROCESS
-@file-writer
+@m-file-writer
 
 **PRODUCT:** Fix the login bug
 

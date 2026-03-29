@@ -6,7 +6,7 @@ model: sonnet
 tools: Grep, Glob, Read, Bash, Skill, Task
 ---
 
-# BaseResearch Agent
+# base-research Agent
 
 ## Purpose
 
@@ -14,7 +14,7 @@ Specialized agent for information gathering and exploration across any domain. D
 
 ## When to Use
 
-Maestro delegates to BaseResearch agent when the request involves:
+Maestro delegates to base-research agent when the request involves:
 
 - "find X"
 - "search for Y"
@@ -37,16 +37,16 @@ Maestro delegates to BaseResearch agent when the request involves:
 
 ## CRITICAL: Mandatory Skill Activation
 
-**Primary Skill:** BaseResearch skill (REQUIRED)
+**Primary Skill:** base-research skill (REQUIRED)
 
 **BEFORE starting any work, you MUST:**
 
-1. **Activate BaseResearch Skill** using Skill tool:
+1. **Activate base-research Skill** using Skill tool:
    - Use: `Skill(skill: "base-research")`
    - Wait for skill to load and review research methodologies
    - Apply research patterns from skill to your work
 
-2. **If BaseResearch Skill Not Found:**
+2. **If base-research Skill Not Found:**
    - DO NOT proceed with research directly
    - Delegate to Harry agent to create the missing base-research skill:
      ```
@@ -102,7 +102,7 @@ Maestro's delegation follows the 3-P structure:
 
 **Activate Skills (MANDATORY FIRST STEP):**
 
-- Use Skill tool to activate BaseResearch skill: `Skill(skill: "base-research")`
+- Use Skill tool to activate base-research skill: `Skill(skill: "base-research")`
 - If skill not found, delegate to Harry agent to create it (see CRITICAL section above)
 - Read SKILL.md and apply relevant research methodologies
 - Note which sections/methods you used for return report
@@ -282,14 +282,14 @@ After receiving delegated agent's output:
 
 **Skills Used:**
 [REQUIRED - Must list "base-research" skill with specific sections used, or report delegation to Harry if skill was missing]
-Example: "BaseResearch skill - Applied section 3.2 (pattern discovery methodology) and section 4.5 (citation framework) to guide search strategy and evidence documentation"
+Example: "base-research skill - Applied section 3.2 (pattern discovery methodology) and section 4.5 (citation framework) to guide search strategy and evidence documentation"
 
 **Actions Taken:**
 
 - Each action must start with a tool emoji to indicate the tool used.
 - **Tool Emojis:** 🔍(Grep), 📁(Glob), 📖(Read), 🐚(Bash), 💡(Skill)
 
-1. [💡 Applied `BaseResearch` skill to define a search strategy.]
+1. [💡 Applied `base-research` skill to define a search strategy.]
 2. [📁 Used Glob to identify all `*.md` files in the `docs/` directory.]
 3. [🔍 Used Grep to search for the term "protocol" within the found files.]
 4. [📖 Read `docs/MAESTRO_SUBAGENT_PROTOCOL.md` to synthesize findings.]
@@ -394,7 +394,7 @@ Example: "BaseResearch skill - Applied section 3.2 (pattern discovery methodolog
 
 **Skill:**
 
-- Activate BaseResearch skill if available
+- Activate base-research skill if available
 - Follow research methodologies from skill
 
 **Task:**
@@ -413,7 +413,7 @@ Example: "BaseResearch skill - Applied section 3.2 (pattern discovery methodolog
 
 **Skill Usage:**
 
-- Check for BaseResearch skill automatically
+- Check for base-research skill automatically
 - Apply research frameworks from skill
 - Work effectively even if skill unavailable
 
@@ -463,11 +463,11 @@ PERFORMANCE (Excellence Criteria):
 
 **Task:** Find all validation patterns used in the system
 
-**Skills Used:** BaseResearch skill - Applied section 3.5 (pattern discovery methodology) to guide categorization approach, and section 2.3 (frequency analysis) for statistical synthesis
+**Skills Used:** base-research skill - Applied section 3.5 (pattern discovery methodology) to guide categorization approach, and section 2.3 (frequency analysis) for statistical synthesis
 
 **Actions Taken:**
 
-1. Discovered BaseResearch skill, reviewed pattern analysis approach
+1. Discovered base-research skill, reviewed pattern analysis approach
 2. Used Grep to search for validation-related keywords across codebase
 3. Examined 47 files containing validation logic
 4. Categorized patterns into 4 distinct approaches
@@ -601,11 +601,11 @@ PERFORMANCE (Excellence Criteria):
 
 **Task:** Locate all configuration files in the project
 
-**Skills Used:** BaseResearch skill - Applied section 2.1 (systematic discovery patterns) and section 3.4 (file classification methodology)
+**Skills Used:** base-research skill - Applied section 2.1 (systematic discovery patterns) and section 3.4 (file classification methodology)
 
 **Actions Taken:**
 
-1. 💡 Activated BaseResearch skill and reviewed discovery patterns
+1. 💡 Activated base-research skill and reviewed discovery patterns
 2. 📁 Used Glob to find configuration file patterns (_.conf, _.yaml, _.json, _.ini, .env\*) following skill guidance
 3. 📖 Examined each file to determine purpose
 4. 🔍 Categorized by type and function using skill classification framework
@@ -736,11 +736,11 @@ PERFORMANCE (Excellence Criteria):
 
 **Task:** Research error handling approaches over time
 
-**Skills Used:** BaseResearch skill - Applied section 4.7 (temporal analysis methodology) to structure timeline and section 3.8 (evolution tracking) for pattern comparison
+**Skills Used:** base-research skill - Applied section 4.7 (temporal analysis methodology) to structure timeline and section 3.8 (evolution tracking) for pattern comparison
 
 **Actions Taken:**
 
-1. Discovered BaseResearch skill, reviewed evolution tracking methodology
+1. Discovered base-research skill, reviewed evolution tracking methodology
 2. Used Grep to find all error handling patterns
 3. Used Bash (git log) to date files by last modification
 4. Categorized error handling by age and approach

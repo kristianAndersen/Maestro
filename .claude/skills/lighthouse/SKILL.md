@@ -1,6 +1,6 @@
 ---
 name: lighthouse
-description: Activates for web performance auditing tasks; provides guidance for running Lighthouse, interpreting audit results across all 5 categories, and applying actionable remediations
+description: Activates for web performance auditing tasks. Use this skill whenever auditing a website's performance, accessibility, SEO, or best practices — even for quick 'how fast is this page' or 'why is this scoring low' questions.
 ---
 
 # Lighthouse Skill

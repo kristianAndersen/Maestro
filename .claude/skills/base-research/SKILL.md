@@ -1,332 +1,105 @@
 ---
 name: base-research
-description: Activates for information gathering tasks; provides research methodology, source evaluation, and synthesis guidance. Use this skill whenever investigating unfamiliar topics, gathering information to make decisions, finding documentation or examples, researching best practices, or systematically discovering how a system works — including codebase exploration where you need to understand before acting.
+description: Information gathering and research methodology. Use whenever investigating unfamiliar topics, finding documentation, researching best practices, or systematically exploring how a system works.
 tools: Read, Grep, Glob, Bash, LS, WebSearch, WebFetch
 ---
 
-# BaseResearch Skill
+# base-research Skill
 
 ## Purpose
 
-This skill provides comprehensive guidance for information gathering and research operations. It helps you discover sources, evaluate credibility, synthesize findings, and document research effectively.
-
-## When to Use This Skill
-
-This skill automatically activates when:
-
-- Investigating unfamiliar topics or technologies
-- Gathering information to make decisions
-- Understanding how something works
-- Finding documentation or examples
-- Researching best practices or solutions
+Systematic guidance for information gathering operations: discovering sources, evaluating credibility, synthesizing findings, and documenting research effectively.
 
 ## Claude Code Tool Mapping
 
-In Claude Code, use dedicated tools for research operations:
-
-| Task | Tool | Example |
-|---|---|---|
-| Find files by pattern | Glob | `Glob("**/*.md", path="docs")` |
-| Search content in files | Grep | `Grep(pattern="authentication", include="*.py")` |
-| Read a file | Read | `Read("docs/authentication.md")` |
-| Fetch external docs | WebFetch | `WebFetch(url="...", prompt="explain X")` |
-| Search the web | WebSearch | `WebSearch(query="best practice for X")` |
+| Task | Tool |
+|---|---|
+| Find files by pattern | Glob |
+| Search content in files | Grep |
+| Read a file | Read |
+| Fetch external docs | WebFetch |
+| Search the web | WebSearch |
 
 ---
 
 ## Quick Start
 
-For 80% of research operations, follow these principles:
-
-1. **Start broad, then narrow** - Get overview first, then dive into specifics
-2. **Use multiple sources** - Cross-reference to verify information
-3. **Evaluate credibility** - Official docs > reputable blogs > forums
-4. **Document as you go** - Capture sources and key findings
-5. **Synthesize, don't just collect** - Understand and connect information
+1. **Start broad, then narrow** — Get overview first, then dive into specifics
+2. **Use multiple sources** — Cross-reference to verify information
+3. **Evaluate credibility** — Official docs > reputable blogs > forums
+4. **Document as you go** — Capture sources and key findings
+5. **Synthesize, don't just collect** — Understand and connect information
 
 ## Core Principles
 
-### 1. **Structured Investigation**
+1. **Structured Investigation** — Define question → search → evaluate → synthesize
+2. **Source Diversity** — Use official docs, code examples, tests, and community resources
+3. **Critical Evaluation** — Not all sources are equal; verify authority, recency, and accuracy
+4. **Progressive Refinement** — Start high-level, progressively add detail
+5. **Evidence-Based Conclusions** — Base findings on concrete evidence, not assumptions
 
-Use systematic approach: define question → search → evaluate → synthesize.
+## Source Evaluation Hierarchy
 
-### 2. **Source Diversity**
-
-Use multiple types of sources: official docs, code examples, discussions, academic papers.
-
-### 3. **Critical Evaluation**
-
-Not all sources are equal. Verify authority, recency, and accuracy.
-
-### 4. **Progressive Refinement**
-
-Start with high-level understanding, progressively add detail.
-
-### 5. **Evidence-Based Conclusions**
-
-Base findings on concrete evidence, not assumptions.
-
-## Research Methodology
-
-### Phase 1: Define Question
-
-```bash
-# What exactly are you trying to learn?
-question="How does authentication work in this framework?"
-
-# Break into sub-questions:
-# - What auth methods are supported?
-# - How are credentials stored?
-# - What's the session management approach?
-```
-
-### Phase 2: Identify Sources
-
-```bash
-# Official documentation
-cat README.md
-find . -name "*.md" -path "*/docs/*"
-
-# Code examples
-grep -r "auth\|login" examples/
-
-# Tests (show usage)
-grep -r "test.*auth" tests/
-
-# Configuration
-find . -name "*config*" -name "*.json" -o -name "*.yaml"
-```
-
-### Phase 3: Gather Information
-
-```bash
-# Read official docs first
-cat docs/authentication.md
-
-# Find code examples
-grep -rn "authenticate\|login" src/
-
-# Check tests for usage patterns
-cat tests/test_auth.py
-
-# Search discussions (if available)
-grep -r "authentication" discussions/ issues/
-```
-
-### Phase 4: Evaluate and Synthesize
-
-```markdown
-# Research Findings: Authentication
-
-## Sources
-
-- docs/authentication.md (official, current)
-- src/auth/login.py (implementation)
-- tests/test_auth.py (usage examples)
-
-## Key Findings
-
-1. Supports JWT and session-based auth
-2. Passwords hashed with bcrypt
-3. Sessions stored in Redis
-4. Token expiry: 24 hours
-
-## Synthesis
-
-Framework provides flexible auth with two methods...
-```
-
-## Source Evaluation
-
-### Credibility Hierarchy
-
-1. **Tier 1 (Highest):** Official documentation, source code
+1. **Tier 1:** Official documentation, source code
 2. **Tier 2:** Well-maintained examples, official tutorials
 3. **Tier 3:** Reputable blogs, established community resources
 4. **Tier 4:** Forum posts, Stack Overflow (verify before trusting)
-5. **Tier 5 (Lowest):** Random blogs, outdated tutorials
+5. **Tier 5:** Random blogs, outdated tutorials
 
-### Evaluation Criteria
+## Inter-Agent Delegation
 
-```bash
-# Check recency
-stat -c%y file.md  # Last modified
-git log -1 --format="%ai" file.md  # Last commit
+When research requires external data, delegate to fetch:
+- Web pages, APIs, or external documentation → delegate to `fetch` agent
+- Large files (>2000 lines) or bulk operations → delegate to `gemini-brain`
+- Use 3P format when delegating; integrate results into final research report
 
-# Check authority
-# Is this official documentation?
-# Is author credible/experienced?
-
-# Check accuracy
-# Does example actually work?
-# Can you verify claims?
-```
-
-## Research Patterns
-
-### Pattern: Technology Investigation
-
-```bash
-# 1. Find official docs
-cat README.md docs/
-
-# 2. Identify key concepts
-grep -rn "Overview\|Introduction\|Getting Started" docs/
-
-# 3. Find examples
-find . -path "*/examples/*" -o -path "*/samples/*"
-
-# 4. Check tests for patterns
-grep -r "test" . | head -20
-
-# 5. Synthesize understanding
-# Document: What it is, what it does, how to use it
-```
-
-### Pattern: Problem-Solution Research
-
-```bash
-# 1. Define problem clearly
-problem="Application crashes on startup"
-
-# 2. Search error messages
-grep -r "error message" logs/
-
-# 3. Check known issues
-grep -ri "crash\|startup" docs/ issues/
-
-# 4. Find similar cases
-# Search forums, discussions, issues
-
-# 5. Try solutions and document results
-```
-
-### Pattern: Best Practices Research
-
-```bash
-# 1. Find official recommendations
-grep -r "best practice\|recommended\|guideline" docs/
-
-# 2. Study examples from maintainers
-find . -path "*/examples/*" -name "*.py"
-
-# 3. Check community consensus
-# Review popular libraries/projects
-
-# 4. Synthesize into guidelines
-```
-
-## Documentation Practices
-
-### Capture Sources
-
-```markdown
-# Research Log
-
-## Question
-
-How to implement caching?
-
-## Sources Consulted
-
-- docs/caching.md (official docs)
-- src/cache/redis.py (implementation)
-- examples/cache-demo.py (example)
-- https://redis.io/docs (Redis docs)
-
-## Findings
-
-[Document what you learned]
-```
-
-### Organize Findings
-
-```markdown
-# Caching Research
-
-## Overview
-
-[High-level summary]
-
-## Key Concepts
-
-- Cache invalidation
-- TTL settings
-- Cache backends
-
-## Implementation Details
-
-[Specific how-tos]
-
-## Examples
-
-[Code snippets]
-
-## Gotchas
-
-[Things to watch out for]
-```
+---
 
 ## Resources (Progressive Disclosure)
 
-- **`assets/methodology.md`** - Advanced research strategies, source evaluation frameworks, synthesis techniques
-- **`assets/patterns.md`** - Research workflow examples, documentation patterns, note-taking templates
-- **`assets/troubleshooting.md`** - Handling conflicting sources, incomplete information, verification strategies
+Load assets when you need depth beyond the quick start:
+
+- **`assets/methodology.md`** — Load when you need the full 4-phase methodology walkthrough (Define → Identify → Gather → Synthesize), advanced research frameworks, source evaluation (CRAAP test), or synthesis techniques. Load at the start of a complex multi-source investigation.
+
+- **`assets/patterns.md`** — Load when you need concrete examples: Technology Investigation, Problem-Solution, and Best Practices patterns with command examples; Research Log, Organized Findings, and Technology Evaluation documentation templates. Load when you need a template or workflow to follow.
+
+- **`assets/troubleshooting.md`** — Load when encountering conflicting sources, incomplete information, outdated docs, or information overload. Contains verification strategies and cross-reference techniques.
+
+---
 
 ## Anti-Patterns
 
-### ❌ Single Source Reliance
+**Single source reliance** — Trust first result without cross-referencing. Always verify against a second authoritative source.
 
-```bash
-# BAD: Trust first result
-info=$(grep "definition" first-file.md)
+**No source tracking** — Collecting information without noting where it came from. Document sources as you go, not after.
 
-# GOOD: Cross-reference
-official=$(cat docs/official.md)
-examples=$(cat examples/demo.py)
-# Verify consistency
+**Assumption over evidence** — "This probably uses Redis." Verify in code before stating as fact:
+```
+Grep(pattern: "redis|Redis", path: ".")
 ```
 
-### ❌ No Source Tracking
-
-```bash
-# BAD: Collect info without noting where from
-echo "Feature X works like this..."
-
-# GOOD: Document sources
-echo "Feature X (per docs/features.md): works like this..."
-```
-
-### ❌ Assumption Over Evidence
-
-```bash
-# BAD: "This probably uses Redis"
-conclusion="Uses Redis for caching"
-
-# GOOD: Verify
-grep -r "redis\|Redis" . && conclusion="Uses Redis (verified in code)"
-```
+---
 
 ## Quick Reference
 
-```bash
-# Research workflow
-# 1. Define question clearly
-# 2. Find official docs: cat README.md docs/
-# 3. Check implementation: grep -r "topic" src/
-# 4. Review examples: find . -path "*/examples/*"
-# 5. Verify in tests: grep -r "test.*topic" tests/
-# 6. Synthesize and document findings
+```
+Research workflow:
+1. Define question clearly
+2. Find official docs (README.md, docs/)
+3. Check implementation: Grep pattern in src/
+4. Review examples: Glob **/examples/**
+5. Verify in tests: Grep test.*topic in tests/
+6. Synthesize and document findings
 
-# Source priority
-# 1. Official docs
-# 2. Source code
-# 3. Tests/examples
-# 4. Community resources
+Source priority:
+1. Official docs
+2. Source code
+3. Tests / examples
+4. Community resources
 
-# Verification
-# Cross-reference multiple sources
-# Test examples yourself
-# Check recency
-# Evaluate authority
+Verification checklist:
+- Cross-reference multiple sources
+- Test examples yourself when possible
+- Check recency (git log -1 docs/file.md)
+- Evaluate authority before trusting
 ```

@@ -145,7 +145,7 @@ Location: `.claude/memory/evaluation-history.jsonl`
 Format: JSONL (JSON Lines), one evaluation per line
 
 ```json
-{"timestamp": "2025-12-08T10:30:00Z", "sessionId": "abc123", "agent": "file-writer", "verdict": "EXCELLENT", "iterations": 1, "productScore": 95, "processScore": 90, "performanceScore": 92}
+{"timestamp": "2025-12-08T10:30:00Z", "sessionId": "abc123", "agent": "m-file-writer", "verdict": "EXCELLENT", "iterations": 1, "productScore": 95, "processScore": 90, "performanceScore": 92}
 {"timestamp": "2025-12-08T11:15:00Z", "sessionId": "abc123", "agent": "base-research", "verdict": "NEEDS REFINEMENT", "iterations": 2, "productScore": 75, "processScore": 80, "performanceScore": 70}
 ```
 
@@ -198,13 +198,13 @@ Purpose: Build on previous user preference learnings
 
 **1. Inter-Agent Delegation Missing from File-Writer**
 
-- **Pattern:** file-writer attempted complex research tasks directly instead of delegating to base-research
+- **Pattern:** m-file-writer attempted complex research tasks directly instead of delegating to base-research
 - **Observed In:** 2025-12-01-session-1.md (section: Delegation Patterns), 2025-12-03-session-2.md (section: Challenges)
-- **CLAUDE.md Reference:** Line 145 describes inter-agent delegation but file-writer agent description lacks explicit guidance
+- **CLAUDE.md Reference:** Line 145 describes inter-agent delegation but m-file-writer agent description lacks explicit guidance
 - **Frequency:** 2 out of 5 sessions
 - **Evidence:**
-  - Diary 2025-12-01: "file-writer spent 3 iterations trying to research API patterns before succeeding"
-  - Diary 2025-12-03: "file-writer should have delegated external documentation lookup to base-research"
+  - Diary 2025-12-01: "m-file-writer spent 3 iterations trying to research API patterns before succeeding"
+  - Diary 2025-12-03: "m-file-writer should have delegated external documentation lookup to base-research"
 - **Impact:** Unnecessary iterations, inefficient workflow
 ```
 
@@ -440,13 +440,13 @@ For each pattern identified, create actionable CLAUDE.md update proposal:
   ```
 - **Rationale:**
   - Addresses Pattern Type 1: Rule Violations
-  - 2 sessions (2025-12-01, 2025-12-03) showed file-writer attempting research tasks
-  - file-writer agent lacks explicit inter-agent delegation guidance
+  - 2 sessions (2025-12-01, 2025-12-03) showed m-file-writer attempting research tasks
+  - m-file-writer agent lacks explicit inter-agent delegation guidance
   - Current CLAUDE.md describes delegation but doesn't specify per-agent rules
 - **Expected Benefit:**
-  - Prevent file-writer from inefficient research attempts
+  - Prevent m-file-writer from inefficient research attempts
   - Clearer agent boundaries and delegation triggers
-  - Reduce average iterations for file-writer from 2.5 to <1.5
+  - Reduce average iterations for m-file-writer from 2.5 to <1.5
 
 **Proposal 3: Document defer_loading Success Pattern**
 
@@ -592,7 +592,7 @@ Use Write tool with append behavior (read existing, add new lines, write back)
 **Implementation Process:**
 1. User reviews each proposal
 2. User approves/rejects/modifies proposal
-3. User manually updates CLAUDE.md OR requests file-writer agent to apply approved changes
+3. User manually updates CLAUDE.md OR requests m-file-writer agent to apply approved changes
 4. Reflector does NOT implement changes directly
 
 ---
@@ -705,7 +705,7 @@ Use Write tool to create reflection at:
 **Pattern Analysis Summary:**
 
 **Rule Violations Found:** [count]
-[Brief list of violations, e.g., "file-writer attempted research instead of delegating"]
+[Brief list of violations, e.g., "m-file-writer attempted research instead of delegating"]
 
 **Weak Directives Found:** [count]
 [Brief list of weak areas, e.g., "Evidence requirements too vague"]
@@ -787,7 +787,7 @@ Use Write tool to create reflection at:
 **Notes:**
 
 [Any important observations, such as:]
-- "High concentration of rule violations in file-writer delegation - priority area"
+- "High concentration of rule violations in m-file-writer delegation - priority area"
 - "User preferences very stable - high confidence in profile"
 - "No evaluation history file found yet - will improve analysis once available"
 - "Processed.log created for first time - future reflections will build on this baseline"
@@ -797,7 +797,7 @@ Use Write tool to create reflection at:
 1. **Review Reflection Report:** `.claude/memory/reflections/[filename]`
 2. **Evaluate Proposals:** Assess each CLAUDE.md update proposal
 3. **Approve/Modify/Reject:** Decide which proposals to implement
-4. **Implement Approved Changes:** Manually update CLAUDE.md OR use /file-writer to apply
+4. **Implement Approved Changes:** Manually update CLAUDE.md OR use /m-file-writer to apply
 5. **Continue Diary Capture:** Keep documenting sessions for future reflections
 6. **Run Reflection Periodically:** Weekly or after 5-10 new diary entries
 

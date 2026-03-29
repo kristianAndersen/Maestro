@@ -11,17 +11,20 @@
  *           other hooks can recreate phantom activeDomain/lastEditedFile
  *
  * Detection Strategy:
- * - Compare current session metadata (sessionId, timestamp) vs context.json
+ * - Compare current prompt metadata (cwd, timestamp) vs context.json
  * - Detect session change if:
- *   1. Different sessionId
- *   2. Time gap > 30 minutes
+ *   1. cwd changed between prompts (new project = new session)
+ *   2. Time gap > 30 minutes (idle timeout)
+ *
+ * Note: Claude Code's UserPromptSubmit payload only provides \ and \.
+ * There is no \ field. Detection relies on cwd changes and idle time.
  *
  * Reset Logic on Session Change:
  * - Clear: activeDomain, lastEditedFile, skillTracking.recommended
  * - Preserve: historicalMetrics, evaluation compliance data
  */
 
-import { readFileSync, writeFileSync, existsSync, appendFileSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, renameSync, existsSync, appendFileSync, mkdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -54,8 +57,8 @@ function log(message) {
 }
 
 /**
- * Reads stdin to get session metadata
- * Expected format: JSON with sessionId and timestamp fields
+ * Reads stdin to get prompt metadata
+ * Expected format: JSON with `prompt` and `cwd` fields (Claude Code UserPromptSubmit payload)
  */
 async function readStdin() {
   return new Promise((resolve) => {
@@ -90,7 +93,10 @@ function loadContext() {
  */
 function saveContext(context) {
   try {
-    writeFileSync(CONTEXT_FILE_PATH, JSON.stringify(context, null, 2), 'utf8');
+    // Atomic write: tmp + rename prevents race conditions under parallel subagent execution.
+    const tmpPath = CONTEXT_FILE_PATH + '.tmp';
+    writeFileSync(tmpPath, JSON.stringify(context, null, 2), 'utf8');
+    renameSync(tmpPath, CONTEXT_FILE_PATH);
     log('Context saved successfully');
     return true;
   } catch (error) {
@@ -100,29 +106,30 @@ function saveContext(context) {
 }
 
 /**
- * Extracts session metadata from stdin
- * Handles various input formats gracefully
+ * Extracts session metadata from stdin.
+ * The UserPromptSubmit payload provides `prompt` and `cwd` — no sessionId.
+ * We use cwd as the session signal and current wall-clock time as the timestamp.
  */
 function extractSessionMetadata(stdinData) {
+  const now = new Date();
   try {
-    // Try parsing as JSON first
     const data = JSON.parse(stdinData);
     return {
-      sessionId: data.sessionId || null,
-      timestamp: data.timestamp || new Date().toISOString()
+      cwd: data.cwd || null,
+      timestamp: now.toISOString()
     };
   } catch {
-    // If not JSON, generate session ID from timestamp
-    const now = new Date();
+    // Non-JSON input (shouldn't happen in normal operation)
     return {
-      sessionId: `session-${now.getTime()}-${Math.random().toString(36).substr(2, 9)}`,
+      cwd: null,
       timestamp: now.toISOString()
     };
   }
 }
 
 /**
- * Determines if a session change has occurred
+ * Determines if a session change has occurred.
+ * Signals: cwd change, or idle gap > 30 minutes.
  */
 function detectSessionChange(context, currentMetadata) {
   if (!context) {
@@ -130,15 +137,14 @@ function detectSessionChange(context, currentMetadata) {
     return true;
   }
 
-  // Check if sessionId changed
-  const previousSessionId = context.skillTracking?.sessionId || context.lastSessionId;
-  if (previousSessionId && currentMetadata.sessionId &&
-      previousSessionId !== currentMetadata.sessionId) {
-    log(`Session ID changed: ${previousSessionId} → ${currentMetadata.sessionId}`);
+  // Signal 1: cwd changed (new project directory = new session)
+  const previousCwd = context.skillTracking?.cwd || context.lastCwd;
+  if (previousCwd && currentMetadata.cwd && previousCwd !== currentMetadata.cwd) {
+    log(`CWD changed: ${previousCwd} → ${currentMetadata.cwd}`);
     return true;
   }
 
-  // Check if time gap exceeds 30 minutes
+  // Signal 2: idle gap exceeds 30 minutes
   const lastPromptTime = context.skillTracking?.lastPromptTime || context.lastUpdated;
   if (lastPromptTime) {
     const lastTime = new Date(lastPromptTime);
@@ -189,7 +195,7 @@ function resetSessionData(context, currentMetadata) {
 
   // Build fresh context with session data cleared
   const cleanContext = {
-    lastSessionId: currentMetadata.sessionId,
+    lastCwd: currentMetadata.cwd,
     lastSessionEnd: new Date().toISOString(),
     historicalMetrics,
     evaluationTracking,
@@ -197,7 +203,7 @@ function resetSessionData(context, currentMetadata) {
       recommended: [], // CLEAR cached skills
       used: [],
       sessionStart: currentMetadata.timestamp,
-      sessionId: currentMetadata.sessionId,
+      cwd: currentMetadata.cwd,
       lastPromptTime: currentMetadata.timestamp,
       promptCount: 0,
       domainHistory: []
@@ -208,7 +214,7 @@ function resetSessionData(context, currentMetadata) {
     lastUpdated: currentMetadata.timestamp
   };
 
-  log(`Session reset complete. New session ID: ${currentMetadata.sessionId}`);
+  log(`Session reset complete. New CWD: ${currentMetadata.cwd}`);
   return cleanContext;
 }
 
@@ -217,11 +223,11 @@ function resetSessionData(context, currentMetadata) {
  */
 async function main() {
   try {
-    // Read stdin for session metadata
+    // Read stdin for prompt metadata
     const stdinData = await readStdin();
     const currentMetadata = extractSessionMetadata(stdinData);
 
-    log(`Processing session: ${currentMetadata.sessionId}`);
+    log(`Processing prompt from cwd: ${currentMetadata.cwd}`);
 
     // Load existing context
     const context = loadContext();
@@ -245,6 +251,11 @@ async function main() {
         context.skillTracking = context.skillTracking || {};
         context.skillTracking.lastPromptTime = currentMetadata.timestamp;
         context.skillTracking.promptCount = (context.skillTracking.promptCount || 0) + 1;
+        // Keep cwd in sync in case it wasn't stored previously
+        if (currentMetadata.cwd) {
+          context.skillTracking.cwd = currentMetadata.cwd;
+          context.lastCwd = currentMetadata.cwd;
+        }
         context.lastUpdated = currentMetadata.timestamp;
         saveContext(context);
       }

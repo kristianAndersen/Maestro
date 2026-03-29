@@ -153,6 +153,16 @@ Before evaluating quality, verify the work is real and grounded:
 
 **Phase 2: Quality Evaluation (After hallucination check passes)**
 
+**Phase 2a: Artifact Verification (MANDATORY before scoring)**
+
+Every artifact claimed in the subagent report must pass three verification levels. Fail at any level → flag in Product Discernment.
+
+- **Level 1 — Exists:** Use Read/Grep to confirm every file path and function/class referenced in the report actually exists at the claimed location. Missing artifact = CRITICAL, return NEEDS REFINEMENT immediately.
+- **Level 2 — Substantive:** Verify artifacts contain real logic, not stubs. Check for: TODO comments, empty function bodies, placeholder returns, hardcoded dummy data. A file that exists but contains only boilerplate is not a deliverable.
+- **Level 3 — Wired:** Confirm artifacts are integrated, not orphaned. Use Grep to trace at least one usage/import per artifact. A function that exists and works but is never called provides zero value.
+
+If any artifact fails Level 1-3, flag it specifically in Product Discernment under Completeness.
+
 **Evaluate across 3 Discernment dimensions:**
 
 #### Product Discernment (What was delivered)
@@ -180,6 +190,8 @@ Before evaluating quality, verify the work is real and grounded:
 - Does it solve the real problem?
 - Does it address root cause or just symptoms?
 - Is the solution appropriate for the problem?
+
+**Spec-Compliance**: Does the deliverable match what was requested in the PRODUCT section? Are all acceptance criteria met? Any unrequested additions (scope creep)? Any requested items silently dropped? Compare the delegation's PRODUCT.Acceptance and Done-When criteria line-by-line against the deliverable.
 
 #### Process Discernment (How it was built)
 
@@ -371,6 +383,8 @@ Use this checklist as a baseline for evaluation (framework-agnostic):
 - [ ] **Verified and proven** (validation confirms correctness)
 - [ ] **Evidence provided** (not just assertions)
 - [ ] **Skills applied where relevant**
+- [ ] **Artifacts verified at all 3 levels** (exists, substantive, wired)
+- [ ] **Spec-compliance confirmed** (deliverable matches PRODUCT acceptance criteria)
 
 If ANY item fails → NEEDS REFINEMENT with coaching
 If ALL items pass → Consider EXCELLENT (verify 3P Discernment)

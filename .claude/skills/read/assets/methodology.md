@@ -388,3 +388,212 @@ This methodology provides:
 - **Approaches** for investigating complex systems
 
 Apply based on analysis goals and code complexity.
+
+---
+
+## 4-Phase Analysis Process
+
+### Phase 1: Overview (Structure)
+
+**Goal:** Understand what exists and how it's organized.
+
+```bash
+# Directory structure
+tree -L 3 -d
+
+# File inventory
+find . -type f -name "*.py" | head -20
+
+# Entry points
+find . -name "main.*" -o -name "index.*" -o -name "__init__.*"
+
+# Configuration files
+find . -maxdepth 2 -name "*.json" -o -name "*.yaml"
+```
+
+### Phase 2: Architecture (Relationships)
+
+**Goal:** Understand how components connect and interact.
+
+```bash
+# Import/dependency analysis
+grep -r "^import\|^from" --include="*.py" | head -30
+
+# Module boundaries
+find . -name "__init__.py" -o -name "index.js"
+
+# External dependencies
+cat package.json requirements.txt Gemfile | grep -v "^#"
+```
+
+### Phase 3: Functionality (What It Does)
+
+**Goal:** Understand core capabilities and behaviors.
+
+```bash
+# Key functions/classes
+grep -rn "^def \|^class \|^function " --include="*.py" | head -50
+
+# Public API
+grep -rn "^export\|^public" --include="*.js" | head -30
+
+# Routes/endpoints (if web app)
+grep -rn "@app.route\|@router\|app.get\|app.post" --include="*.py"
+```
+
+### Phase 4: Details (How It Works)
+
+**Goal:** Understand implementation specifics and algorithms.
+
+```bash
+# Read specific implementation
+cat -n src/core/processor.py
+
+# Analyze complex function
+sed -n '/def complex_algorithm/,/^def /p' module.py | head -n -1
+```
+
+---
+
+## Analysis Strategies
+
+### Strategy 1: Top-Down (Architecture First)
+
+Start from entry point, follow execution flow:
+
+```bash
+# 1. Find entry point
+find . -name "main.py" -o -name "app.js" -o -name "index.js"
+
+# 2. Read entry point
+cat src/main.py
+
+# 3. Follow imports
+grep "^import\|^from" src/main.py
+
+# 4. Read each imported module
+cat src/config.py
+cat src/router.py
+
+# 5. Continue recursively
+```
+
+### Strategy 2: Bottom-Up (Components First)
+
+Start with individual components, build up understanding:
+
+```bash
+# 1. List all modules
+find src -name "*.py"
+
+# 2. Read each module
+for file in src/*.py; do
+  echo "=== $file ==="
+  cat -n "$file"
+done
+
+# 3. Identify dependencies
+# 4. Build mental map of relationships
+```
+
+### Strategy 3: Data Flow Tracing
+
+Follow data through the system:
+
+```bash
+# 1. Identify data entry points (API, file input, etc.)
+grep -rn "request\|input\|read" --include="*.py"
+
+# 2. Trace transformations
+grep -rn "process\|transform\|convert" --include="*.py"
+
+# 3. Find outputs
+grep -rn "write\|send\|return" --include="*.py"
+```
+
+### Strategy 4: Feature-Based Analysis
+
+Analyze by feature or use case:
+
+```bash
+# 1. Identify feature
+feature="user authentication"
+
+# 2. Find related files
+grep -rl "auth\|login\|user" src/
+
+# 3. Read feature implementation
+cat src/auth/login.py
+cat src/auth/middleware.py
+
+# 4. Understand feature flow
+```
+
+---
+
+## Comprehension Techniques
+
+### Technique 1: Reading with Questions
+
+Ask and answer questions while reading:
+
+- **What** does this code do?
+- **Why** is it structured this way?
+- **How** does it handle errors?
+- **When** is this code executed?
+- **Where** does the data come from/go to?
+
+### Technique 2: Mental Execution
+
+Trace code execution mentally:
+
+```python
+# Given this code
+def process(items):
+    filtered = [x for x in items if x > 0]
+    doubled = [x * 2 for x in filtered]
+    return sum(doubled)
+
+# Mental trace with items = [-1, 2, 3]
+# filtered = [2, 3]
+# doubled = [4, 6]
+# return = 10
+```
+
+### Technique 3: Annotation
+
+Add comments while reading to capture understanding:
+
+```python
+def handle_request(request):
+    # Extract JSON payload from HTTP request
+    data = request.json
+
+    # Validate schema and business rules
+    validated = validate(data)
+
+    # Core processing logic
+    result = process(validated)
+
+    # Convert to JSON response
+    return jsonify(result)
+```
+
+### Technique 4: Diagramming
+
+Create visual representations:
+
+```
+Request Flow:
+  Client
+    ↓
+  Router (/api/users)
+    ↓
+  Controller (UserController.create)
+    ↓
+  Service (UserService.validateAndCreate)
+    ↓
+  Model (User.save)
+    ↓
+  Database
+```

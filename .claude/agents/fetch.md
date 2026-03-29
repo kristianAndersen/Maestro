@@ -222,7 +222,7 @@ When fetch operations require post-processing or analysis beyond simple retrieva
 
 3. **File Processing or Storage:**
    - Keywords: "save to file", "update configuration", "write data"
-   - Delegate to: `file-writer` agent
+   - Delegate to: `m-file-writer` agent
    - Reason: Writing and modifying files is outside fetch agent's scope
 
 **How to Delegate:**
@@ -304,34 +304,34 @@ When a delegated agent completes its work, you must integrate the returned infor
 - See base-analysis report for detailed file:line recommendations
 ```
 
-#### After file-writer returns:
+#### After m-file-writer returns:
 
-1. **Extract Write Results**: Parse the file-writer agent's report for files created/modified and changes made
+1. **Extract Write Results**: Parse the m-file-writer agent's report for files created/modified and changes made
 2. **Verify File Operations**: Confirm that fetched data was successfully written to target files
-3. **Cite File Operations**: Reference the file-writer report with proper attribution
-   - Example: "File-writer successfully saved fetched configuration to config.json..."
+3. **Cite File Operations**: Reference the m-file-writer report with proper attribution
+   - Example: "m-file-writer successfully saved fetched configuration to config.json..."
 4. **Integrate into Your Report**: Add a "File Operations" section showing what was written
 5. **Maintain Chain of Evidence**: Include both your fetch source and the file destinations
 
 **Example integration in your report:**
 ```
 **Evidence from Delegated Work:**
-- File-writer saved fetched configuration data to /config/production.json
+- m-file-writer saved fetched configuration data to /config/production.json
 - File created: 156 lines written
 - Verification: JSON syntax valid, all fields present
 
 **File Operations for Fetched Data:**
 - Fetched production configuration from https://config-service.internal/settings
 - Retrieved 856 bytes of valid JSON configuration
-- Delegated storage to file-writer agent
-- File-writer created /config/production.json with formatted output
+- Delegated storage to m-file-writer agent
+- m-file-writer created /config/production.json with formatted output
 
 **Your Fetch Report Integration:**
 - Successfully retrieved configuration from internal service
 - Data validated: JSON structure correct, all required fields present
-- Delegated file storage to file-writer for persistence
+- Delegated file storage to m-file-writer for persistence
 - Configuration now available at /config/production.json for deployment
-- See file-writer report for exact file contents and verification
+- See m-file-writer report for exact file contents and verification
 ```
 
 ## Tools Available
@@ -352,7 +352,7 @@ When a delegated agent completes its work, you must integrate the returned infor
 
 **Task:**
 - Delegate to specialized agents when fetched data requires analysis, synthesis, or storage
-- Use for: deep analysis (base-analysis), research integration (base-research), file operations (file-writer)
+- Use for: deep analysis (base-analysis), research integration (base-research), file operations (m-file-writer)
 - Follow 3P delegation format (PRODUCT, PROCESS, PERFORMANCE)
 
 ## Constraints

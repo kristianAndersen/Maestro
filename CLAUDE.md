@@ -1,12 +1,14 @@
-# CLAUDE.md
+## Session Bootstrap
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+The Maestro conductor persona is loaded automatically via `"agent": "maestro"` in `.claude/settings.json`. This loads `.claude/agents/maestro.md` as a system-level instruction — that file is the single source of truth for conductor identity and behavior.
+
+**CLAUDE.md is a reference manual, not a persona definition.** It documents the framework architecture, agent catalog, workflows, and configuration — but does not define who Maestro is or how it should behave. That responsibility belongs solely to `maestro.md`.
 
 ## Repository Overview
 
 **Maestro** is an AI orchestration framework that implements Anthropic's 4-D methodology (Delegation, Description, Discernment, Diligence). It enables Claude to operate as a conductor that delegates work to specialized subagents, evaluates outputs through quality gates, and iterates until excellence is achieved.
 
-**Core Principle:** Maestro orchestrates through delegation, not direct execution. Maestro do not asume, have baise, follow paradigms or operate in any spesefic domain. Maestro is agnostic to language, framework, or methodology. All work is done by specialized subagents guided by progressive skills.
+**Core Principle:** Maestro orchestrates through delegation, not direct execution. Maestro does not assume, have bias, follow paradigms, or operate in any specific domain. Maestro is agnostic to language, framework, or methodology. All work is done by specialized subagents guided by progressive skills.
 
 ## Setup and Installation
 
@@ -42,10 +44,17 @@ bun run test:evaluation-reminder
    - `work-tracker.sh`: Logs all file modifications to `.maestro-work-log.txt` (PostToolUse)
    - `evaluation-reminder.js`: Reminds to run 4-D evaluation (Stop)
    - `enforce-4d-evaluation.js`: Enforces mandatory 4-D quality gates on subagent outputs (Stop)
+   - `subagent-error-reporter.js`: Captures subagent completion/failure metadata to `logs/subagent-runs.jsonl` (SubagentStop)
+   - `delegation-logger.js`: Logs delegation completions with taskHash correlation to `logs/delegation.jsonl` (PostToolUse)
+   - `diary-capture.js`: Captures session memory for diary entries (Stop)
+   - `pre-delegation-validator.js`: Validates delegation context before subagent dispatch (PreToolUse)
+   - `skill-extraction-detector.js`: Detects skill extraction patterns (UserPromptSubmit)
+   - `statusline.sh`: Updates status line display (PostToolUse)
 
 2. **Agents** (`.claude/agents/*.md`) - Specialized subagents for specific operations
    - `maestro.md`: Meta-conductor that orchestrates all other agents
    - `list.md`, `open.md`, `file-reader.md`, `file-writer.md`: File operations
+   - `m-file-writer.md`: Resilient file writer with retry, ghost write detection, and verification (**Maestro MUST use m-file-writer instead of file-writer for all write delegations**)
    - `base-research.md`, `base-analysis.md`: Information gathering and evaluation
    - `4d-evaluation.md`: Quality assessment using 4-D framework (mandatory quality gate)
    - `fetch.md`: External data retrieval
@@ -55,15 +64,26 @@ bun run test:evaluation-reminder
    - `diary-writer.md`: Episodic session memory capture for learning and reflection
    - `reflector.md`: Diary analysis and CLAUDE.md improvement proposals
    - `excel.md`: Excel/spreadsheet data operations specialist
+   - `agent-creator.md`: Agent creation, improvement, and registry optimization specialist
+   - `ai-pulse.md`: Twitter/X AI news aggregation and digest generation
+   - `figma.md`: Figma design operations and canvas manipulation
+   - `ui-ux-designer.md`: Color theory, typography, layout, and WCAG compliance specialist
+   - `communicator.md`: Inter-session messaging and registration
 
    **Internal Utility Agents** (invoked by Harry, not directly by users):
-   - Creator agents: `create-agent.md`, `create-commands.md`, `create-hooks.md`, `create-meta-prompts.md`, `create-subagents.md`
+   - Creator agents: `create-agent.md` (skill generator), `create-commands.md`, `create-hooks.md`, `create-meta-prompts.md`, `create-subagents.md`
    - Auditor agents: `hook-auditor.md`, `skill-auditor.md`, `slash-command-auditor.md`, `subagent-auditor.md`
+
+   **Debate Persona Agents** (specialized discussion agents):
+   - `emilio.md`: Cross-functional integrator PM, leads with pragmatic constraints
+   - `ludvig.md`: Pragmatic systems leader, leads with first principles
+   - `nicola.md`: Systems-minded investigator-builder, leads with data and evidence
 
 3. **Skills** (`.claude/skills/*/SKILL.md`) - Progressive guidance activated by context
    - Skills provide methodology and best practices to agents
    - Organized as: `SKILL.md` (overview <500 lines) + `assets/*.md` (deep dives <500 lines each)
    - Auto-activated via pattern matching in `skill-rules.json`
+   - Available skill domains: list, open, read, write, fetch, base-research, base-analysis, 4d-evaluation, hallucination-detection, maestro-orchestration, delegater, ui-ux-design, ai-pulse, excel, figma, lighthouse
 
 ### Performance Optimization
 
@@ -93,6 +113,20 @@ See: `docs/DEFER_LOADING_USER_GUIDE.md` for details
 - `.claude/skills/skill-rules.json`: Skill activation rules with prompt/file triggers
 - `.claude/context.json`: Runtime context tracking (active domain, last edited file, skill cache)
 - `.claude/settings.json`: Hook configuration and event bindings
+
+### Observability Layer
+
+**Schemas** (`.claude/schemas/*.json`) - JSONL log format contracts:
+- `delegation-log.json`: Delegation completion events (timestamp is completion, not dispatch)
+- `subagent-runs-log.json`: Subagent lifecycle events (10 fields)
+- `evaluation-history-log.json`: 4-D evaluation verdicts with taskHash correlation
+
+**Live Logs** (`.claude/logs/*.jsonl`) - Runtime event streams:
+- `delegation.jsonl`: PostToolUse/Agent completions with taskHash
+- `subagent-runs.jsonl`: SubagentStop completions with agentType
+
+**Evaluation History** (`.claude/memory/evaluation-history.jsonl`):
+- 4-D verdicts with taskHash for cross-log correlation
 
 ## Core Workflows
 
@@ -132,7 +166,7 @@ Agent A (receives task)
 - **base-analysis → fetch**: When evaluation requires current external documentation for baseline
 - **base-analysis → base-research**: When analysis needs comprehensive discovery phase
 - **fetch → base-analysis**: When fetched data requires deep evaluation
-- **fetch → file-writer**: When external data needs to be saved to files
+- **fetch → m-file-writer**: When external data needs to be saved to files
 
 **Requirements for Delegation:**
 
@@ -266,6 +300,8 @@ When creating or modifying skills:
 6. **Framework Agnostic**: Zero bias toward any language, framework, or methodology
 7. **Context Preservation with defer_loading**: Progressive disclosure keeps main context clean while enabling complex work. Skills recommended once per session/domain, then cached to reduce token overhead by 74%.
 8. **Evidence-Based**: All claims must include proof with specific file paths and line numbers
+9. **Resilient Writes**: Maestro MUST always delegate file writes to m-file-writer (not file-writer). The m-file-writer provides retry logic, ghost write detection, and mandatory read-after-write verification to prevent silent write failures.
+10. **Observability**: All delegations, evaluations, and subagent runs are logged with taskHash correlation for debugging and compliance measurement.
 
 ## File Locations
 
@@ -274,6 +310,10 @@ When creating or modifying skills:
 - **Performance Docs**: `docs/DEFER_LOADING_USER_GUIDE.md`, `docs/DEFER_LOADING_DEVELOPER_GUIDE.md`
 - **Work Logs**: `.maestro-work-log.txt` (git-ignored, tracks all file modifications)
 - **Context Tracking**: `.claude/context.json` (runtime state, active domain, skill cache)
+- **Observability Schemas**: `.claude/schemas/` (JSONL log format contracts)
+- **Runtime Logs**: `.claude/logs/` (delegation, subagent-runs event streams)
+- **Session Memory**: `.claude/memory/diary/` (episodic session capture for learning)
+- **Slash Commands**: `.claude/commands/` (ai-pulse, diagnose, figma)
 
 ## Maestro Emoji Protocol
 

@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "delegation-log",
+  "title": "Delegation Log Entry",
+  "description": "One entry per Agent tool event. Two entries per delegation: one 'dispatch' entry (from pre-delegation-validator.js via PreToolUse) and one 'completion' entry (from delegation-logger.js via PostToolUse). Join on taskHash to compute dispatch-to-completion latency.",
+  "type": "object",
+  "required": ["timestamp", "sessionId", "agentName", "taskSummary", "taskHash"],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC. Meaning depends on 'phase': dispatch entries record when Maestro sent the task; completion entries record when the subagent returned."
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["dispatch", "completion"],
+      "description": "Entry phase. 'dispatch': written by pre-delegation-validator.js at PreToolUse (before Agent tool executes). 'completion': written by delegation-logger.js at PostToolUse (after Agent tool returns). Absent in entries written before v3 item 4 — treat as 'completion' for backward compatibility."
+    },
+    "taskHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{12}$",
+      "description": "12-char hex prefix of SHA256(prompt[0:200]). Correlation key: join dispatch and completion entries with matching taskHash to get per-task latency. Both hooks compute identical hashes from identical input. Collision probability negligible for typical session volumes."
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "UUID from Claude Code session context. Groups all dispatches and completions in a session."
+    },
+    "agentId": {
+      "type": "string",
+      "description": "Subagent runtime ID. Only present in completion entries (PostToolUse). 'unknown' in practice — Claude Code does not expose subagent runtime ID in PostToolUse hook input for Agent calls. Absent in dispatch entries."
+    },
+    "agentName": {
+      "type": "string",
+      "description": "Resolved agent name. Extraction order: (1) tool_input.agent field, (2) known-agent list scan of prompt text, (3) 'unknown'. Available in both dispatch and completion entries."
+    },
+    "taskSummary": {
+      "type": "string",
+      "description": "First 120 chars of task prompt (completion) or first 200 chars (dispatch — pre-delegation-validator uses 200 for hash input). Used as human-readable context. Do not rely on exact match between dispatch and completion summaries."
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "timestamp": "2026-03-29T20:05:43.900Z",
+      "phase": "dispatch",
+      "taskHash": "a3f7c2b91e04",
+      "sessionId": "302041b2-b528-4939-931b-01ef1eab3513",
+      "agentName": "list",
+      "taskSummary": "List all .js files in /Users/awesome/dev/devtest/Maestro/.claude/hooks/ with their line counts."
+    },
+    {
+      "timestamp": "2026-03-29T20:05:44.046Z",
+      "phase": "completion",
+      "taskHash": "a3f7c2b91e04",
+      "sessionId": "302041b2-b528-4939-931b-01ef1eab3513",
+      "agentId": "unknown",
+      "agentName": "list",
+      "taskSummary": "List all .js files in /Users/awesome/dev/devtest/Maestro/.claude/hooks/ with their line counts. Use wc -l on each file."
+    }
+  ],
+  "consumers": [
+    "subagent-error-reporter.js — resolveAgentName() looks up agentId in completion entries",
+    "enforce-4d-evaluation.js — detectTaskFromDelegationLog() queries completion entries for recent Task dispatches",
+    "latency analysis — join dispatch + completion entries on taskHash, subtract timestamps"
+  ],
+  "knownLimitations": [
+    "agentId is always 'unknown' in completion entries — Claude Code PostToolUse does not expose subagent runtime ID for Agent calls",
+    "entries written before v3 item 4 lack 'phase' and 'taskHash' fields — treat as completion entries",
+    "taskSummary length differs between dispatch (200 chars) and completion (120 chars) — do not use as join key",
+    "hash collision possible but negligible for session-scale volumes (12-char hex = 281 trillion combinations)"
+  ]
+}

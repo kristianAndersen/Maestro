@@ -1,6 +1,6 @@
-# BaseAnalysis Skill: Patterns
+# base-analysis Skill: Patterns
 
-Analysis patterns, evaluation templates, and scoring rubrics for different assessment contexts.
+Analysis patterns, evaluation templates, scoring rubrics, and assessment output formats. Load this asset when you need concrete report templates, PR review formats, scoring rubrics, or the standard Assessment Template.
 
 ## Analysis Patterns by Context
 
@@ -99,6 +99,45 @@ pytest --cov --cov-report=term-missing
 
 ## Evaluation Templates
 
+### Template: Assessment Report (Standard)
+
+```markdown
+# Code Analysis: [Component Name]
+
+## Summary
+[One paragraph overview of assessment]
+
+## Strengths
+- [Specific positive aspect with example]
+- [Another strength]
+
+## Issues Identified
+
+### Critical (Fix Immediately)
+- [Issue with severity justification]
+  - Location: file.py:123
+  - Impact: [Why it matters]
+  - Recommendation: [How to fix]
+
+### Important (Fix Soon)
+- [Issue]
+
+### Minor (Consider Fixing)
+- [Issue]
+
+## Metrics
+- Lines of code: X
+- Test coverage: Y%
+- Complexity score: Z
+
+## Recommendations
+1. [Actionable recommendation]
+2. [Another recommendation]
+
+## Verdict
+[APPROVED | NEEDS WORK | BLOCKED]
+```
+
 ### Template: Component Analysis
 
 ```markdown
@@ -170,7 +209,33 @@ pytest --cov --cov-report=term-missing
 
 ## Scoring Rubrics
 
-### Code Quality Rubric
+### Code Quality Tier Rubric
+
+**Excellent (90-100%):**
+- Clear, well-documented code
+- Comprehensive tests
+- No code smells
+- Follows best practices
+
+**Good (70-89%):**
+- Generally clear code
+- Adequate tests
+- Minor code smells
+- Mostly follows best practices
+
+**Needs Improvement (50-69%):**
+- Some unclear code
+- Limited tests
+- Notable code smells
+- Some best practices violated
+
+**Poor (<50%):**
+- Unclear, complex code
+- Minimal/no tests
+- Significant code smells
+- Many best practices violated
+
+### Code Quality Criterion Rubric
 
 | Criterion | Excellent (5) | Good (4) | Fair (3) | Poor (2) | Very Poor (1) |
 |-----------|---------------|----------|----------|----------|---------------|

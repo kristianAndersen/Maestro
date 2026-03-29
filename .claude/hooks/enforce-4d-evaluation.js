@@ -1,11 +1,12 @@
 #!/usr/bin/env bun
 
-import { readFileSync, writeFileSync, appendFileSync, existsSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, renameSync, appendFileSync, existsSync, mkdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
 
 /**
  * Enforce 4-D Evaluation Hook
@@ -37,6 +38,50 @@ if (!conversationContext) {
 // Load project context from .claude/context.json
 let projectContext = {};
 const contextPath = join(__dirname, '..', 'context.json');
+const DELEGATION_LOG = join(__dirname, '..', 'logs', 'delegation.jsonl');
+const RUNS_LOG_PATH = join(__dirname, '..', 'logs', 'subagent-runs.jsonl');
+// Look back this many minutes for log-based Task/evaluation detection
+const DETECTION_WINDOW_MS = 90 * 60 * 1000; // 90 minutes
+
+// --- Anti-Rationalization Table ---
+// Known patterns where LLMs rationalize skipping 4D evaluation.
+// Each entry: the excuse Claude generates, and the rebuttal that counters it.
+// Referenced in warning output to pre-empt compliance shortcuts.
+const ANTI_RATIONALIZATION_TABLE = [
+  {
+    excuse: 'I already evaluated informally / I reviewed it mentally',
+    rebuttal: 'Informal evaluation is not structured evaluation. The 4D framework catches issues across three dimensions (Product, Process, Performance) that informal review systematically misses. "I looked at it" is not a quality gate.',
+  },
+  {
+    excuse: 'This task is too simple to need evaluation',
+    rebuttal: 'Simple tasks are where quality shortcuts compound. If the task is truly simple, evaluation takes seconds. If you are wrong about it being simple, skipping evaluation lets the error through. The cost of evaluating a simple task is low; the cost of not evaluating a complex task you misjudged is high.',
+  },
+  {
+    excuse: 'The subagent output looks correct / The work is obviously fine',
+    rebuttal: '"Looks correct" and "is correct" are different claims. The 4D gate checks process and performance, not just product. An output can look right while the approach is fragile, incomplete, or non-idiomatic. You cannot assess what you have not structured-evaluated.',
+  },
+  {
+    excuse: "I'll evaluate the next one / I'll be more thorough next time",
+    rebuttal: 'Skipping once normalizes skipping. There is no "next one" exception — every delegation requires evaluation. Deferred compliance is non-compliance.',
+  },
+  {
+    excuse: 'The user is waiting / Time pressure / Need to respond quickly',
+    rebuttal: 'A wrong answer delivered fast costs more than a correct answer delivered with evaluation. The user asked for quality (by using Maestro). Evaluation IS the service, not overhead on top of it.',
+  },
+  {
+    excuse: 'The subagent already self-assessed its work',
+    rebuttal: 'Agent self-assessment is not independent evaluation. The entire point of 4D is external quality checking by a separate agent with fresh context. Self-assessment is input to evaluation, not a substitute for it.',
+  },
+  {
+    excuse: 'I need to evaluate multiple outputs together / I will batch them',
+    rebuttal: 'Each delegation gets its own evaluation. Batching evaluations means the first outputs are accepted without review while waiting for later ones. Evaluate as you go, not after the fact.',
+  },
+  {
+    excuse: 'The 4D evaluation agent will just say EXCELLENT anyway',
+    rebuttal: 'If you are confident the work is excellent, evaluation costs nothing — it confirms your assessment in 10 seconds. If the work is NOT excellent, you just tried to skip the one process that would have caught it. Either way, run the evaluation.',
+  },
+];
+
 try {
   projectContext = JSON.parse(readFileSync(contextPath, 'utf-8'));
 } catch (error) {
@@ -45,6 +90,62 @@ try {
 }
 
 // --- Detection Functions ---
+
+
+/**
+ * Query delegation.jsonl to detect Task tool invocations in the current session.
+ * More reliable than string-matching conversation context (which changes format
+ * across Claude Code versions). Uses a time window to scope to the current turn.
+ *
+ * @returns {{ used: boolean, agentNames: string[] }}
+ */
+function detectTaskFromDelegationLog() {
+  try {
+    if (!existsSync(DELEGATION_LOG)) return { used: false, agentNames: [], taskHashes: [] };
+    const cutoff = Date.now() - DETECTION_WINDOW_MS;
+    const lines = readFileSync(DELEGATION_LOG, 'utf-8').trim().split('\n').filter(Boolean);
+    const recent = [];
+    const hashes = [];
+    for (const line of lines) {
+      try {
+        const entry = JSON.parse(line);
+        if (new Date(entry.timestamp).getTime() >= cutoff) {
+          recent.push(entry.agentName || 'unknown');
+          if (entry.taskHash) hashes.push(entry.taskHash);
+        }
+      } catch { /* skip malformed */ }
+    }
+    return { used: recent.length > 0, agentNames: recent, taskHashes: hashes };
+  } catch {
+    return { used: false, agentNames: [], taskHashes: [] };
+  }
+}
+
+/**
+ * Query subagent-runs.jsonl to detect whether a 4d-evaluation agent ran
+ * in the current session window.
+ *
+ * @returns {boolean}
+ */
+function detect4dEvaluationFromRunsLog() {
+  try {
+    if (!existsSync(RUNS_LOG_PATH)) return false;
+    const cutoff = Date.now() - DETECTION_WINDOW_MS;
+    const lines = readFileSync(RUNS_LOG_PATH, 'utf-8').trim().split('\n').filter(Boolean);
+    for (let i = lines.length - 1; i >= 0; i--) {
+      try {
+        const entry = JSON.parse(lines[i]);
+        if (new Date(entry.timestamp).getTime() < cutoff) break; // past window
+        if (entry.agentType && entry.agentType.toLowerCase().includes('4d-evaluation')) {
+          return true;
+        }
+      } catch { /* skip */ }
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Check if Task tool was used in the conversation
@@ -61,9 +162,10 @@ function detectTaskToolUsage(context) {
     /<invoke name="task">/i,
     // Look for Task tool in function results
     /<function_results>[\s\S]*?<name>Task<\/name>/i,
-    // Delegation markers
-    /\bDelegating to.*agent\b/i,
-    /\bTask tool to delegate\b/i,
+    // Delegation markers - specific structural patterns only (avoid conversational false positives)
+    /📤\s*Delegating to/,
+    /subagent_type\s*[:=]/i,
+    /\bAgent tool.*to launch\b/i,
     // Subagent invocation patterns
     /\bsubagent_type=/i,
   ];
@@ -248,7 +350,39 @@ function generateWarning() {
   output.push('║ ⚠️  DO NOT accept subagent work without evaluation         ║');
   output.push('║ 🔄 Iterate until EXCELLENT verdict achieved                ║');
   output.push('║                                                            ║');
-  output.push('╚════════════════════════════════════════════════════════════╝');
+  output.push('║ 🛡️  ANTI-RATIONALIZATION GUARD:                            ║');
+  output.push('║                                                            ║');
+  output.push('║ If you are thinking of skipping evaluation, check if       ║');
+  output.push('║ your reasoning matches a known rationalization pattern:    ║');
+  output.push('║                                                            ║');
+  for (const entry of ANTI_RATIONALIZATION_TABLE) {
+    // Show excuse (truncated to fit) + full rebuttal (word-wrapped)
+    const excuse = entry.excuse.length > 54 ? entry.excuse.slice(0, 53) + '…' : entry.excuse;
+    output.push(`║ ❌ "${excuse.padEnd(54)}" ║`);
+    // Word-wrap rebuttal into 52-char lines with ↳ prefix
+    const words = entry.rebuttal.split(' ');
+    const rebLines = [];
+    let cur = '';
+    for (const word of words) {
+      if ((cur + (cur ? ' ' : '') + word).length <= 52) {
+        cur = cur + (cur ? ' ' : '') + word;
+      } else {
+        if (cur) rebLines.push(cur);
+        cur = word;
+      }
+    }
+    if (cur) rebLines.push(cur);
+    rebLines.forEach((line, i) => {
+      const prefix = i === 0 ? '  ↳ ' : '    ';
+      output.push(`║ ${(prefix + line).padEnd(60)}║`);
+    });
+    output.push('║                                                            ║');
+  }
+  output.push('║                                                            ║');
+  output.push('║ ALL of the above are known failure patterns.               ║');
+  output.push('║ If your reason matches ANY of them — run the evaluation.   ║');
+  output.push('║                                                            ║');
+    output.push('╚════════════════════════════════════════════════════════════╝');
   output.push('');
 
   return output.join('\n');
@@ -389,9 +523,11 @@ function updateComplianceTracking(taskUsed, evaluationPerformed) {
     tracking.lastChecked = new Date().toISOString();
   }
 
-  // Write updated context back to file
+  // Write updated context back to file (atomic: tmp + rename prevents race conditions).
   try {
-    writeFileSync(contextPath, JSON.stringify(projectContext, null, 2), 'utf-8');
+    const tmpPath = contextPath + '.tmp';
+    writeFileSync(tmpPath, JSON.stringify(projectContext, null, 2), 'utf-8');
+    renameSync(tmpPath, contextPath);
   } catch (error) {
     // Fail gracefully - don't break workflow if context can't be updated
   }
@@ -401,7 +537,7 @@ function updateComplianceTracking(taskUsed, evaluationPerformed) {
  * Log evaluation outcomes to evaluation-history.jsonl
  * @param {array} evaluations - Array of evaluation detail objects
  */
-function logEvaluationHistory(evaluations) {
+function logEvaluationHistory(evaluations, taskHashes) {
   if (!evaluations || evaluations.length === 0) {
     return; // Nothing to log
   }
@@ -428,9 +564,13 @@ function logEvaluationHistory(evaluations) {
   // Append each evaluation as a JSONL entry
   try {
     for (const evaluation of evaluations) {
+      // Use the most recent taskHash for correlation with delegation logs
+      const taskHash = taskHashes.length > 0 ? taskHashes[taskHashes.length - 1] : null;
+
       const logEntry = {
         timestamp: new Date().toISOString(),
         sessionId,
+        taskHash,
         agentUsed: evaluation.agentUsed,
         taskType: evaluation.taskType,
         verdict: evaluation.verdict,
@@ -537,10 +677,22 @@ function generateSkillUsageWarning() {
 
 // --- Main Execution ---
 
-const taskUsed = detectTaskToolUsage(conversationContext);
+// Primary: log-based detection (reliable, format-independent)
+const logTaskResult = detectTaskFromDelegationLog();
+const logEvalPerformed = detect4dEvaluationFromRunsLog();
+
+// Fallback: string-matching on conversation context (legacy, kept for sessions
+// where delegation-logger wasn't running or logs are absent)
+const stringTaskUsed = detectTaskToolUsage(conversationContext);
 const evaluationResult = detectEvaluationPerformed(conversationContext);
-const evaluationPerformed = evaluationResult.performed;
+const stringEvalPerformed = evaluationResult.performed;
 const evaluations = evaluationResult.evaluations;
+
+// Merge: log-based wins when available, string-match is the fallback
+const taskUsed = logTaskResult.used || stringTaskUsed;
+const evaluationPerformed = logTaskResult.used
+  ? logEvalPerformed   // log-based: use log result
+  : stringEvalPerformed; // no log data: fall back to string matching
 
 // NEW: Check for protocol violations
 const selfAssessmentDetected = detectSelfAssessmentAfterEvaluation(conversationContext);
@@ -552,7 +704,7 @@ updateComplianceTracking(taskUsed, evaluationPerformed);
 
 // Log evaluation outcomes to history file
 if (evaluationPerformed && evaluations.length > 0) {
-  logEvaluationHistory(evaluations);
+  logEvaluationHistory(evaluations, logTaskResult.taskHashes);
 }
 
 // Output warnings for violations (in priority order)

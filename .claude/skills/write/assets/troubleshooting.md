@@ -489,3 +489,95 @@ pytest tests/test_file.py  # Tests
 
 # Don't wait until end to verify
 ```
+
+---
+
+## Edge Cases
+
+### Large Files
+- Don't use Edit on files > 10,000 lines
+- Break into smaller, focused edits
+- Verify each edit before proceeding to next
+
+### Generated Code
+- Be cautious editing auto-generated files
+- Look for "DO NOT EDIT" warnings
+- Modify the source template instead
+
+### Multiple Changes Needed
+- Make one logical change per Edit
+- Verify each change works before the next
+- If 3+ changes needed → use Write (full replacement) to avoid Edit uniqueness failures
+
+### Formatting Conflicts
+- Preserve existing formatting style
+- Don't mix tabs and spaces
+- Match existing line endings (LF vs CRLF)
+
+---
+
+## Anti-Pattern Reference
+
+### Writing Without Reading
+
+```bash
+# BAD: Modify without understanding context
+Write(file.py, new_content)
+
+# GOOD: Read first, then modify
+Read(file.py)
+Edit(file.py, old_string, new_string)
+```
+
+### Using Write on Existing Files
+
+```bash
+# BAD: Overwrites entire file
+Write(existing.py, content)
+
+# GOOD: Targeted edit
+Edit(existing.py, old_section, new_section)
+```
+
+### No Verification
+
+```bash
+# BAD: Make change and move on
+Edit(file.py, old, new)
+# Next task...
+
+# GOOD: Verify immediately
+Edit(file.py, old, new)
+python -m py_compile file.py
+pytest tests/test_file.py
+```
+
+### Batching Unrelated Changes
+
+```bash
+# BAD: Multiple unrelated changes in one Edit
+Edit(file.py,
+  old="entire file",
+  new="entire file with 5 different changes")
+
+# GOOD: One logical change at a time
+Edit(file.py, old="function A", new="improved function A")
+# Verify
+Edit(file.py, old="function B", new="improved function B")
+# Verify
+```
+
+### Stale Snapshot Edits
+
+```bash
+# BAD: Plan multiple Edits from one Read, execute all at once
+Read(file.py)   # snapshot taken
+Edit(...)        # changes file
+Edit(...)        # old_string may no longer match — FAILS
+
+# GOOD: Re-Read before every Edit
+Read(file.py)
+Edit(file.py, ...)
+Read(file.py)   # re-read to get current state
+Edit(file.py, ...)
+```

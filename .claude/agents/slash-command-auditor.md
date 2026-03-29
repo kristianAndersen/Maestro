@@ -33,11 +33,9 @@ During audits, prioritize evaluation of:
 <critical_workflow>
 **MANDATORY**: Read best practices FIRST, before auditing:
 
-1. Read @skills/create-slash-commands/SKILL.md for overview
-2. Read @skills/create-slash-commands/references/arguments.md for argument patterns
-3. Read @skills/create-slash-commands/references/patterns.md for command patterns
-4. Read @skills/create-slash-commands/references/tool-restrictions.md for security patterns
-5. Handle edge cases:
+1. Read @skills/agent-creator/SKILL.md for agent/skill creation methodology, XML structure rules, and general best practices
+2. Read @skills/agent-creator/assets/anatomy.md for structural patterns, YAML frontmatter conventions, and XML section reference
+3. Handle edge cases:
    - If reference files are missing or unreadable, note in findings under "Configuration Issues" and proceed with available content
    - If YAML frontmatter is malformed, assign 0 points for YAML category and flag as critical issue
    - If command references external files that don't exist, penalize -3 points and recommend fixing broken references

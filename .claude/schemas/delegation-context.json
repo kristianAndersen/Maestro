@@ -1,0 +1,69 @@
+{
+  "$schema": "Maestro Delegation Context Schema v1",
+  "$description": "Defines what valid delegation context looks like for Task tool calls. Used by pre-delegation-validator.js (PreToolUse hook) to catch corruption before it propagates to subagents.",
+  "$history": {
+    "v1": "Defined from production failure evidence during v1 observation period. Known failure modes: context.json race condition (fixed), skill cache cross-boundary leak, oversized prompts with embedded reports."
+  },
+
+  "requiredFields": ["prompt", "description"],
+  "optionalFields": ["subagent_type", "model", "isolation", "run_in_background"],
+
+  "prompt": {
+    "minLength": 20,
+    "maxLength": 50000,
+    "description": "The delegation instructions. Should contain task-specific context only.",
+    "recommended3P": {
+      "description": "For standard/complex delegations, prompt should include PRODUCT, PROCESS, PERFORMANCE sections",
+      "enforcement": "advisory",
+      "exemptions": ["simple read/list operations", "direct file operations with clear paths"]
+    }
+  },
+
+  "description": {
+    "minLength": 3,
+    "maxLength": 200,
+    "description": "Short summary of what the agent will do (3-5 words recommended)"
+  },
+
+  "subagent_type": {
+    "description": "Must match a known agent name from agent-registry.json. If omitted, defaults to general-purpose.",
+    "validation": "warn-on-unknown",
+    "enforcement": "advisory"
+  },
+
+  "contextPollutionSignals": {
+    "description": "Patterns that suggest the delegation context is contaminated with irrelevant data",
+    "signals": [
+      {
+        "pattern": "4D-EVALUATION REPORT",
+        "severity": "warning",
+        "reason": "Evaluation reports should not be forwarded to new delegations"
+      },
+      {
+        "pattern": "SUBAGENT REPORT (>2000 chars)",
+        "severity": "warning",
+        "reason": "Prior agent reports should be summarized, not embedded wholesale"
+      },
+      {
+        "pattern": "conversation history markers",
+        "severity": "warning",
+        "reason": "Delegation should contain task context, not chat history"
+      }
+    ]
+  },
+
+  "enforcementLevels": {
+    "requiredFields": "error",
+    "lengthBounds": "warning",
+    "subagentType": "advisory",
+    "3PStructure": "advisory",
+    "contextPollution": "warning"
+  },
+
+  "notes": [
+    "This schema is a living document — update it as new failure modes are observed in production.",
+    "Pre-delegation-validator.js reads this schema at hook execution time.",
+    "Advisory checks surface warnings but do not block delegation.",
+    "Error-level checks surface prominent warnings that the conductor should address before proceeding."
+  ]
+}

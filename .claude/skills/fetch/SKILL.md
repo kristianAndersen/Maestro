@@ -1,6 +1,6 @@
 ---
 name: fetch
-description: Activates for external data retrieval operations; provides guidance on using WebFetch and WebSearch tools, knowing when to use each, handling failures gracefully, and validating responses. Use this skill whenever you need to fetch a URL, search the web for current information, retrieve documentation, verify an API signature, or get data from external sources — even if the user just says "look it up" or "check the docs".
+description: Activates for external data retrieval operations. Use this skill whenever you need to fetch a URL, search the web for current information, retrieve documentation, verify an API signature, or get data from external sources — even if the user just says "look it up" or "check the docs".
 tools: WebFetch, WebSearch
 ---
 

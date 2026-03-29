@@ -11,7 +11,7 @@ This document catalogs common mistakes in workflow design and context management
 User: "Add rate limiting to the login endpoint"
 
 # BAD - Writing without reading
-@file-writer
+@m-file-writer
 
 **PRODUCT:** Add rate limiting to src/auth/login.py
 
@@ -50,7 +50,7 @@ Step 1: @file-reader
 
 ↓
 
-Step 2: @file-writer
+Step 2: @m-file-writer
 
 **PRODUCT:** Add rate limiting to login endpoint
 
@@ -82,7 +82,7 @@ Step 2: @file-writer
 1. Before any modification: understand current state
 2. Use @file-reader to comprehend code
 3. Document findings
-4. Then use @file-writer with context
+4. Then use @m-file-writer with context
 
 ### Anti-Pattern 3.2: Serial When Parallel Possible
 

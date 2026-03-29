@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "evaluation-history-log",
+  "title": "Evaluation History Log Entry",
+  "description": "One entry per 4D evaluation verdict detected. Written by enforce-4d-evaluation.js (Stop hook) to .claude/memory/evaluation-history.jsonl. Used for long-term quality trend analysis and session retrospectives.",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "sessionId",
+    "agentUsed",
+    "taskType",
+    "verdict",
+    "iterationCount",
+    "coachingApplied"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC. Written at Stop hook time, not at evaluation time \u2014 may lag actual evaluation by the remainder of the session."
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Session ID from context.json skillTracking.sessionId or lastSessionId. May be 'unknown' if context.json is unavailable or stale."
+    },
+    "taskHash": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{12}$",
+      "description": "12-char hex prefix of SHA256(prompt[0:200]). Sourced from delegation.jsonl via detectTaskFromDelegationLog() \u2014 uses the most recent taskHash in the session window. Null if no delegation log data exists. Join to delegation.jsonl completion entry with matching taskHash to correlate verdict with task dispatch."
+    },
+    "agentUsed": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Agent identifier extracted from context around the VERDICT match. May be null if extraction failed or verdict appeared without clear agent attribution."
+    },
+    "taskType": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Task type extracted from context around the VERDICT match. Heuristic extraction \u2014 may be null or imprecise."
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "EXCELLENT",
+        "NEEDS REFINEMENT"
+      ],
+      "description": "Normalized verdict string from VERDICT: pattern match in conversation context."
+    },
+    "iterationCount": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "description": "Number of refinement iterations for this task. Extracted from context if available, null if not determinable. Post-v1 circuit breaker: hard limit of 3."
+    },
+    "coachingApplied": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Whether coaching/refinement instructions were provided with a NEEDS REFINEMENT verdict. Null if not determinable from context."
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "timestamp": "2026-03-29T20:08:00.000Z",
+      "sessionId": "302041b2-b528-4939-931b-01ef1eab3513",
+      "agentUsed": "base-research",
+      "taskType": "hook inventory",
+      "verdict": "EXCELLENT",
+      "iterationCount": 2,
+      "coachingApplied": true,
+      "taskHash": "a3f7c2b91e04"
+    }
+  ],
+  "consumers": [
+    "enforce-4d-evaluation.js \u2014 writes this log via logEvaluationHistory()",
+    "reflector agent \u2014 reads evaluation-history.jsonl for session retrospectives and CLAUDE.md improvement proposals",
+    "diary-writer agent \u2014 may reference for episodic memory capture"
+  ],
+  "knownLimitations": [
+    "timestamp is Stop hook time, not evaluation time \u2014 multiple verdicts from same session share similar timestamps",
+    "agentUsed and taskType are heuristic extractions from regex context windows \u2014 accuracy not guaranteed",
+    "iterationCount extraction is context-dependent \u2014 null is common for sessions predating the circuit breaker",
+    "location: .claude/memory/ not .claude/logs/ \u2014 different directory from other two log files",
+    "taskHash uses the most recent hash in the session window \u2014 for sessions with multiple delegations, all verdicts get the same hash (the last one). True per-verdict correlation requires matching taskHash + timestamp proximity.",
+    "taskHash correlation uses the most recent delegation log entry in the window \u2014 in parallel dispatch scenarios with multiple agents, this may match the wrong delegation entry."
+  ]
+}

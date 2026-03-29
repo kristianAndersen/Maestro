@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "subagent-runs-log",
+  "title": "Subagent Runs Log Entry",
+  "description": "One entry per subagent completion. Written by subagent-error-reporter.js (SubagentStop). Primary diagnostic log for subagent failures and performance.",
+  "type": "object",
+  "required": ["timestamp", "sessionId", "agentId", "agentType", "status", "recovered", "errorCount", "errors", "responseLengthChars"],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC. SubagentStop fires at subagent completion."
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "UUID from SubagentStop hook input."
+    },
+    "agentId": {
+      "type": "string",
+      "description": "Subagent runtime ID from SubagentStop hook input (e.g. 'ae326aef21f40e545'). Use this to join with delegation.jsonl — NOTE: delegation.jsonl currently logs agentId as 'unknown', so join must use taskSummary hash until v3 item 4 is implemented."
+    },
+    "agentType": {
+      "type": "string",
+      "description": "Resolved agent type. Source priority: (1) delegation.jsonl lookup by agentId via resolveAgentName(), (2) raw agent_type from SubagentStop hook input (historically 'general-purpose' for all agents). Post-v1: should now reflect actual agent name (list, base-research, etc.)."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["success", "error", "empty"],
+      "description": "Outcome classification. 'error': error patterns found and not recovered. 'success': no errors or all recovered. 'empty': subagent returned blank response (likely crash or context limit)."
+    },
+    "recovered": {
+      "type": "boolean",
+      "description": "True if error patterns were detected but success patterns were also present, indicating the subagent handled the error internally."
+    },
+    "errorCount": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of error pattern matches found in last_assistant_message."
+    },
+    "errors": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 5,
+      "description": "Up to 5 error snippet strings from last_assistant_message. Snippets are 100-char substrings around matched error patterns — not full error messages."
+    },
+    "structuredError": {
+      "type": ["object", "null"],
+      "description": "Parsed structured error block if ESCALATION REQUIRED or ERROR REPORT pattern detected. Null if no structured error present.",
+      "properties": {
+        "type": { "type": "string" },
+        "message": { "type": "string" },
+        "context": { "type": "string" },
+        "recommendation": { "type": "string" }
+      }
+    },
+    "transcriptPath": {
+      "type": ["string", "null"],
+      "description": "Absolute path to subagent JSONL transcript from SubagentStop hook input. Null if not provided."
+    },
+    "responseLengthChars": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Character count of last_assistant_message. 0 for empty responses."
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "timestamp": "2026-03-26T11:30:07.663Z",
+      "sessionId": "af4376d6-b78f-4653-983a-ed5d808e39f4",
+      "agentId": "a5ceb244b08f8aedb",
+      "agentType": "fetch",
+      "status": "success",
+      "recovered": false,
+      "errorCount": 0,
+      "errors": [],
+      "structuredError": null,
+      "transcriptPath": "/Users/awesome/.claude/projects/-Users-awesome-dev-devtest-Maestro/af4376d6/subagents/agent-a5ceb244b08f8aedb.jsonl",
+      "responseLengthChars": 18384
+    }
+  ],
+  "consumers": [
+    "enforce-4d-evaluation.js — detect4dEvaluationFromRunsLog() queries this for 4d-evaluation completions",
+    "subagent-error-reporter.js — writes this log and reads delegation.jsonl to resolve agentType"
+  ],
+  "knownLimitations": [
+    "error snippets are 100-char windows around pattern matches — not full error messages; false positives possible",
+    "agentType was historically 'general-purpose' for all entries pre-v1; post-v1 should resolve correctly",
+    "recovered=false does not mean unrecovered — it means no SUCCESS_PATTERNS were found alongside errors"
+  ]
+}

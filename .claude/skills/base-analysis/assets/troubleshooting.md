@@ -1,4 +1,4 @@
-# BaseAnalysis Skill: Troubleshooting
+# base-analysis Skill: Troubleshooting
 
 Handling analysis challenges, subjective criteria, and verification issues.
 

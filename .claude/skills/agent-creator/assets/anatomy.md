@@ -31,6 +31,7 @@ Full reference for Maestro agent file structure, XML sections, tool selection, a
 name: lowercase-with-hyphens
 description: What + when + keywords
 tools: Read, Grep, Glob
+permissionMode: default
 model: sonnet
 ---
 ```
@@ -84,6 +85,31 @@ Never add `Task` "just in case" — only if the agent's workflow explicitly dele
 | `haiku` | Simple, single-step, fast tasks. Listing, simple transformations, quick lookups. |
 | `sonnet` | Default for most agents. Multi-step workflows, medium complexity, judgment required. |
 | `opus` | Deep reasoning, highest-stakes quality gates, complex analysis requiring maximum capability. |
+
+### `permissionMode` — Subagent Permission Control
+
+Controls whether the subagent requires interactive permission prompts for tool use. **Critical for agents that write files in background subagent contexts**, where interactive prompts cause silent hangs.
+
+| Mode | Behavior | Use when |
+|------|----------|----------|
+| `default` | Prompts for approval on writes/edits | Read-only agents, research agents |
+| `acceptEdits` | Auto-accepts file edits | Agents that edit but don't need full bypass |
+| `bypassPermissions` | Skips all permission checks | **Write agents** (m-file-writer, file-writer, agent-refactorer, harry) |
+| `plan` | Read-only, no writes allowed | Exploration and planning agents |
+| `auto` | Background classifier decides | Long-running autonomous tasks |
+| `dontAsk` | Only pre-approved tools, auto-denies rest | Locked-down CI/CD agents |
+
+**When to add `bypassPermissions`:**
+- Agent's primary purpose is file writing or modification
+- Agent runs as a subagent (via Task/Agent tool) where interactive prompts can't be answered
+- Agent already has `Write` or `Edit` in its tools list
+
+**When NOT to add it:**
+- Read-only or research agents
+- Agents that should never write without human approval
+- Agents with `Bash` access running arbitrary shell commands (unless scoped)
+
+**Note:** Also configure `permissions.allow` in `settings.json` for project-level tool pre-approval as a complementary safeguard.
 
 ---
 

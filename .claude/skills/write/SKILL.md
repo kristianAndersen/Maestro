@@ -1,428 +1,127 @@
 ---
 name: write
-description: Activates for code/file modification operations; provides guidance on Edit vs Write tool selection, safety checks, and verification. Use this skill whenever creating new files, modifying existing ones, fixing bugs, implementing features, or updating documentation. Always activate before making changes — the read-before-write and verify-after-write patterns prevent subtle breakage that's hard to trace later.
+description: Code and file modification guidance — Edit vs Write tool selection, safety checks, and read-after-write verification. Use whenever creating files, modifying code, fixing bugs, or updating documentation. Always activate before making changes — the read-before-write and verify-after-write patterns prevent subtle breakage that's hard to trace later.
 ---
 
 # Write Skill
 
-## Purpose
-
-This skill provides comprehensive guidance for code and file modification operations. It helps you choose between Edit and Write tools, implement safety checks, verify changes, and follow best practices for making reliable, maintainable code modifications.
-
-## When to Use This Skill
-
-This skill automatically activates when:
-- Creating new files or modifying existing ones
-- Refactoring code or fixing bugs
-- Making configuration changes
-- Implementing new features
-- Updating documentation
-
 ## Quick Start
 
-For 80% of modification operations, follow these principles:
+For 80% of modification operations:
 
-1. **Read before writing** - Always read the file first to understand context
-2. **Edit over Write** - Prefer Edit for existing files, Write only for new files
-3. **Small, focused changes** - Make one logical change at a time
-4. **Verify immediately** - Check that changes work after each modification
-5. **Test your changes** - Run tests or manual verification before considering complete
+1. **Read before writing** — Always read the file first to understand context
+2. **Edit over Write** — Prefer Edit for existing files, Write only for new files
+3. **Small, focused changes** — Make one logical change at a time
+4. **Verify immediately** — Read the file back after every write; never assume success
+5. **Re-Read before every Edit** — File state may have changed since your last read
 
-## Core Principles
+## Write Modes
 
-### 1. **Context Preservation**
-Understand the existing code before modifying. Read the file, understand its purpose, then make targeted changes.
+**Lite Mode (default):** Write + read-after-write verify. No retry protocol. Used for standard file operations.
 
-### 2. **Minimal Impact**
-Change only what's necessary. Avoid reformatting, refactoring, or "improving" unrelated code.
+**Resilient Mode:** Full retry protocol with ghost write detection. Load `assets/resilience.md`. Used only when delegator flags `high-risk: true` or for critical infrastructure files.
 
-### 3. **Safety First**
-Use Edit tool for existing files (prevents accidental overwrites). Use Write only for new files.
-
-### 4. **Immediate Verification**
-Verify changes work right after making them, not at the end of a long series of modifications.
-
-### 5. **Reversibility**
-Make changes that can be easily undone. Avoid destructive operations without backups.
+Agents should default to Lite Mode. The resilience asset is a recovery resource, not a pre-flight requirement.
 
 ## Tool Selection: Edit vs Write
 
-### Use Edit Tool When:
-- ✅ Modifying existing files
-- ✅ Making targeted changes to specific sections
-- ✅ Updating configuration or code
-- ✅ Fixing bugs in existing code
-- ✅ Refactoring existing functionality
+### Use Edit When:
+- Modifying existing files (targeted changes, bug fixes, config updates)
+- 1-2 surgical changes to a section
 
-### Use Write Tool When:
-- ✅ Creating brand new files
-- ✅ File doesn't exist yet
-- ✅ Generating boilerplate/scaffolding
-- ✅ Creating new components from scratch
+### Use Write When:
+- Creating new files that don't exist yet
+- Making 3+ changes to an existing file (full replacement avoids Edit uniqueness failures)
+- Changing >30% of file content (sequential Edits become fragile)
 
 ### Never:
-- ❌ Use Write on existing files (risk of data loss)
-- ❌ Use Edit without reading file first
-- ❌ Make multiple unrelated changes in one Edit
+- Use Edit without re-Reading the file immediately before (stale snapshots cause "file modified since read" errors)
+- Plan multiple Edits from a single Read snapshot — re-Read before EACH Edit
+- Make multiple unrelated changes in one Edit
+
+## Write Reliability Protocol
+
+Hard rules for all subagents — these are not optional:
+
+1. **Re-Read before every Edit** — The file may change between operations (hooks, formatters, other processes). Always re-Read immediately before each Edit call.
+2. **Read-after-write verification** — After every Write or Edit, read the file back to confirm content matches intent. No write is successful without verification.
+3. **Multi-change threshold** — 3+ edits or >30% content change → use Write (full replacement) instead of sequential Edits.
+4. **Changeset fallback** — If write fails after 3 attempts, return a structured changeset to the parent agent for direct application instead of silently failing.
+5. **Domain separation** — Hooks own tracking files (context.json, work logs). Subagents own source files. Never cross domains — it causes race conditions.
 
 ## Safe Modification Workflow
 
-### Step 1: Read and Understand
-
-```bash
-# Check if file exists
-ls -l path/to/file
-
-# Read file contents
-cat path/to/file
-
-# Understand structure
-grep -n "^class \|^def \|^function " path/to/file
-```
-
-### Step 2: Plan Change
-
-Ask yourself:
-- What exactly needs to change?
-- What's the minimal change required?
-- What could break if I change this?
-- How will I verify the change works?
-
-### Step 3: Make Change
-
-```bash
-# For existing files: Use Edit
-# - Specify exact old_string to replace
-# - Provide exact new_string replacement
-# - Preserve indentation and formatting
-
-# For new files: Use Write
-# - Create complete, well-formed file
-# - Follow project conventions
-# - Include necessary imports/headers
-```
-
-### Step 4: Verify Change
-
-```bash
-# Read back to confirm
-cat path/to/file | grep -A 5 "changed_section"
-
-# Run syntax check
-python -m py_compile file.py  # Python
-bun --check file.js  # JavaScript (using Bun)
-go build file.go  # Go
-
-# Run tests
-pytest tests/test_file.py
-bun test  # or equivalent test command for your project
-```
-
-## Common Modification Patterns
-
-### Pattern 1: Adding a New Function
-
-```python
-# 1. Read existing file
-cat module.py
-
-# 2. Identify insertion point (end of file, or after related function)
-
-# 3. Use Edit to add function
-# old_string: existing content at insertion point
-# new_string: existing content + new function
-
-# 4. Verify
-python -m py_compile module.py
-```
-
-### Pattern 2: Modifying Existing Function
-
-```python
-# 1. Read file and locate function
-cat -n module.py | grep -A 20 "def target_function"
-
-# 2. Use Edit with exact old function text
-# old_string: entire old function
-# new_string: entire modified function
-
-# 3. Verify syntax and logic
-python -m py_compile module.py
-pytest tests/test_module.py
-```
-
-### Pattern 3: Updating Configuration
-
-```yaml
-# 1. Read current config
-cat config.yaml
-
-# 2. Use Edit for specific key change
-# old_string: old key-value pair
-# new_string: new key-value pair
-
-# 3. Validate config format
-yq eval '.' config.yaml  # Check YAML is valid
-```
-
-### Pattern 4: Refactoring
-
-```python
-# 1. Ensure tests exist first
-cat tests/test_module.py
-
-# 2. Run tests (establish baseline)
-pytest tests/test_module.py
-
-# 3. Make refactoring change with Edit
-
-# 4. Run tests again (verify behavior unchanged)
-pytest tests/test_module.py
-
-# 5. If tests fail, fix or revert
-```
-
-### Pattern 5: Creating New File
-
-```python
-# 1. Verify file doesn't exist
-ls path/to/new_file.py
-
-# 2. Use Write to create complete file
-# - Include all necessary imports
-# - Follow project structure conventions
-# - Add docstrings/comments
-
-# 3. Verify new file
-python -m py_compile path/to/new_file.py
-```
-
-## Safety Checks
-
-### Before Modification
-
-```bash
-# Check file exists (for Edit operations)
-test -f file.py && echo "File exists" || echo "File not found"
-
-# Check file is not binary
-file file.py | grep -q text && echo "Text file" || echo "Binary file"
-
-# Check file permissions
-ls -l file.py
-
-# Backup critical files (optional)
-cp important.py important.py.backup
-```
-
-### During Modification
-
-- **Preserve exact indentation** (tabs vs spaces)
-- **Match existing formatting** (don't reformat)
-- **Keep line endings consistent** (LF vs CRLF)
-- **Maintain imports organization** (don't reorder unnecessarily)
-
-### After Modification
-
-```bash
-# Syntax check
-python -m py_compile file.py
-bun --check file.js
-
-# Lint check (optional)
-pylint file.py
-eslint file.js
-
-# Run affected tests
-pytest tests/test_file.py -v
-
-# Check diff (if using git)
-git diff file.py
-```
-
-## Verification Strategies
-
-### Level 1: Syntax Verification
-
-```bash
-# Python
-python -m py_compile file.py
-
-# JavaScript
-bun --check file.js
-
-# TypeScript
-tsc --noEmit file.ts
-
-# Go
-go build file.go
-
-# Ruby
-ruby -c file.rb
-```
-
-### Level 2: Unit Tests
-
-```bash
-# Run specific test file
-pytest tests/test_module.py
-bun test tests/module.test.js
-
-# Run with coverage
-pytest --cov=module tests/test_module.py
-```
-
-### Level 3: Integration Tests
-
-```bash
-# Run integration test suite
-pytest tests/integration/
-bun test --glob "tests/integration/**"
-```
-
-### Level 4: Manual Verification
-
-```bash
-# Run application
-python app.py
-
-# Test specific endpoint
-curl http://localhost:8000/api/test
-
-# Check logs
-tail -f application.log
-```
-
-## Edge Cases
-
-### Large Files
-- Don't use Edit on files > 10,000 lines
-- Break into smaller, focused edits
-- Verify each edit before next
-
-### Generated Code
-- Be cautious editing auto-generated files
-- Look for "DO NOT EDIT" warnings
-- Modify source/template instead
-
-### Multiple Changes Needed
-- Make one logical change per Edit
-- Verify each change works
-- Don't batch unrelated changes
-
-### Formatting Conflicts
-- Preserve existing formatting style
-- Don't mix tabs and spaces
-- Match existing line endings
-
-## Resources (Progressive Disclosure)
-
-For deeper guidance, load these resources as needed:
-
-- **`assets/methodology.md`** - When you need advanced modification strategies, refactoring techniques, safety protocols, or testing approaches
-- **`assets/patterns.md`** - When you need concrete examples of modification patterns, language-specific templates, or common scenarios
-- **`assets/troubleshooting.md`** - When encountering merge conflicts, breaking changes, test failures, or rollback needs
-
-## Anti-Patterns
-
-### ❌ Writing Without Reading
-```bash
-# BAD: Modify without understanding context
-Write(file.py, new_content)
-
-# GOOD: Read first, then modify
-Read(file.py)
-# Understand structure
-Edit(file.py, old_string, new_string)
-```
-
-### ❌ Using Write on Existing Files
-```bash
-# BAD: Overwrites entire file
-Write(existing.py, content)
-
-# GOOD: Targeted edit
-Edit(existing.py, old_section, new_section)
-```
-
-### ❌ No Verification
-```bash
-# BAD: Make change and move on
-Edit(file.py, old, new)
-# Next task...
-
-# GOOD: Verify immediately
-Edit(file.py, old, new)
-python -m py_compile file.py
-pytest tests/test_file.py
-```
-
-### ❌ Batching Unrelated Changes
-```bash
-# BAD: Change multiple things at once
-Edit(file.py,
-  old="entire file",
-  new="entire file with 5 different changes")
-
-# GOOD: One logical change at a time
-Edit(file.py, old="function A", new="improved function A")
-# Verify
-Edit(file.py, old="function B", new="improved function B")
-# Verify
-```
+**Step 1: Read and Understand**
+- Read the file to understand its structure and purpose
+- Locate the exact section you need to change
+
+**Step 2: Plan the Change**
+- What is the minimal change required?
+- What could break? How will you verify it works?
+- If 3+ edits needed → plan a full Write instead
+
+**Step 3: Make the Change**
+- New file → Write tool
+- Existing file (1-2 changes) → Edit tool (re-Read immediately before)
+- Existing file (3+ changes or >30%) → Write tool (full replacement)
+
+**Step 4: Verify**
+- Read the file back immediately
+- Check syntax (see verification commands in `assets/patterns.md`)
+- Run tests if applicable
+
+## Core Safety Rules
+
+**Preserve formatting:**
+- Exact indentation (tabs vs spaces)
+- Existing line endings (LF vs CRLF)
+- Import organization (don't reorder unnecessarily)
+
+**Before modifying:**
+- Confirm file exists if using Edit
+- Confirm file does NOT exist if using Write
+- Understand what depends on the code you're changing
+
+**After modifying:**
+- Syntax check immediately
+- Run affected tests
+- Verify no side effects in callers
 
 ## Quick Reference
 
-### Decision Tree: Edit or Write?
+**Decision: Edit or Write?**
 
 ```
-Need to modify code?
-  ├─ File exists?
-  │   ├─ Yes → Use Edit
-  │   └─ No → Use Write
-  ├─ Making targeted change?
-  │   └─ Yes → Use Edit
-  └─ Creating from scratch?
-      └─ Yes → Use Write
+File exists?
+  Yes + 1-2 changes  → Edit (re-Read first)
+  Yes + 3+ changes   → Write (full replacement)
+  No                 → Write (create new)
 ```
 
-### Modification Checklist
+**Modification Checklist**
 
 ```
 Before:
   ☐ Read file (if exists)
-  ☐ Understand context
+  ☐ Understand context and dependencies
   ☐ Plan minimal change
-  ☐ Consider what could break
+  ☐ Decide: Edit or Write?
 
 During:
-  ☐ Use Edit for existing, Write for new
+  ☐ Re-Read immediately before each Edit
   ☐ Preserve formatting
-  ☐ Make focused change
-  ☐ Keep change reversible
+  ☐ Make one focused change
 
 After:
+  ☐ Read file back (mandatory)
   ☐ Syntax check
   ☐ Run tests
-  ☐ Verify behavior
   ☐ Check for side effects
 ```
 
-### Quick Commands
+## Assets (Load When Needed)
 
-```bash
-# Read before editing
-cat file.py
-
-# Syntax check after edit
-python -m py_compile file.py
-
-# Run tests
-pytest tests/test_file.py
-
-# Check changes
-git diff file.py
-
-# Verify file structure
-grep -n "^class \|^def " file.py
-```
+- **`assets/patterns.md`** — Concrete modification patterns (add function, refactor, update config), verification strategy levels (syntax → unit → integration → manual), and pre/post safety check bash commands. Load when you need step-by-step examples or language-specific patterns.
+- **`assets/methodology.md`** — Advanced strategies (Red-Green-Refactor, Incremental Change, Parallel Path, Strangler Fig), safety protocols with bash scripts, testing approaches. Load for complex refactoring or high-risk changes.
+- **`assets/troubleshooting.md`** — Edit failures (string not found, indentation corruption), breaking changes, test failures, rollback strategies, edge cases, and anti-pattern reference. Load when something goes wrong or to review common mistakes.
+- **`assets/resilience.md`** — Retry logic, ghost write detection, read-after-write verification protocol, Bash heredoc fallback. Load ONLY in Resilient Mode or when encountering write errors. Not needed for standard writes.

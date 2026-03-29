@@ -1,6 +1,79 @@
-# BaseResearch Skill: Methodology
+# base-research Skill: Methodology
 
 Advanced research strategies and systematic investigation approaches.
+
+## 4-Phase Research Methodology
+
+### Phase 1: Define Question
+
+```bash
+# What exactly are you trying to learn?
+question="How does authentication work in this framework?"
+
+# Break into sub-questions:
+# - What auth methods are supported?
+# - How are credentials stored?
+# - What's the session management approach?
+```
+
+### Phase 2: Identify Sources
+
+```
+# Official documentation
+Read(file_path: "README.md")
+Glob(pattern: "**/*.md", path: "docs")
+
+# Code examples
+Grep(pattern: "auth|login", path: "examples")
+
+# Tests (show usage)
+Grep(pattern: "test.*auth", path: "tests")
+
+# Configuration
+Glob(pattern: "**/*config*.json")
+Glob(pattern: "**/*config*.yaml")
+```
+
+### Phase 3: Gather Information
+
+```
+# Read official docs first
+Read(file_path: "docs/authentication.md")
+
+# Find code examples
+Grep(pattern: "authenticate|login", path: "src")
+
+# Check tests for usage patterns
+Read(file_path: "tests/test_auth.py")
+
+# Search discussions (if available)
+Grep(pattern: "authentication", path: "discussions")
+```
+
+### Phase 4: Evaluate and Synthesize
+
+```markdown
+# Research Findings: Authentication
+
+## Sources
+
+- docs/authentication.md (official, current)
+- src/auth/login.py (implementation)
+- tests/test_auth.py (usage examples)
+
+## Key Findings
+
+1. Supports JWT and session-based auth
+2. Passwords hashed with bcrypt
+3. Sessions stored in Redis
+4. Token expiry: 24 hours
+
+## Synthesis
+
+Framework provides flexible auth with two methods...
+```
+
+---
 
 ## Research Frameworks
 
@@ -31,6 +104,22 @@ Advanced research strategies and systematic investigation approaches.
 - **Authority:** Is source credible?
 - **Accuracy:** Is information correct?
 - **Purpose:** Why was it created?
+
+### Evaluation Commands
+
+```bash
+# Check recency
+stat -c%y file.md         # Last modified
+git log -1 --format="%ai" file.md  # Last commit
+
+# Check authority
+# Is this official documentation?
+# Is author credible/experienced?
+
+# Check accuracy
+# Does example actually work?
+# Can you verify claims?
+```
 
 ### Red Flags
 - No author/date

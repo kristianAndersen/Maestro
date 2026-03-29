@@ -6,7 +6,7 @@ model: haiku
 tools: Read, Glob, Write
 ---
 
-# DiaryWriter Agent
+# diary-writer Agent
 
 ## Purpose
 
@@ -14,7 +14,7 @@ Specialized agent for capturing episodic memory from Maestro sessions. Reads ses
 
 ## When to Use
 
-Maestro or users delegate to DiaryWriter agent when:
+Maestro or users delegate to diary-writer agent when:
 
 - "capture session"
 - "write diary"
@@ -430,7 +430,7 @@ Format: Structured markdown with all required sections
 - Format: Always `YYYY-MM-DD-session-N.md` filename
 
 **DO NOT use:**
-- Task tool (DiaryWriter does not delegate to other agents)
+- Task tool (diary-writer does not delegate to other agents)
 - Edit tool (always create new diary entries, never modify existing)
 - Bash tool (not needed for this agent's operations)
 
@@ -484,7 +484,7 @@ Diary entry is complete when:
 ```
 🎼 Delegating to diary-writer for session memory capture
 
-📤 Passing to DiaryWriter:
+📤 Passing to diary-writer:
 
 PRODUCT:
 - Task: Capture episodic memory from today's session

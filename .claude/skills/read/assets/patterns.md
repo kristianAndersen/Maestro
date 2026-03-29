@@ -396,3 +396,67 @@ grep -rn "subscribe\|observe\|notify" .  # Observer
 grep -rn "strategy\|algorithm" .  # Strategy
 grep -rn "singleton\|instance" .  # Singleton
 ```
+
+---
+
+## Design Pattern Quick Reference
+
+| Pattern   | Indicators                          | What It Means               |
+| --------- | ----------------------------------- | --------------------------- |
+| MVC       | Separate model/view/controller dirs | Separation of concerns      |
+| Factory   | `create_*`, `make_*` functions      | Object creation abstraction |
+| Singleton | `instance`, `getInstance`           | Single shared instance      |
+| Observer  | `subscribe`, `notify`, `listener`   | Event-driven architecture   |
+| Strategy  | Multiple implementations, interface | Swappable algorithms        |
+| Decorator | `@decorator`, wrapper functions     | Behavior extension          |
+
+## Code Idioms by Language
+
+**Python:**
+
+```python
+# List comprehension → Data transformation
+[x*2 for x in items if x > 0]
+
+# Context manager → Resource management
+with open(file) as f:
+
+# Decorators → Cross-cutting concerns
+@property, @staticmethod
+```
+
+**JavaScript:**
+
+```javascript
+// Arrow functions → Functional style
+items.map(x => x * 2)
+
+// Promises/async → Async operations
+async/await, .then()
+
+// Destructuring → Clean parameter handling
+const {id, name} = user
+```
+
+## Architectural Patterns Reference
+
+```
+Layered architecture:
+  src/
+    controllers/  # Request handling
+    services/     # Business logic
+    models/       # Data layer
+    utils/        # Shared utilities
+
+Microservices:
+  services/
+    user-service/
+    auth-service/
+    payment-service/
+
+Feature-based:
+  features/
+    authentication/
+    dashboard/
+    reports/
+```

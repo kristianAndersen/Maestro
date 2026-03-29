@@ -139,7 +139,7 @@ Step 1: @file-reader
 
 ↓
 
-Step 2: @file-writer
+Step 2: @m-file-writer
 **PRODUCT:** Add comprehensive input validation
 
 **Context from Step 1:**
@@ -322,18 +322,18 @@ Decision: How many files found?
 Branch A          Branch B          Branch C
 
 Branch A (Simple):
-  @file-reader → understand → @file-writer → fix
+  @file-reader → understand → @m-file-writer → fix
 
 Branch B (Medium):
   @file-reader → understand all
   @base-analysis → identify bug location
-  @file-writer → targeted fix
+  @m-file-writer → targeted fix
 
 Branch C (Complex):
   @base-research → narrow down to likely files
   @file-reader → deep dive on suspects
   @base-analysis → root cause analysis
-  @file-writer → comprehensive fix
+  @m-file-writer → comprehensive fix
 ```
 
 ### Example: Severity-Based Response
@@ -355,7 +355,7 @@ Decision: What severity issues found?
 If CRITICAL issues:
   → Immediate detailed report
   → Prioritize fixes
-  → @file-writer: Implement urgent fixes
+  → @m-file-writer: Implement urgent fixes
   → Deliver with WARNING
 
 If HIGH/MEDIUM issues:
@@ -467,7 +467,7 @@ Accept and deliver
 User: "Write a user authentication service"
 
 Iteration 1:
-@file-writer
+@m-file-writer
 **PRODUCT:** Authentication service
 
 ↓
@@ -481,7 +481,7 @@ Issues:
 ↓
 
 Iteration 2:
-@file-writer (REFINEMENT)
+@m-file-writer (REFINEMENT)
 **Coaching:**
 1. Add try/catch for all external calls
 2. Validate all inputs before use
@@ -498,7 +498,7 @@ Issues:
 ↓
 
 Iteration 3:
-@file-writer (REFINEMENT)
+@m-file-writer (REFINEMENT)
 **Coaching:**
 Remove hardcoded values from test fixtures too
 
@@ -531,7 +531,7 @@ Phase 2: ANALYZE
   → Understand/evaluate information
 
 Phase 3: ACT
-  @file-writer or deliver findings
+  @m-file-writer or deliver findings
   → Take action or report
 ```
 
@@ -564,7 +564,7 @@ Phase 2: ANALYZE
 ↓ @4d-evaluation → EXCELLENT
 
 Phase 3: ACT
-@file-writer
+@m-file-writer
 **PRODUCT:** Implement Redis caching for profile endpoint
 **PROCESS:**
 1. Add cache decorator
@@ -607,7 +607,7 @@ Total: ~1000ms login time
 ↓ @4d-evaluation
 
 Phase 3: ACT
-@file-writer
+@m-file-writer
 **PRODUCT:** Implement performance improvements
 1. Add database index on username column
 2. Make session creation async
@@ -779,7 +779,7 @@ Step 1: @file-reader
 
 ↓ @4d-evaluation
 
-Step 2: @file-writer
+Step 2: @m-file-writer
 **PRODUCT:** [Modify/Create] [component] to [goal]
 
 **Context from Step 1:** [Key findings]
@@ -811,7 +811,7 @@ Phase 3: SYNTHESIZE
 Combine findings, identify patterns, prioritize
 
 Phase 4: ACT
-@file-writer: Implement changes based on analysis
+@m-file-writer: Implement changes based on analysis
 ↓ @4d-evaluation
 
 Deliver comprehensive results

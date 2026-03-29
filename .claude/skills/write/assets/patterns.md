@@ -448,3 +448,79 @@ After modification:
   ☐ Verify behavior
   ☐ Check for side effects
 ```
+
+---
+
+## Verification Strategies
+
+### Level 1: Syntax Verification
+
+```bash
+python -m py_compile file.py   # Python
+bun --check file.js            # JavaScript
+tsc --noEmit file.ts           # TypeScript
+go build file.go               # Go
+ruby -c file.rb                # Ruby
+```
+
+### Level 2: Unit Tests
+
+```bash
+pytest tests/test_module.py
+bun test tests/module.test.js
+
+# With coverage
+pytest --cov=module tests/test_module.py
+```
+
+### Level 3: Integration Tests
+
+```bash
+pytest tests/integration/
+bun test --glob "tests/integration/**"
+```
+
+### Level 4: Manual Verification
+
+```bash
+python app.py                          # Run application
+curl http://localhost:8000/api/test    # Test endpoint
+tail -f application.log               # Check logs
+```
+
+---
+
+## Pre/Post Safety Checks
+
+### Before Modification
+
+```bash
+# Check file exists (for Edit operations)
+test -f file.py && echo "File exists" || echo "File not found"
+
+# Check file is not binary
+file file.py | grep -q text && echo "Text file" || echo "Binary file"
+
+# Check file permissions
+ls -l file.py
+
+# Backup critical files (optional)
+cp important.py important.py.backup
+```
+
+### During Modification
+
+- Preserve exact indentation (tabs vs spaces)
+- Match existing formatting (don't reformat)
+- Keep line endings consistent (LF vs CRLF)
+- Maintain imports organization (don't reorder unnecessarily)
+
+### After Modification
+
+```bash
+python -m py_compile file.py   # Syntax check
+pylint file.py                 # Lint check (optional)
+eslint file.js
+pytest tests/test_file.py -v   # Run affected tests
+git diff file.py               # Check diff
+```

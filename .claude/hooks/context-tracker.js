@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, renameSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -112,8 +112,10 @@ async function main() {
     context.lastEditedFile = filePath;
     context.lastUpdated = new Date().toISOString();
 
-    // Write the updated context back to the file.
-    writeFileSync(CONTEXT_FILE_PATH, JSON.stringify(context, null, 2), 'utf8');
+    // Write the updated context back to the file (atomic: tmp + rename prevents race conditions).
+    const tmpPath = CONTEXT_FILE_PATH + '.tmp';
+    writeFileSync(tmpPath, JSON.stringify(context, null, 2), 'utf8');
+    renameSync(tmpPath, CONTEXT_FILE_PATH);
 
   } catch (error) {
     // Fail silently if JSON is malformed or there are other errors.

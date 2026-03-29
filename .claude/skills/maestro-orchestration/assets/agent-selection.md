@@ -66,7 +66,7 @@ Is it just listing/showing?
    ┌──┴──┐  Yes      No
   Yes   No   │
    │     │   ▼
-   ▼     ▼  @file-writer
+   ▼     ▼  @m-file-writer
  @open @file-reader
 ```
 
@@ -90,7 +90,7 @@ Is it just listing/showing?
 - Need structural analysis
 - Comprehension required before action
 
-**Use @file-writer when:**
+**Use @m-file-writer when:**
 - "create [file]"
 - "add [feature] to [file]"
 - "modify [file] to..."
@@ -185,8 +185,8 @@ Do you understand current state?
    Yes      No
     │        │
     ▼        ▼
-@file-   First: @file-reader
-writer   Then: @file-writer
+@m-file- First: @file-reader
+writer   Then: @m-file-writer
 ```
 
 ### Pattern: Always Understand Before Modifying
@@ -194,7 +194,7 @@ writer   Then: @file-writer
 **Bad:**
 ```markdown
 User: "Add rate limiting to login"
-→ @file-writer: Add rate limiting
+→ @m-file-writer: Add rate limiting
 ```
 
 **Good:**
@@ -202,7 +202,7 @@ User: "Add rate limiting to login"
 User: "Add rate limiting to login"
 → @file-reader: Understand current login implementation
 → @4d-evaluation: Verify understanding is complete
-→ @file-writer: Add rate limiting (with context from reader)
+→ @m-file-writer: Add rate limiting (with context from reader)
 ```
 
 ## Agent Selection Matrices
@@ -217,7 +217,7 @@ User: "Add rate limiting to login"
 | Find patterns | base-research | - | 4d-evaluation |
 | Analyze quality | base-analysis | - | 4d-evaluation |
 | Security assessment | base-analysis | - | 4d-evaluation |
-| Create/modify files | file-writer | write skill | 4d-evaluation |
+| Create/modify files | m-file-writer | write skill | 4d-evaluation |
 | External data | fetch | - | 4d-evaluation |
 | Evaluate output | 4d-evaluation | - | (is the evaluator) |
 
@@ -264,7 +264,7 @@ User: "Add rate limiting to login"
 - **Tools:** Read, Grep, comprehension skills
 - **Activates:** read skill
 
-**file-writer**
+**m-file-writer**
 - **Capabilities:** File creation, modification, code generation
 - **Use for:** Creating/editing files, implementing features
 - **Don't use for:** Reading-only, research, analysis
@@ -300,7 +300,7 @@ User: "Add rate limiting to login"
 - **Capabilities:** External API calls, downloading data, web requests
 - **Use for:** Getting external resources, API integration
 - **Don't use for:** Local file operations, analysis
-- **Tools:** Bash (curl, wget), API clients
+- **Tools:** WebFetch, WebSearch
 
 ## Agent Selection Anti-Patterns
 
@@ -348,12 +348,12 @@ User: "Add rate limiting to login"
 ```markdown
 # BAD
 User: "Add validation to login"
-@file-writer: Add validation to src/auth/login.py
+@m-file-writer: Add validation to src/auth/login.py
 
 # GOOD
 User: "Add validation to login"
 @file-reader: Understand current login implementation
-@file-writer: Add validation based on understanding
+@m-file-writer: Add validation based on understanding
 ```
 
 **Why it's wrong:**
@@ -454,7 +454,7 @@ Finds: Files A, B, C
 
 Step 2a: @file-reader (uses files A, B, C)
 Step 2b: @base-analysis (uses files A, B, C)
-Step 2c: @file-writer (uses files A, B, C)
+Step 2c: @m-file-writer (uses files A, B, C)
 
 Don't re-search in each step - pass the file list forward
 ```
@@ -475,7 +475,7 @@ Don't re-search in each step - pass the file list forward
    ├─ List only → list
    ├─ Read single → open
    ├─ Understand/analyze → file-reader
-   └─ Modify/create → file-writer (after file-reader)
+   └─ Modify/create → m-file-writer (after file-reader)
 
 3. Within research:
    ├─ Find patterns/files → base-research

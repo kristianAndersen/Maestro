@@ -23,3 +23,7 @@ node_modules/
 .claude/_stashed/
 __pycache__/
 .codex-work-log.txt
+
+# Diary staging files (ephemeral runtime data)
+.claude/memory/diary/staging/*.json
+.claude/memory/diary/capture-log.jsonl
