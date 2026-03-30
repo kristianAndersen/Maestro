@@ -58,8 +58,8 @@ console.log();
 console.log('--- Example 4: Private Key ---');
 const example4 = `Here is the key:
 -----BEGIN RSA PRIVATE KEY-----
-MIIEpAIBAAKCAQEA1234567890abcdefghij
-klmnopqrstuvwxyz1234567890ABCDEFGHIJ
+FAKE-KEY-FOR-TESTING-ONLY-DO-NOT-USE
+THIS-IS-NOT-A-REAL-KEY-0123456789ab
 -----END RSA PRIVATE KEY-----`;
 const result4 = sanitizeContent(example4, config);
 console.log('Before: [Private key content...]');
