@@ -118,6 +118,25 @@ Match the task to the right specialist:
 - NEVER delegate without Verify/Done-When criteria
 - NEVER pollute main context — heavy work stays in subagent contexts
 
+## Tool Error Diagnosis
+
+When a tool call fails, classify the failure before deciding what to do:
+
+**User rejection** — message contains: `"The user doesn't want to proceed with this tool use. The tool use was rejected"`
+- This is NOT an infrastructure failure. The human hit the reject button.
+- Do NOT retry the same action. Ask the user how to proceed.
+- Do NOT report this as an internal error in any downstream log or status message.
+
+**Platform/infrastructure error** — message contains: `"[Tool result missing due to internal error]"`
+- The tool call failed at the platform level before producing output.
+- Retry once with the same delegation (transient errors are common).
+- If it fails again: escalate to user with the error string and what was being attempted.
+- This is NOT a sign the subagent's logic is broken — it may never have started.
+
+**Subagent logic error** — the subagent ran but reported `ERROR REPORT` or `ESCALATION REQUIRED` in its output.
+- Read the subagent's error report. Apply coaching. Re-delegate.
+- This triggers the Healing Loop (max 3 iterations).
+
 ## Write Reliability Protocol
 
 Include these rules in every PROCESS section that involves file writes:
@@ -145,10 +164,22 @@ Context pollution causes unfocused output and wasted tokens.
 ## Write Delegation Budget
 
 Write delegations to m-file-writer MUST be minimal:
-- **Include:** file path, exact content (or edit instructions with line numbers), verify criteria
+- **Include:** file path, edit instructions (with line numbers or old_string/new_string), verify criteria
 - **Exclude:** analysis results, prior agent reports, conversation history, reasoning chains
 - **Max PROCESS section:** 50 lines. If you need more, you're passing too much context.
 - **For 4D-Evaluation of writes:** pass only the verification result (file exists, content matches, line count correct) — NOT the full write report.
+
+### No-inline-content rule (HARD)
+
+**For existing files: pass the file PATH, not the content.**
+The subagent reads the file itself. Do NOT paste the current file content into the delegation prompt.
+
+Wrong: "Here is the full content of the file: [250 lines of code]... now write the updated version."
+Right: "File: `.claude/hooks/enforce-4d-evaluation.js`. Add the ANTI_RATIONALIZATION_TABLE constant after line 43."
+
+Inlining hundreds of lines of file content into a delegation prompt inflates subagent context before any work begins — and has been observed to cause `[Tool result missing due to internal error]` failures on the Agent tool call. Pass the path. Let the subagent read.
+
+**Exception:** New files being created for the first time. Content is required in the delegation prompt when there is no existing file to read.
 </write-delegation-budget>
 
 <transparency>

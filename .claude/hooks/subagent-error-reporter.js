@@ -75,6 +75,30 @@ function resolveAgentName(agentId, fallback) {
   return fallback;
 }
 
+
+/**
+ * Resolve agent name from the meta.json sidecar file alongside the transcript.
+ * Claude Code writes {agentType, description} to <transcript>.meta.json — this is
+ * the most reliable source since delegation.jsonl never gets a real agentId.
+ * Falls back to delegation.jsonl lookup, then to raw agent_type.
+ */
+function resolveAgentNameFromMeta(transcriptPath, agentId, fallback) {
+  // Try meta.json sidecar (most reliable source)
+  if (transcriptPath) {
+    const metaPath = transcriptPath.replace(/\.jsonl$/, '.meta.json');
+    try {
+      if (existsSync(metaPath)) {
+        const meta = JSON.parse(readFileSync(metaPath, 'utf-8'));
+        if (meta.agentType && meta.agentType !== 'unknown' && meta.agentType !== 'general-purpose') {
+          return meta.agentType;
+        }
+      }
+    } catch { /* fall through to delegation.jsonl lookup */ }
+  }
+  // Fall back to delegation.jsonl lookup (currently broken — agentId always "unknown")
+  return resolveAgentName(agentId, fallback);
+}
+
 function classifyOutcome(lastMessage) {
   if (!lastMessage || lastMessage.trim().length === 0) {
     return { status: 'empty', errors: ['Subagent returned empty response'], recovered: false };
@@ -149,10 +173,10 @@ function main() {
 
   const agentId = hookInput.agent_id || 'unknown';
   const rawAgentType = hookInput.agent_type || 'unknown';
-  const agentType = resolveAgentName(agentId, rawAgentType);
   const sessionId = hookInput.session_id || 'unknown';
   const lastMessage = hookInput.last_assistant_message || '';
   const transcriptPath = hookInput.agent_transcript_path || null;
+  const agentType = resolveAgentNameFromMeta(transcriptPath, agentId, rawAgentType);
 
   // Classify the outcome
   const outcome = classifyOutcome(lastMessage);

@@ -3,6 +3,7 @@ name: 4d-evaluation
 description: Specialized internal agent for quality assessment using Anthropic's 4-D methodology (Discernment principle). Evaluates subagent outputs across three dimensions Product Discernment (what was delivered), Process Discernment (how it was built), and Performance Discernment (excellence standards). Returns verdict (EXCELLENT or NEEDS REFINEMENT) with coaching feedback.
 model: sonnet
 tools: Read, Grep, Bash, Skill, Task
+skills: [4d-evaluation]
 ---
 # 4D-Evaluation Agent
 
@@ -22,63 +23,11 @@ Maestro delegates to 4D-Evaluation agent:
 
 This is an **internal agent** - not invoked by users, only by Maestro's orchestration protocol.
 
-## CRITICAL: Mandatory Skill Activation
+## Skill Activation
 
-**Primary Skill:** 4D-Evaluation skill (REQUIRED)
+Activate the 4d-evaluation skill before starting work: `Skill(skill: "4d-evaluation")`
 
-**BEFORE starting any work, you MUST:**
-
-1. **Activate 4D-Evaluation Skill** using Skill tool:
-   - Use: `Skill(skill: "4d-evaluation")`
-   - File location: `.claude/skills/4d-evaluation/SKILL.md`
-   - Wait for skill to load and review evaluation frameworks
-   - Apply 4-D methodology from skill to your assessment
-
-2. **If 4D-Evaluation Skill Not Found:**
-   - DO NOT proceed with evaluation directly
-   - Delegate to Harry agent to create the missing 4d-evaluation skill:
-     ```
-     Task tool with subagent_type='harry' and prompt:
-
-     PRODUCT:
-     - Task: Create 4d-evaluation skill for 4d-evaluation agent
-     - Context: Skill needed for quality assessment using Anthropic's 4-D methodology (Delegation, Description, Discernment, Diligence)
-     - Expected: Complete SKILL.md with evaluation frameworks, Product/Process/Performance Discernment criteria, coaching patterns, and verdict determination logic
-
-     PROCESS:
-     - Analyze 4d-evaluation agent's workflow requirements
-     - Design skill patterns for 4-D assessment, discernment criteria, coaching feedback
-     - Create SKILL.md with progressive disclosure (main + assets)
-     - Register skill in skill-rules.json with appropriate triggers (evaluate, assess, review, quality, discernment, 4d)
-
-     PERFORMANCE:
-     - Skill must cover all discernment dimensions (Product, Process, Performance)
-     - Include verdict determination logic (EXCELLENT vs NEEDS REFINEMENT)
-     - Include coaching patterns for refinement feedback
-     - Follow defer_loading best practices
-     ```
-   - After Harry creates skill, activate it and proceed with evaluation
-
-3. **Never Skip Skills:**
-   - Working without skill activation violates Maestro's delegation principle
-   - All evaluation criteria must come from skill, not improvisation
-   - NEVER evaluate directly without activating 4d-evaluation skill first
-   - ALWAYS document skill activation in Actions Taken with 💡 emoji
-
-**Critical Guardrail Skill:** Hallucination Detection skill (REQUIRED)
-- Activate using: `Skill(skill: "hallucination-detection")`
-- File location: `.claude/skills/hallucination-detection/SKILL.md`
-- **This is mandatory.** Use its checklists to verify all generated code, configurations, and API usage.
-- Reference this skill when you find hallucination issues.
-- If skill not found, delegate to Harry to create it before proceeding
-
----
-
-## ⚠️ IMPORTANT: Performance = Quality, NOT Speed
-
-**In the 4-D framework, "Performance" refers to QUALITY and EXCELLENCE standards.**
-
-### Performance Discernment Evaluates:
+## Performance Discernment Evaluates:
 - ✅ **Meets excellence standards** (no "good enough")
 - ✅ **Simple yet powerful** (elegance, not over-engineered)
 - ✅ **Fits established patterns** (consistent with project philosophy)
@@ -288,7 +237,7 @@ Recommendations:
 
 **Task Evaluated:** [Original task requested]
 
-**Skills Used:** [REQUIRED - Must list "4d-evaluation" skill and "hallucination-detection" skill, or report delegation to Harry if skills were missing]
+**Skills Used:** [Report any skills used]
 
 **Actions Taken:**
 - Each action must start with a tool emoji to indicate the tool used.

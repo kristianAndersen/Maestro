@@ -27,3 +27,6 @@ __pycache__/
 # Diary staging files (ephemeral runtime data)
 .claude/memory/diary/staging/*.json
 .claude/memory/diary/capture-log.jsonl
+
+# External MCP servers (embedded git repos)
+claude-talk-to-figma-mcp/

@@ -1,0 +1,1682 @@
+[
+  {
+    "prompt": "fix the login validation",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "fix the bug in the auth handler",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "add pagination to the user list API",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "implement rate limiting on the endpoint",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "add error handling to the fetch call",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "write a function to parse the CSV",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "create a new config file for production",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "add unit tests for the validator",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "implement the retry logic in the HTTP client",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "scaffold a new service module",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "write the missing interface for the plugin system",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "create a README for this project",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "add TypeScript types to the response handler",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "implement the caching layer using Redis",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "write migration scripts for the database schema changes",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "add logging to the payment processor",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "implement feature flag support in the config loader",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "fix the null pointer exception in the user service",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "add input validation to the registration form",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "create the database seed file",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "rewrite the session management module",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "update the API response format to match the new schema",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "find where the config is loaded",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "search for unused imports across the codebase",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "locate the authentication middleware",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "find all places where the database connection is opened",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "where is the rate limiter implemented?",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "search for all TODO comments in the codebase",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "find which files import the user service",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "locate the error handling logic for 404s",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "find the test fixtures for the payment module",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "search for any hardcoded API keys in the codebase",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "find all async functions that don't have error handling",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "locate the environment variable definitions",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "where are the migration files stored?",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "find the webhook handler for Stripe events",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "search for all usages of the deprecated API endpoint",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "locate where session tokens are generated",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "find all files modified in the last sprint",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "research how the caching system works in this codebase",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "find the logging configuration",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "locate the CSS custom properties definitions",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "review this PR for security issues",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "check code quality across the services directory",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "analyze the performance bottlenecks in the query handler",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "evaluate the architecture of the plugin system",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "assess the test coverage for the authentication module",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "review the database indexing strategy",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "analyze the memory usage patterns",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "evaluate whether the API design follows REST principles",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "check the security of the token validation logic",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "assess technical debt in the legacy payment module",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "review the error handling strategy across the codebase",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "analyze the dependency graph for circular imports",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "evaluate code readability in the core module",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "check performance of the data transformation pipeline",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "assess whether the current architecture can scale to 10x load",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "review the API for potential injection vulnerabilities",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "analyze coupling between the domain and infrastructure layers",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "change the button color to blue",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "improve the dashboard layout",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "add dark mode support",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "fix the contrast ratio on the navigation bar",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "create a color palette for the new brand",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "design a typography scale for the design system",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "update the CSS grid to a 12-column layout",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "make the form WCAG 2.1 AA compliant",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "improve the spacing between the cards",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "audit the design for accessibility issues",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "create design tokens for the component library",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "pick a font pairing for the landing page",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "update the stylesheet to use CSS custom properties",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "improve the visual hierarchy on the pricing page",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "implement a light mode theme",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "fix the responsive layout on mobile",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "adjust the font size to improve readability",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "review the color scheme for brand consistency",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "add padding to the hero section",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "check if the UI meets WCAG contrast requirements",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "analyze the sales spreadsheet",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "create a chart from the monthly revenue data",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "calculate the total and average for each region in the workbook",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "extract the Q3 numbers from the Excel file",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "build a pivot table from the sales data",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "analyze the customer acquisition spreadsheet",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "generate a visualization of the trend data",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "calculate weekly averages from the xlsx file",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "read the financial data from the workbook and summarize it",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "aggregate the data by category in the spreadsheet",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "create a bar chart from the survey results",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "calculate statistics for each column in the dataset",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "analyze the xls file from last quarter",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "extract and pivot the transaction data",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "what are the monthly totals in this spreadsheet?",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "send a message to the team about the deployment",
+    "category": "communication",
+    "expected": "communicator"
+  },
+  {
+    "prompt": "check for updates in the session",
+    "category": "communication",
+    "expected": "communicator"
+  },
+  {
+    "prompt": "notify the other session about the config change",
+    "category": "communication",
+    "expected": "communicator"
+  },
+  {
+    "prompt": "register this session as the main backend",
+    "category": "communication",
+    "expected": "communicator"
+  },
+  {
+    "prompt": "tell the other agent that the build is ready",
+    "category": "communication",
+    "expected": "communicator"
+  },
+  {
+    "prompt": "name this session 'backend-worker'",
+    "category": "communication",
+    "expected": "communicator"
+  },
+  {
+    "prompt": "send an IPC message to the frontend session",
+    "category": "communication",
+    "expected": "communicator"
+  },
+  {
+    "prompt": "communicate with the peer session about the schema change",
+    "category": "communication",
+    "expected": "communicator"
+  },
+  {
+    "prompt": "check ccchat for unread messages",
+    "category": "ccchat",
+    "expected": "ccchat"
+  },
+  {
+    "prompt": "ask peers what they think about this architecture",
+    "category": "ccchat",
+    "expected": "ccchat"
+  },
+  {
+    "prompt": "send a message to the council",
+    "category": "ccchat",
+    "expected": "ccchat"
+  },
+  {
+    "prompt": "post this question to the cross-project chat",
+    "category": "ccchat",
+    "expected": "ccchat"
+  },
+  {
+    "prompt": "read messages in the general room",
+    "category": "ccchat",
+    "expected": "ccchat"
+  },
+  {
+    "prompt": "message the agent team about the regression results",
+    "category": "ccchat",
+    "expected": "ccchat"
+  },
+  {
+    "prompt": "ask in ccchat whether anyone has seen this pattern before",
+    "category": "ccchat",
+    "expected": "ccchat"
+  },
+  {
+    "prompt": "create a banner in Figma",
+    "category": "figma",
+    "expected": "figma"
+  },
+  {
+    "prompt": "clone the mobile frame in Figma",
+    "category": "figma",
+    "expected": "figma"
+  },
+  {
+    "prompt": "create a new version of the hero banner in Figma",
+    "category": "figma",
+    "expected": "figma"
+  },
+  {
+    "prompt": "read the current design from the Figma canvas",
+    "category": "figma",
+    "expected": "figma"
+  },
+  {
+    "prompt": "modify the button component in Figma",
+    "category": "figma",
+    "expected": "figma"
+  },
+  {
+    "prompt": "design a landing page layout in Figma",
+    "category": "figma",
+    "expected": "figma"
+  },
+  {
+    "prompt": "create a wireframe in Figma for the checkout flow",
+    "category": "figma",
+    "expected": "figma"
+  },
+  {
+    "prompt": "clone the 9x16 banner frame",
+    "category": "figma",
+    "expected": "figma"
+  },
+  {
+    "prompt": "update the mockup in Figma to match the new brand colors",
+    "category": "figma",
+    "expected": "figma"
+  },
+  {
+    "prompt": "create a prototype for the onboarding flow in Figma",
+    "category": "figma",
+    "expected": "figma"
+  },
+  {
+    "prompt": "how does caching work?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what is middleware?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what does the delegater agent do?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "how do hooks work in this framework?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what is the difference between agents and skills?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "how does 4-D evaluation work?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what is defer_loading?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "how does the intent classifier suppress false positives?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what triggers the maestro-agent-suggester?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "how does subagent delegation work?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what is a task hash?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "how is the scoring threshold used in the hook?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "when should I use gemini-brain vs base-research?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what happens when a subagent fails?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "how does pre-compact-diary.js work?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what is the 3P delegation format?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "why does the agent-suggester use keyword scoring?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what is the difference between file-writer and m-file-writer?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "how does context.json track skill recommendations?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what does the reflector agent do?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "yes",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "ok",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "go ahead",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "looks good",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "ship it",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "thanks",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "no",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "wait",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "stop",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "continue",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "done",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "proceed",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "not quite",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "sounds good",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "let me think",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "perfect",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "confirmed",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "agreed",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "try again",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "skip that",
+    "category": "conversational",
+    "expected": "none"
+  },
+  {
+    "prompt": "/leavechat",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/diary",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/help",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/ccchat",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/ai-pulse",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/maestro build the feature",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/summon",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/reflect",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/bootstrap",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/diagnose subagent failures",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/mcp list",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/figma",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "/harry create a new skill",
+    "category": "slash-command",
+    "expected": "none"
+  },
+  {
+    "prompt": "can you help?",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "this is broken",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "update everything",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "something isn't working",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "make it better",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "clean this up",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "I need help with the code",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "fix it",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "check this",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "review the changes",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "show me the output",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "run it",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "let's work on the feature",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "the test is failing",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "it's not working as expected",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "do the thing",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "next step",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "what about the data layer?",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "handle the edge case",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "look into this further",
+    "category": "ambiguous",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "create a new agent for processing Slack webhooks",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "build a skill for the new linting workflow",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "make a new agent that handles email parsing",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "I need an agent that monitors GitHub PRs",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "create a hook that runs after every file write",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "build a new skill for database migration tasks",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "harry, create an agent for monitoring log files",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "create a slash command for running the test suite",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "build a skill to guide the code review agent",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "make a new skill for TypeScript type checking",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "refactor the intent-classifier.js to be more modular",
+    "category": "framework",
+    "expected": "agent-refactorer"
+  },
+  {
+    "prompt": "clean up the maestro-agent-suggester hook",
+    "category": "framework",
+    "expected": "agent-refactorer"
+  },
+  {
+    "prompt": "restructure the skills directory for better organization",
+    "category": "framework",
+    "expected": "agent-refactorer"
+  },
+  {
+    "prompt": "simplify the delegation logger code",
+    "category": "framework",
+    "expected": "agent-refactorer"
+  },
+  {
+    "prompt": "extract the scoring logic into a separate module",
+    "category": "framework",
+    "expected": "agent-refactorer"
+  },
+  {
+    "prompt": "remove code duplication in the hook files",
+    "category": "framework",
+    "expected": "agent-refactorer"
+  },
+  {
+    "prompt": "fetch the latest documentation from docs.anthropic.com",
+    "category": "fetch",
+    "expected": "fetch"
+  },
+  {
+    "prompt": "download the API spec from the public endpoint",
+    "category": "fetch",
+    "expected": "fetch"
+  },
+  {
+    "prompt": "retrieve the JSON data from the webhook URL",
+    "category": "fetch",
+    "expected": "fetch"
+  },
+  {
+    "prompt": "get data from the REST API at api.example.com",
+    "category": "fetch",
+    "expected": "fetch"
+  },
+  {
+    "prompt": "make an HTTP request to the health check endpoint",
+    "category": "fetch",
+    "expected": "fetch"
+  },
+  {
+    "prompt": "download the release notes from the GitHub page",
+    "category": "fetch",
+    "expected": "fetch"
+  },
+  {
+    "prompt": "curl the endpoint and show me the response",
+    "category": "fetch",
+    "expected": "fetch"
+  },
+  {
+    "prompt": "retrieve the RSS feed from the blog",
+    "category": "fetch",
+    "expected": "fetch"
+  },
+  {
+    "prompt": "run ai-pulse",
+    "category": "ai-pulse",
+    "expected": "ai-pulse"
+  },
+  {
+    "prompt": "get me the latest AI news",
+    "category": "ai-pulse",
+    "expected": "ai-pulse"
+  },
+  {
+    "prompt": "search Twitter for Claude news",
+    "category": "ai-pulse",
+    "expected": "ai-pulse"
+  },
+  {
+    "prompt": "what's new in AI this week?",
+    "category": "ai-pulse",
+    "expected": "ai-pulse"
+  },
+  {
+    "prompt": "give me a news digest on AI agents",
+    "category": "ai-pulse",
+    "expected": "ai-pulse"
+  },
+  {
+    "prompt": "search x.com for recent Claude updates",
+    "category": "ai-pulse",
+    "expected": "ai-pulse"
+  },
+  {
+    "prompt": "pulse",
+    "category": "ai-pulse",
+    "expected": "ai-pulse"
+  },
+  {
+    "prompt": "what's trending in AI on Twitter?",
+    "category": "ai-pulse",
+    "expected": "ai-pulse"
+  },
+  {
+    "prompt": "capture this session to diary",
+    "category": "diary",
+    "expected": "diary-writer"
+  },
+  {
+    "prompt": "write a diary entry for today's session",
+    "category": "diary",
+    "expected": "diary-writer"
+  },
+  {
+    "prompt": "save session memory before we wrap up",
+    "category": "diary",
+    "expected": "diary-writer"
+  },
+  {
+    "prompt": "document this session's key decisions",
+    "category": "diary",
+    "expected": "diary-writer"
+  },
+  {
+    "prompt": "run the diary capture",
+    "category": "diary",
+    "expected": "diary-writer"
+  },
+  {
+    "prompt": "session summary \u2014 save it",
+    "category": "diary",
+    "expected": "diary-writer"
+  },
+  {
+    "prompt": "reflect on the last few sessions",
+    "category": "reflector",
+    "expected": "reflector"
+  },
+  {
+    "prompt": "analyze patterns in the diary entries",
+    "category": "reflector",
+    "expected": "reflector"
+  },
+  {
+    "prompt": "extract insights from session history",
+    "category": "reflector",
+    "expected": "reflector"
+  },
+  {
+    "prompt": "propose improvements to CLAUDE.md based on recent sessions",
+    "category": "reflector",
+    "expected": "reflector"
+  },
+  {
+    "prompt": "identify recurring patterns across sessions",
+    "category": "reflector",
+    "expected": "reflector"
+  },
+  {
+    "prompt": "list all files in the hooks directory",
+    "category": "file-ops",
+    "expected": "list"
+  },
+  {
+    "prompt": "what files are in the agents folder?",
+    "category": "file-ops",
+    "expected": "list"
+  },
+  {
+    "prompt": "show the directory structure of the skills folder",
+    "category": "file-ops",
+    "expected": "list"
+  },
+  {
+    "prompt": "ls the .claude directory",
+    "category": "file-ops",
+    "expected": "list"
+  },
+  {
+    "prompt": "what js files are in hooks?",
+    "category": "file-ops",
+    "expected": "list"
+  },
+  {
+    "prompt": "enumerate all markdown files in the project",
+    "category": "file-ops",
+    "expected": "list"
+  },
+  {
+    "prompt": "scan the project for all agent definition files",
+    "category": "file-ops",
+    "expected": "list"
+  },
+  {
+    "prompt": "open the settings.json file",
+    "category": "file-ops",
+    "expected": "open"
+  },
+  {
+    "prompt": "read the agent-registry.json",
+    "category": "file-ops",
+    "expected": "open"
+  },
+  {
+    "prompt": "show me the contents of CLAUDE.md",
+    "category": "file-ops",
+    "expected": "open"
+  },
+  {
+    "prompt": "view the maestro.md file",
+    "category": "file-ops",
+    "expected": "open"
+  },
+  {
+    "prompt": "read from the intent-classifier.js file",
+    "category": "file-ops",
+    "expected": "open"
+  },
+  {
+    "prompt": "show content of the delegation.jsonl log",
+    "category": "file-ops",
+    "expected": "open"
+  },
+  {
+    "prompt": "explain how the skill discovery hook works",
+    "category": "file-ops",
+    "expected": "file-reader"
+  },
+  {
+    "prompt": "analyze the delegation logger code",
+    "category": "file-ops",
+    "expected": "file-reader"
+  },
+  {
+    "prompt": "inspect the intent-classifier and explain its logic",
+    "category": "file-ops",
+    "expected": "file-reader"
+  },
+  {
+    "prompt": "understand how the context tracker updates state",
+    "category": "file-ops",
+    "expected": "file-reader"
+  },
+  {
+    "prompt": "explain this entire file to me",
+    "category": "file-ops",
+    "expected": "file-reader"
+  },
+  {
+    "prompt": "analyze the entire codebase for security issues",
+    "category": "large-context",
+    "expected": "gemini-brain"
+  },
+  {
+    "prompt": "process all files in the project and summarize patterns",
+    "category": "large-context",
+    "expected": "gemini-brain"
+  },
+  {
+    "prompt": "this file is too large \u2014 use gemini to process it",
+    "category": "large-context",
+    "expected": "gemini-brain"
+  },
+  {
+    "prompt": "bulk operation on all the agent definition files",
+    "category": "large-context",
+    "expected": "gemini-brain"
+  },
+  {
+    "prompt": "analyze the entire codebase with gemini",
+    "category": "large-context",
+    "expected": "gemini-brain"
+  },
+  {
+    "prompt": "context overflow \u2014 offload to gemini-brain",
+    "category": "large-context",
+    "expected": "gemini-brain"
+  },
+  {
+    "prompt": "orchestrate a full review of the authentication system",
+    "category": "orchestration",
+    "expected": "maestro"
+  },
+  {
+    "prompt": "delegate this to the right agent",
+    "category": "orchestration",
+    "expected": "maestro"
+  },
+  {
+    "prompt": "conduct a thorough audit of the entire codebase",
+    "category": "orchestration",
+    "expected": "maestro"
+  },
+  {
+    "prompt": "orchestrate the feature implementation end to end",
+    "category": "orchestration",
+    "expected": "maestro"
+  },
+  {
+    "prompt": "coordinate parallel analysis of the front-end and back-end",
+    "category": "orchestration",
+    "expected": "delegater"
+  },
+  {
+    "prompt": "run multiple agents in parallel for this workflow",
+    "category": "orchestration",
+    "expected": "delegater"
+  },
+  {
+    "prompt": "sequence the research, analysis, and write tasks",
+    "category": "orchestration",
+    "expected": "delegater"
+  },
+  {
+    "prompt": "orchestrate multiple parallel tasks with dependencies",
+    "category": "orchestration",
+    "expected": "delegater"
+  },
+  {
+    "prompt": "find where the auth token is validated and then fix the bug there",
+    "category": "compound",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "research the caching strategy and then write a proposal doc",
+    "category": "compound",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "analyze the test coverage and add missing tests",
+    "category": "compound",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "review the PR and then apply the suggested changes",
+    "category": "compound",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "look at the Figma design and implement it in CSS",
+    "category": "compound",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "fetch the API docs and write a client wrapper",
+    "category": "compound",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "find all usages of the old API and migrate them to the new one",
+    "category": "compound",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "read the requirements and implement the feature",
+    "category": "compound",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "can you find where the session token expires?",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "could you fix the broken pagination?",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "would you review the security of this endpoint?",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "please create a chart for the sales data",
+    "category": "data-excel",
+    "expected": "excel"
+  },
+  {
+    "prompt": "can you change the primary color to green?",
+    "category": "ui-ux",
+    "expected": "ui-ux-designer"
+  },
+  {
+    "prompt": "could you analyze the entire codebase?",
+    "category": "large-context",
+    "expected": "gemini-brain"
+  },
+  {
+    "prompt": "please fetch the latest release notes",
+    "category": "fetch",
+    "expected": "fetch"
+  },
+  {
+    "prompt": "can you refactor the utility functions?",
+    "category": "framework",
+    "expected": "agent-refactorer"
+  },
+  {
+    "prompt": "would you create an agent for Jira integration?",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "can you run ai-pulse?",
+    "category": "ai-pulse",
+    "expected": "ai-pulse"
+  },
+  {
+    "prompt": "please open the SKILL.md file",
+    "category": "file-ops",
+    "expected": "open"
+  },
+  {
+    "prompt": "could you list the agent files?",
+    "category": "file-ops",
+    "expected": "list"
+  },
+  {
+    "prompt": "can you write a diary entry?",
+    "category": "diary",
+    "expected": "diary-writer"
+  },
+  {
+    "prompt": "please reflect on this week's sessions",
+    "category": "reflector",
+    "expected": "reflector"
+  },
+  {
+    "prompt": "could you send the build results to ccchat?",
+    "category": "ccchat",
+    "expected": "ccchat"
+  },
+  {
+    "prompt": "refactor",
+    "category": "task-directive",
+    "expected": "agent-refactorer"
+  },
+  {
+    "prompt": "analyze",
+    "category": "task-directive",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "search",
+    "category": "task-directive",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "fetch",
+    "category": "task-directive",
+    "expected": "fetch"
+  },
+  {
+    "prompt": "list",
+    "category": "task-directive",
+    "expected": "list"
+  },
+  {
+    "prompt": "open",
+    "category": "task-directive",
+    "expected": "open"
+  },
+  {
+    "prompt": "research",
+    "category": "task-directive",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "review",
+    "category": "task-directive",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "orchestrate",
+    "category": "task-directive",
+    "expected": "maestro"
+  },
+  {
+    "prompt": "delegate",
+    "category": "task-directive",
+    "expected": "maestro"
+  },
+  {
+    "prompt": "how does the delegater agent handle parallel tasks?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "why is the hook not triggering on my prompt?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what is the purpose of evaluation-history.jsonl?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "when should I use base-research vs base-analysis?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "why does the intent classifier use word-boundary matching?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what is the scoring algorithm for keyword matching?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "how does the pre-compact hook interact with the diary writer?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "what happens if m-file-writer fails on a write?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "is there a way to reset the skill cache?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "can gemini-brain process files over 2000 lines?",
+    "category": "informational",
+    "expected": "none"
+  },
+  {
+    "prompt": "run the regression test against the prompt dataset",
+    "category": "task-directive",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "measure the false positive rate of the suggester hook",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "find the RSA private key accidentally pushed to the repo",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "rewrite the statusline script to render on one line",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "fix the printf format error in statusline.sh",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "add test script for pre-compact-diary.js to package.json",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "research the oh-my-claudecode framework on GitHub",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "create an implementation plan for the PreCompact hook",
+    "category": "task-directive",
+    "expected": "ambiguous"
+  },
+  {
+    "prompt": "remove the interrogative phrases from file-reader keywords",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "integrate the intent classifier into the agent suggester",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "measure the impact of raising the threshold from 10 to 15",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "write a session report documenting what shipped today",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "add compound intent patterns to the ui-ux-designer registry entry",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "find what JSON fields Claude Code sends to statusLine hooks",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "add compound intent patterns to the ui-ux-designer entry in agent-registry.json to improve agent specificity",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "find all places in the codebase where the session token is read and verify they handle expiry correctly",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "analyze the false positive rate of the agent-suggester hook against the 273-prompt regression baseline and report findings",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "create a new agent definition file in .claude/agents/ for handling GitHub webhook events with full registry entry",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "rewrite the maestro-agent-suggester.js hook to import and use the new intent-classifier module from lib/intent-classifier.js",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "evaluate the architecture of the three-layer false-positive reduction system and recommend which layers to prioritize next",
+    "category": "analysis",
+    "expected": "base-analysis"
+  },
+  {
+    "prompt": "search for all instances where the deprecated file-writer agent is invoked and replace them with m-file-writer references",
+    "category": "research",
+    "expected": "base-research"
+  },
+  {
+    "prompt": "build a comprehensive skill file for the new TypeScript type-checker agent including assets directory and skill-rules.json entry",
+    "category": "framework",
+    "expected": "harry"
+  },
+  {
+    "prompt": "create a session report documenting all the changes shipped in today's session including metrics and open items for next sprint",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "update the CLAUDE.md documentation to reflect the new additive keyword scoring system and the intent-classifier integration details",
+    "category": "task-directive",
+    "expected": "m-file-writer"
+  },
+  {
+    "prompt": "extract the keyword scoring logic from maestro-agent-suggester.js into a standalone module and add unit tests for edge cases",
+    "category": "framework",
+    "expected": "agent-refactorer"
+  },
+  {
+    "prompt": "fetch the Claude API documentation from docs.anthropic.com and extract the complete list of available models with their context windows",
+    "category": "fetch",
+    "expected": "fetch"
+  }
+]

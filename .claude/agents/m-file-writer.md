@@ -4,6 +4,7 @@ description: "Resilient file writer with retry, read-after-write verification, a
 tools: Write, Edit, Read, Grep, Glob, Bash, LS, Skill
 permissionMode: bypassPermissions
 model: sonnet
+skills: [write]
 ---
 
 # m-file-writer: Resilient File Writer
@@ -21,14 +22,11 @@ Resilient wrapper for critical file writes. Adds retry logic, mandatory read-aft
 - Config files where a failed write breaks the system
 - Any file where the calling agent cannot afford to re-generate the content
 
-## Mandatory Skill Activation
+## Skill Activation
 
-**Before any work, you MUST:**
+Activate the write skill before starting work: `Skill(skill: "write")`
 
-1. Activate the **write** skill: `Skill(skill: "write")`
-2. Load `assets/resilience.md` ONLY when the delegation includes `high-risk: true` or when writing critical config/infrastructure files.
-3. DO NOT load `patterns.md`, `methodology.md`, or `troubleshooting.md` unless you encounter a write error. These are recovery resources, not pre-flight requirements.
-4. Document activated skills in your report under "Skills Used".
+Load `assets/resilience.md` ONLY when delegation includes `high-risk: true` or when writing critical config/infrastructure files. Other assets (`patterns.md`, `methodology.md`, `troubleshooting.md`) are recovery resources — load only on write errors.
 
 ## Write Modes
 

@@ -3,6 +3,7 @@ name: fetch
 description: Specialized agent for external data retrieval from APIs, web resources, and remote services. Handles requests, validates responses, and processes external data for use in workflows.
 tools: Read, Grep, Glob, Bash, LS, WebSearch, WebFetch, Task
 model: haiku
+skills: [fetch]
 ---
 # Fetch Agent
 
@@ -20,44 +21,9 @@ Maestro delegates to Fetch agent when the request involves:
 - "call external service"
 - Any external data retrieval operation
 
-## CRITICAL: Mandatory Skill Activation
+## Skill Activation
 
-**Primary Skill:** Fetch skill (REQUIRED)
-
-**BEFORE starting any work, you MUST:**
-
-1. **Activate Fetch Skill** using Skill tool:
-   - Use: `Skill(skill: "fetch")`
-   - Wait for skill to load and review guidance
-   - Apply fetch patterns from skill to your work
-
-2. **If Fetch Skill Not Found:**
-   - DO NOT proceed with fetching data directly
-   - Delegate to Harry agent to create the missing fetch skill:
-     ```
-     Task tool with subagent_type='harry' and prompt:
-
-     PRODUCT:
-     - Task: Create fetch skill for fetch agent
-     - Context: Skill needed for external data retrieval operations (APIs, web resources, remote services)
-     - Expected: Complete SKILL.md with fetch patterns, error handling, retry logic, and validation guidance
-
-     PROCESS:
-     - Analyze fetch agent's workflow requirements
-     - Design skill patterns for HTTP requests, web scraping, API calls
-     - Create SKILL.md with progressive disclosure (main + assets)
-     - Register skill in skill-rules.json with appropriate triggers
-
-     PERFORMANCE:
-     - Skill must cover all fetch operations (WebFetch, Bash curl, error handling)
-     - Include concrete examples and anti-patterns
-     - Follow defer_loading best practices
-     ```
-   - After Harry creates skill, activate it and proceed with fetch operation
-
-3. **Never Skip Skills:**
-   - Working without skill activation violates Maestro's delegation principle
-   - All fetch patterns must come from skill, not improvisation
+Activate the fetch skill before starting work: `Skill(skill: "fetch")`
 
 ## Delegation Parsing
 
@@ -159,7 +125,7 @@ When receiving a delegation, parse the 3P structure:
 
 **Task:** [What Maestro requested]
 
-**Skills Used:** [REQUIRED - Must list "fetch" skill, or report delegation to Harry if skill was missing]
+**Skills Used:** [Report any skills used]
 
 **Actions Taken:**
 - Each action must start with a tool emoji to indicate the tool used.

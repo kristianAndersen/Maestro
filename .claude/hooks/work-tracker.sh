@@ -92,6 +92,6 @@ log_entry="[$timestamp] ${tool_name:-unknown tool}: $file_list"
   if [ "$log_primary" != "$log_compat" ]; then
     echo "$log_entry" >> "$log_compat"
   fi
-} >/dev/null 2>&1
+} >/dev/null 2>&1 || true  # Never exit non-zero on log write failure — hook must not break tool results
 
 exit 0

@@ -7,6 +7,8 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+import { getIntentPenalty } from './lib/intent-classifier.js';
+
 /**
  * Maestro Agent Suggester Hook
  *
@@ -72,7 +74,8 @@ function analyzeComplexity(prompt) {
  */
 function matchKeywords(prompt, keywords = []) {
   const lowerPrompt = prompt.toLowerCase();
-  return keywords.some(kw => new RegExp(`\\b${kw.toLowerCase()}\\b`, 'i').test(lowerPrompt)) ? 10 : 0;
+  const matchCount = keywords.filter(kw => new RegExp(`\\b${kw.toLowerCase()}\\b`, 'i').test(lowerPrompt)).length;
+  return Math.min(matchCount * 3, 15);
 }
 
 /**
@@ -80,7 +83,8 @@ function matchKeywords(prompt, keywords = []) {
  */
 function matchSynonyms(prompt, synonyms = []) {
   const lowerPrompt = prompt.toLowerCase();
-  return synonyms.some(syn => new RegExp(`\\b${syn.toLowerCase()}\\b`, 'i').test(lowerPrompt)) ? 5 : 0;
+  const matchCount = synonyms.filter(syn => new RegExp(`\\b${syn.toLowerCase()}\\b`, 'i').test(lowerPrompt)).length;
+  return Math.min(matchCount * 2, 10);
 }
 
 /**
@@ -95,7 +99,7 @@ function matchIntentPatterns(prompt, patterns = []) {
  */
 function matchOperations(prompt, operations = []) {
     const lowerPrompt = prompt.toLowerCase();
-    return operations.some(op => lowerPrompt.includes(op.toLowerCase())) ? 8 : 0;
+    return operations.some(op => new RegExp(`\\b${op.toLowerCase()}\\b`, 'i').test(lowerPrompt)) ? 8 : 0;
 }
 
 /**
@@ -130,7 +134,8 @@ function scoreAgents(prompt, registry, context) {
       intent: matchIntentPatterns(prompt, triggers.intentPatterns),
       operations: matchOperations(prompt, triggers.operations),
       complexity: calculateComplexityBonus(prompt, agentData.complexity),
-      context: matchContext(context, agentData.domain)
+      context: matchContext(context, agentData.domain),
+      intentPenalty: getIntentPenalty(prompt)
     };
 
     // Questions signal research intent (finding/discovering information) - boost base-research for interrogatives

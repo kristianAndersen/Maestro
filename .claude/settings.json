@@ -38,6 +38,14 @@
             "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun $HOME/dev/devtest/ccchat-improve/hooks/poll.js"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/awesome/dev/devtest/ccchat-improve/hooks/compact-nudge.js"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -60,12 +68,39 @@
         ]
       },
       {
+        "matcher": "Write|Edit|write_file|replace",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/regression-warning.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/asset-builder.js",
+            "description": "Detects missing skill asset files and prompts research + verified creation"
+          }
+        ]
+      },
+      {
         "matcher": "Agent",
         "hooks": [
           {
             "type": "command",
             "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/delegation-logger.js",
             "description": "Log Task dispatches for agent name resolution at SubagentStop"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/awesome/dev/devtest/ccchat-improve/hooks/notify.js"
           }
         ]
       }
@@ -106,6 +141,10 @@
           {
             "type": "command",
             "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/session-persister.js"
+          },
+          {
+            "type": "command",
+            "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/pre-compact-diary.js"
           }
         ]
       }
@@ -120,6 +159,14 @@
           {
             "type": "command",
             "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/session-finalizer.js"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/awesome/dev/devtest/ccchat-improve/hooks/leave.js"
           }
         ]
       }
@@ -146,6 +193,16 @@
             "type": "command",
             "command": "PATH=$HOME/.bun/bin:/usr/local/bin:$PATH bun /Users/awesome/dev/devtest/Maestro/.claude/hooks/pre-delegation-validator.js",
             "description": "Validate delegation context before Task tool fires (v2 item #8)"
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/awesome/dev/devtest/ccchat-improve/hooks/post-compact.js"
           }
         ]
       }

@@ -1,0 +1,30 @@
+{"timestamp":"2026-03-31T10:13:54.371Z","prompt":"list all files in the src directory","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:14:00.666Z","prompt":"{\"prompt\":\"PRODUCT: List all typescript files in the components directory\nPROCESS: Use glob patterns","isSubagent":true,"matches":[{"skill":"read","score":32,"matchTypes":["keyword"],"wasForced":true},{"skill":"base-analysis","score":32,"matchTypes":["keyword"],"wasForced":true},{"skill":"list","score":25,"matchTypes":["keyword","intent"],"wasForced":true}]}
+{"timestamp":"2026-03-31T10:18:41.459Z","prompt":"no go th the chat","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:19:20.662Z","prompt":"go meistro go","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:20:34.305Z","prompt":"<task-notification>\n<task-id>bikaevsxb</task-id>\n<tool-use-id>toolu_016VCpXwDpkv2hXTtnU6u7B8</tool-u","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:20:51.249Z","prompt":"<task-notification>\n<task-id>ba2eyh5u6</task-id>\n<tool-use-id>toolu_01GKNaryYZrnZ54g7aGGrWS4</tool-u","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:21:27.993Z","prompt":"well then  Run list agent delegations","isSubagent":false,"matches":[{"skill":"4d-evaluation","score":42,"matchTypes":["keyword"],"wasForced":false}]}
+{"timestamp":"2026-03-31T10:22:36.680Z","prompt":"<task-notification>\n<task-id>bjzj2xuv2</task-id>\n<tool-use-id>toolu_01PAfcdKcorbLFq8QiY4d2Up</tool-u","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:22:36.794Z","prompt":"<task-notification>\n<task-id>bpr8hhfsq</task-id>\n<tool-use-id>toolu_01PaQXnfaR6b3ZHMxzo3PgQD</tool-u","isSubagent":false,"matches":[{"skill":"maestro-orchestration","score":42,"matchTypes":["keyword"],"wasForced":false}]}
+{"timestamp":"2026-03-31T10:23:08.585Z","prompt":"<task-notification>\n<task-id>bbpcmfk91</task-id>\n<tool-use-id>toolu_01F8LuS9bf9YueiKwyxpHVUa</tool-u","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:25:07.023Z","prompt":"<task-notification>\n<task-id>biv9sabgz</task-id>\n<tool-use-id>toolu_01TUHoGSbzRVW6Zzznjmomwt</tool-u","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:25:29.552Z","prompt":"<task-notification>\n<task-id>bx4hj1av8</task-id>\n<tool-use-id>toolu_013Lf2M8JxeKg1FAYBfPmDGh</tool-u","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:25:29.652Z","prompt":"<task-notification>\n<task-id>btevkb4ed</task-id>\n<tool-use-id>toolu_01HicKt7UFn6J41nVYkFBBdy</tool-u","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:25:52.075Z","prompt":"<task-notification>\n<task-id>b0ze11o6t</task-id>\n<tool-use-id>toolu_01JFqWiEqN6q59Egx6C73b6V</tool-u","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:31:23.680Z","prompt":"Use native plan mode plan it,build it ship it","isSubagent":false,"matches":[{"skill":"ui-ux-design","score":32,"matchTypes":["keyword"],"wasForced":false}]}
+{"timestamp":"2026-03-31T10:52:32.449Z","prompt":"sweet","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:52:48.179Z","prompt":"go maestro go","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:55:46.144Z","prompt":"yes and ask in the chat if you need to","isSubagent":false,"matches":[]}
+{"timestamp":"2026-03-31T10:56:38.612Z","prompt":"<task-notification>\n<task-id>be9cdtd9x</task-id>\n<tool-use-id>toolu_01R8nHeSqHWxC6tsVPBCKi3V</tool-u","isSubagent":false,"matches":[{"skill":"lighthouse","score":32,"matchTypes":["keyword"],"wasForced":false}]}
+{"timestamp":"2026-03-31T10:57:39.712Z","prompt":"analyze this code for bugs","matches":[]}
+{"timestamp":"2026-03-31T10:57:45.787Z","prompt":"{\"prompt\":\"PRODUCT: List files\nPROCESS: Use glob\nPERFORMANCE: Return sorted\"}","matches":[]}
+{"timestamp":"2026-03-31T10:58:04.362Z","prompt":"<task-notification>\n<task-id>bke640qqj</task-id>\n<tool-use-id>toolu_0165ngMPVCcSseRcyTiWT4Bm</tool-u","matches":[]}
+{"timestamp":"2026-03-31T10:58:34.767Z","prompt":"go go go be awesome","matches":[]}
+{"timestamp":"2026-03-31T11:08:05.386Z","prompt":"nice share with  the chat","matches":[]}
+{"timestamp":"2026-03-31T11:09:59.019Z","prompt":"cool are you ready for context fork?","matches":[{"skill":"open","score":22,"matchTypes":["keyword"],"wasForced":false}]}
+{"timestamp":"2026-03-31T11:12:42.242Z","prompt":"<task-notification>\n<task-id>b8wv71ly2</task-id>\n<tool-use-id>toolu_016BvZQg4vDs6bi24ABZe4sC</tool-u","matches":[]}
+{"timestamp":"2026-03-31T11:13:38.774Z","prompt":"<task-notification>\n<task-id>bnwm94gzd</task-id>\n<tool-use-id>toolu_01FG7A6PKUx4pZXEFKnRACAU</tool-u","matches":[]}
+{"timestamp":"2026-03-31T11:19:28.312Z","prompt":"so no context fork?","matches":[]}
+{"timestamp":"2026-03-31T11:21:12.441Z","prompt":"call it a session","matches":[]}
+{"timestamp":"2026-03-31T11:27:18.359Z","prompt":"Remenber You are Maestro - an AI orchestration conductor. You delegate all work to specialist agents","matches":[{"skill":"maestro-orchestration","score":45,"matchTypes":["keyword","intent"],"wasForced":true},{"skill":"4d-evaluation","score":42,"matchTypes":["keyword"],"wasForced":true},{"skill":"list","score":22,"matchTypes":["keyword"],"wasForced":true}]}

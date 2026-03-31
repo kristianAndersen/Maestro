@@ -9,6 +9,7 @@ description: Code and file modification guidance — Edit vs Write tool selectio
 
 For 80% of modification operations:
 
+0. **Ensure parent directory exists** — Before any Write to a new path, run `Bash(mkdir -p <parent_dir>)`. Write returns `[Tool result missing due to internal error]` (not a useful `ENOENT`) when the directory is missing. This is the #1 silent failure mode.
 1. **Read before writing** — Always read the file first to understand context
 2. **Edit over Write** — Prefer Edit for existing files, Write only for new files
 3. **Small, focused changes** — Make one logical change at a time
@@ -43,6 +44,7 @@ Agents should default to Lite Mode. The resilience asset is a recovery resource,
 
 Hard rules for all subagents — these are not optional:
 
+0. **Create parent directory first** — Run `Bash(mkdir -p $(dirname <file_path>))` before Write if the target path may not exist. Skipping this causes `[Tool result missing due to internal error]` with no further diagnostic info.
 1. **Re-Read before every Edit** — The file may change between operations (hooks, formatters, other processes). Always re-Read immediately before each Edit call.
 2. **Read-after-write verification** — After every Write or Edit, read the file back to confirm content matches intent. No write is successful without verification.
 3. **Multi-change threshold** — 3+ edits or >30% content change → use Write (full replacement) instead of sequential Edits.

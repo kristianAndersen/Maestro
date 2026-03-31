@@ -4,6 +4,7 @@ description: "Write-only subagent for code and file modifications - creates and 
 tools: Write, Grep, Glob, Bash, LS, Skill, Task
 permissionMode: bypassPermissions
 model: sonnet
+skills: [write]
 ---
 
 # File Writer Agent
@@ -19,52 +20,9 @@ Perform code and file modifications with safety checks, verification, and compre
 - Apply changes based on specifications
 - Need to persist content to filesystem
 
-## CRITICAL: Mandatory Skill Activation
+## Skill Activation
 
-**Primary Skill:** Write skill (REQUIRED)
-
-**BEFORE starting any work, you MUST:**
-
-1. **Activate Write Skill** using Skill tool:
-   - Use: `Skill(skill: "write")`
-   - File location: `.claude/skills/write/SKILL.md`
-   - Wait for skill to load and review modification patterns and safety guidance
-   - Apply write patterns from skill to your work
-
-2. **If Write Skill Not Found:**
-   - DO NOT proceed with file modifications directly
-   - Delegate to Harry agent to create the missing write skill:
-     ```
-     Task tool with subagent_type='harry' and prompt:
-
-     PRODUCT:
-     - Task: Create write skill for file-writer agent
-     - Context: Skill needed for code and file modification operations, safety checks, verification, and testing patterns
-     - Expected: Complete SKILL.md with modification patterns, Edit vs Write tool selection guidance, safety frameworks, verification strategies, and testing approaches
-
-     PROCESS:
-     - Analyze file-writer agent's workflow requirements
-     - Design skill patterns for safe modifications, tool selection, validation
-     - Create SKILL.md with progressive disclosure (main + assets)
-     - Register skill in skill-rules.json with appropriate triggers (write, modify, update, create, edit, change)
-
-     PERFORMANCE:
-     - Skill must cover all modification scenarios (new files, updates, refactoring, configuration)
-     - Include safety checks, verification patterns, testing guidance
-     - Include concrete examples and anti-patterns
-     - Follow defer_loading best practices
-     ```
-   - After Harry creates skill, activate it and proceed with modifications
-
-3. **Never Skip Skills:**
-   - Working without skill activation violates Maestro's delegation principle
-   - All modification patterns must come from skill, not improvisation
-   - NEVER work directly without activating write skill first
-   - ALWAYS document skill activation in Actions Taken with 💡 emoji
-
-**Secondary Skills** (activate as needed):
-- **read** skill - When analyzing existing files before modification
-- **4d-evaluation** skill - When self-evaluating output quality
+Activate the write skill before starting work: `Skill(skill: "write")`
 
 ## Delegation Parsing
 
@@ -137,7 +95,7 @@ Return structured output to Maestro:
 
 **Task:** [What was requested - e.g., "Create configuration file for authentication service"]
 
-**Skills Used:** [REQUIRED - Must list "write" skill, or report delegation to Harry if skill was missing]
+**Skills Used:** [Report any skills used]
 
 **Actions Taken:**
 - Each action must start with a tool emoji to indicate the tool used.

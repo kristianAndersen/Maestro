@@ -6,13 +6,18 @@
   "WORK_TRACKING": true,
   "CONTEXT_TRACKING": true,
   "DOMAIN_HISTORY_CLEANUP": true,
-
   "_comments": {
     "DEFER_LOADING": "Enable defer_loading with smart caching (74% token reduction)",
     "SKILL_DISCOVERY": "Enable subagent skill discovery hook",
     "AGENT_SUGGESTIONS": "Enable maestro agent suggestion hook",
     "WORK_TRACKING": "Enable work-tracker.sh logging",
     "CONTEXT_TRACKING": "Enable context.json persistence",
-    "DOMAIN_HISTORY_CLEANUP": "Enable domain history cleanup (keeps last 100 entries)"
-  }
+    "DOMAIN_HISTORY_CLEANUP": "Enable domain history cleanup (keeps last 100 entries)",
+    "DIARY_CAPTURE": "Enable diary capture on SessionEnd",
+    "OBSERVABILITY_LOGGING": "Enable delegation + subagent-runs JSONL logging",
+    "REGRESSION_GATE": "Enable pre-commit regression test gate"
+  },
+  "DIARY_CAPTURE": true,
+  "OBSERVABILITY_LOGGING": true,
+  "REGRESSION_GATE": true
 }

@@ -48,7 +48,7 @@ That's it! The framework is now ready to use.
 
 Maestro can operate in two modes:
 
-### Mode 1: Slash Command (Explicit Activation) �
+### Mode 1: Slash Command (Explicit Activation) 🎼
 
 Use the `/maestro` command to explicitly activate Maestro orchestration for your request:
 
@@ -74,7 +74,7 @@ When you make a request, you'll see suggestions like:
 
 ```
 TPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW
-Q <� MAESTRO AGENT SUGGESTION                                Q
+Q <🎼 MAESTRO AGENT SUGGESTION                                Q
 `PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPc
 Q RECOMMENDED AGENT: BaseResearch                            Q
 Q CONFIDENCE: High (Score: 45/100)                           Q
@@ -91,30 +91,69 @@ This repository has the following Maestro components active:
 ### Hooks (Automatic Triggers)
 
 **UserPromptSubmit** (runs before Claude responds):
-- `maestro-agent-suggester.js` - Suggests which agent to delegate to
+- `maestro-agent-suggester.js` - Suggests which agent to delegate to (additive scoring + intent classification)
 - `subagent-skill-discovery.js` - Suggests relevant skills for the task
+- `skill-extraction-detector.js` - Detects skill extraction patterns
 
-**PostToolUse** (runs after Write/Edit operations):
-- `work-tracker.sh` - Logs all file modifications to `.maestro-work-log.txt` with timestamp and tool name
-- `context-tracker.js` - Tracks active domain (frontend/backend/testing/docs) and last edited file in `.claude/context.json` for context-aware agent/skill suggestions
+**PostToolUse** (runs after tool operations):
+- `work-tracker.sh` - Logs all file modifications to `.maestro-work-log.txt`
+- `context-tracker.js` - Tracks active domain and last edited file in `.claude/context.json`
+- `delegation-logger.js` - Logs delegation completions with taskHash to `logs/delegation.jsonl`
+- `statusline.sh` - Updates status line display
+- `regression-warning.js` - Warns when routing-critical files are modified
+
+**PreToolUse** (runs before tool execution):
+- `pre-delegation-validator.js` - Validates delegation context before subagent dispatch
 
 **Stop** (runs after Claude completes response):
 - `evaluation-reminder.js` - Reminds to run 4-D evaluation on completed work
+- `enforce-4d-evaluation.js` - Enforces mandatory 4-D quality gates on subagent outputs
+- `diary-capture.js` - Captures session memory for diary entries
+
+**SubagentStop** (runs when subagent completes):
+- `subagent-error-reporter.js` - Captures subagent completion/failure metadata to `logs/subagent-runs.jsonl`
+
+**PreCompact** (runs before context compaction):
+- `pre-compact-diary.js` - Captures working context before compaction to diary staging
 
 ### Available Agents
 
-Specialized agents for different operations:
-
+**Core Operations:**
 - **list** - Directory/file listing operations
 - **open** - File reading with context preservation
 - **file-reader** - Deep file/codebase analysis
-- **file-writer** - Code and file modifications
-- **fetch** - External data retrieval
+- **m-file-writer** - Resilient file writer with retry and verification (preferred for all writes)
+- **file-writer** - Basic code and file modifications
+
+**Research & Analysis:**
 - **base-research** - Information gathering & exploration
 - **base-analysis** - Code/system evaluation
 - **4d-evaluation** - Quality assessment (mandatory quality gate)
+
+**Specialized:**
+- **fetch** - External data retrieval (APIs, web resources)
 - **gemini-brain** - Context offloading for large-scale operations
-- **harry** - Meta-orchestrator for creating agents/skills
+- **excel** - Excel/spreadsheet data operations
+- **ai-pulse** - Twitter/X AI news aggregation
+- **figma** - Figma design operations and canvas manipulation
+- **ui-ux-designer** - Color theory, typography, layout, WCAG compliance
+
+**Framework:**
+- **harry** - Meta-orchestrator for creating/updating framework components
+- **agent-refactorer** - Code refactoring specialist
+- **agent-creator** - Agent creation and registry optimization
+
+**Memory & Learning:**
+- **diary-writer** - Episodic session memory capture
+- **reflector** - Diary analysis and CLAUDE.md improvement proposals
+
+**Communication:**
+- **communicator** - Inter-session messaging and registration
+
+**Debate Personas:**
+- **emilio** - Cross-functional integrator PM
+- **ludvig** - Pragmatic systems leader, first principles
+- **nicola** - Systems-minded investigator, data-driven
 
 ### Available Skills
 
@@ -129,6 +168,13 @@ Skills provide progressive guidance to agents:
 - **base-analysis** - Evaluation frameworks
 - **4d-evaluation** - Quality assessment criteria
 - **hallucination-detection** - Prevents AI hallucinations in code
+- **maestro-orchestration** - Multi-agent delegation guidance
+- **delegater** - Cross-agent coordination patterns
+- **ui-ux-design** - Design systems, color theory, typography
+- **ai-pulse** - AI news aggregation methodology
+- **excel** - Spreadsheet data operations
+- **figma** - Figma canvas operations
+- **lighthouse** - Web performance auditing
 
 ---
 
@@ -159,6 +205,17 @@ Skills provide progressive guidance to agents:
    ```
    Expected: Evaluation reminder box appears
 
+### Run Regression Suite
+
+```bash
+# Full regression (336 prompts, ~2 min)
+bun .claude/hooks/run-regression.js
+```
+
+Thresholds: FP must be 0%, Precision must be >= 85%. Exit code 1 on failure.
+
+A git pre-commit hook automatically gates commits that modify `agent-registry.json` or `maestro-agent-suggester.js`.
+
 ---
 
 ## How It Works
@@ -170,33 +227,33 @@ Skills provide progressive guidance to agents:
    User Request
           ,
 
-           �
+           🎼
 
  Maestro Conductor
  (Analyzes request)
           ,
 
-           �
+           🎼
 
  Specialized Agent
  (Executes work)
           ,
 
-           �
+           🎼
 
  4-D Evaluation
  (Quality gate)
           ,
 
           4
-      �         �
+      🎼         🎼
   EXCELLENT  NEEDS REFINEMENT
 
 
 
                 (Iterate with coaching)
 
-      �                �
+      🎼                🎼
 
   Complete & Deliver
 
@@ -336,10 +393,10 @@ If you experience issues with Bun:
 ## Next Steps
 
 1. **Try Maestro Mode**: Run `/maestro` and give it a task
-2. **Observe the Flow**: Watch delegation � execution � evaluation � refinement
+2. **Observe the Flow**: Watch delegation → execution → evaluation → refinement
 3. **Explore Agents**: Check `.claude/agents/*.md` to see what each agent does
 4. **Explore Skills**: Check `.claude/skills/*/SKILL.md` for guidance patterns
-5. **Read the Protocol**: See `MAESTRO_SUBAGENT_PROTOCOL.md` for complete workflow
+5. **Run Regression**: Execute `bun .claude/hooks/run-regression.js` to verify routing quality
 
 ---
 
@@ -362,6 +419,7 @@ If you experience issues with Bun:
 - **docs/skill-loading-architecture.md** - Skill system architecture
 - **.claude/agents/maestro.md** - Maestro conductor implementation
 - **.claude/agents/agent-registry.json** - Agent auto-detection configuration
+- **.claude/docs/dataset-refresh-protocol.md** - Regression corpus maintenance
 
 ---
 

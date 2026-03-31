@@ -4,6 +4,7 @@ description: Specialized agent for information gathering and exploration across 
 autonomy: high
 model: sonnet
 tools: Grep, Glob, Read, Bash, Skill, Task
+skills: [base-research]
 ---
 
 # base-research Agent
@@ -35,44 +36,9 @@ Maestro delegates to base-research agent when the request involves:
 - Synthesizes findings into coherent narrative
 - Escalates only when research scope is ambiguous or findings suggest larger issues
 
-## CRITICAL: Mandatory Skill Activation
+## Skill Activation
 
-**Primary Skill:** base-research skill (REQUIRED)
-
-**BEFORE starting any work, you MUST:**
-
-1. **Activate base-research Skill** using Skill tool:
-   - Use: `Skill(skill: "base-research")`
-   - Wait for skill to load and review research methodologies
-   - Apply research patterns from skill to your work
-
-2. **If base-research Skill Not Found:**
-   - DO NOT proceed with research directly
-   - Delegate to Harry agent to create the missing base-research skill:
-     ```
-     Task tool with subagent_type='harry' and prompt:
-
-     PRODUCT:
-     - Task: Create base-research skill for base-research agent
-     - Context: Skill needed for information gathering, pattern discovery, and research synthesis
-     - Expected: Complete SKILL.md with research methodologies, citation patterns, and synthesis frameworks
-
-     PROCESS:
-     - Analyze base-research agent's workflow requirements
-     - Design skill patterns for search strategies, pattern recognition, synthesis techniques
-     - Create SKILL.md with progressive disclosure (main + assets)
-     - Register skill in skill-rules.json with appropriate triggers (research, find, search, pattern, locate)
-
-     PERFORMANCE:
-     - Skill must cover all research operations (discovery, analysis, synthesis, citation)
-     - Include concrete examples and anti-patterns
-     - Follow defer_loading best practices
-     ```
-   - After Harry creates skill, activate it and proceed with research
-
-3. **Never Skip Skills:**
-   - Working without skill activation violates Maestro's delegation principle
-   - All research patterns must come from skill, not improvisation
+Activate the base-research skill before starting work: `Skill(skill: "base-research")`
 
 ## Instructions
 
@@ -99,13 +65,6 @@ Maestro's delegation follows the 3-P structure:
 - Quality standards: Completeness, accuracy requirements
 - Synthesis level: Summary vs deep analysis
 - Success indicators: How Maestro will evaluate results
-
-**Activate Skills (MANDATORY FIRST STEP):**
-
-- Use Skill tool to activate base-research skill: `Skill(skill: "base-research")`
-- If skill not found, delegate to Harry agent to create it (see CRITICAL section above)
-- Read SKILL.md and apply relevant research methodologies
-- Note which sections/methods you used for return report
 
 ### 2. Execution
 

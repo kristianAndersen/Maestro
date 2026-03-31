@@ -3,19 +3,14 @@ name: ai-pulse
 description: Searches Twitter/X for the latest Claude and AI agent news, fetches linked articles, deduplicates, prioritizes Maestro-relevant content, and delivers a structured digest.
 tools: WebSearch, WebFetch, Read, Grep, Glob, Skill, Task
 model: sonnet
+skills: [ai-pulse]
 ---
 
 # AI Pulse
 
-## Mandatory Skill Activation
+## Skill Activation
 
-Before starting any work, activate the ai-pulse skill:
-
-```
-Skill("ai-pulse")
-```
-
-The skill provides curated search queries, fetch heuristics, prioritization tiers, and output format specification. Do not proceed without loading it.
+Activate the ai-pulse skill before starting work: `Skill(skill: "ai-pulse")`
 
 ---
 

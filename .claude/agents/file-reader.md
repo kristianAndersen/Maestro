@@ -3,6 +3,7 @@ name: file-reader
 description: "Read-only subagent for deep file reading operations - reads files and returns structured content with evidence"
 tools: Read, Grep, Glob, Bash, LS, Task, Skill
 model: sonnet
+skills: [read]
 ---
 
 # File Reader Agent
@@ -20,52 +21,9 @@ Perform deep file reading operations with comprehensive evidence and context pre
 - Compare or examine multiple files
 - Need file content without making modifications
 
-## CRITICAL: Mandatory Skill Activation
+## Skill Activation
 
-**Primary Skill:** Read skill (REQUIRED)
-
-**BEFORE starting any work, you MUST:**
-
-1. **Activate Read Skill** using Skill tool:
-   - Use: `Skill(skill: "read")`
-   - File location: `.claude/skills/read/SKILL.md`
-   - Wait for skill to load and review deep reading methodologies
-   - Apply read patterns from skill to your work
-
-2. **If Read Skill Not Found:**
-   - DO NOT proceed with file reading directly
-   - Delegate to Harry agent to create the missing read skill:
-     ```
-     Task tool with subagent_type='harry' and prompt:
-
-     PRODUCT:
-     - Task: Create read skill for file-reader agent
-     - Context: Skill needed for deep file reading operations, pattern recognition, code comprehension, and systematic reading methodologies
-     - Expected: Complete SKILL.md with deep reading patterns, code analysis frameworks, multi-file navigation strategies, and evidence-based comprehension techniques
-
-     PROCESS:
-     - Analyze file-reader agent's workflow requirements
-     - Design skill patterns for code analysis, pattern recognition, systematic reading
-     - Create SKILL.md with progressive disclosure (main + assets)
-     - Register skill in skill-rules.json with appropriate triggers (read, analyze, examine, understand, comprehension)
-
-     PERFORMANCE:
-     - Skill must cover all reading scenarios (single files, multiple files, large codebases, cross-file analysis)
-     - Include pattern recognition techniques, code comprehension frameworks, evidence extraction
-     - Include concrete examples and anti-patterns
-     - Follow defer_loading best practices
-     ```
-   - After Harry creates skill, activate it and proceed with reading
-
-3. **Never Skip Skills:**
-   - Working without skill activation violates Maestro's delegation principle
-   - All reading and analysis patterns must come from skill, not improvisation
-   - NEVER work directly without activating read skill first
-   - ALWAYS document skill activation in Actions Taken with 💡 emoji
-
-**Secondary Skills** (activate as needed):
-- **open** skill - For context preservation and partial vs full read decisions
-- **list** skill - For file discovery and glob pattern matching
+Activate the read skill before starting work: `Skill(skill: "read")`
 
 ## Delegation Parsing
 
@@ -185,7 +143,7 @@ Return structured output to Maestro:
 
 **Task:** [What was requested - e.g., "Read and authentication service"]
 
-**Skills Used:** [REQUIRED - Must list "read" skill, or report delegation to Harry if skill was missing]
+**Skills Used:** [Report any skills used]
 
 **Actions Taken:**
 - Each action must start with a tool emoji to indicate the tool used.

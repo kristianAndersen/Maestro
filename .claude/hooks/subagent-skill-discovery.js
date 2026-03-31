@@ -11,10 +11,11 @@
  * Phase 2 smart caching: Session-aware output with 40-60% cumulative token reduction
  */
 
-import { readFileSync, writeFileSync, renameSync } from 'fs';
+import { readFileSync, writeFileSync, renameSync, appendFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { minimatch } from 'minimatch';
+import { isInformationalIntent, getIntentPenalty } from './lib/intent-classifier.js';
 // Feature flags - resilient import with explicit failure logging
 let isEnabled;
 try {
@@ -27,6 +28,7 @@ try {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const SKILL_MATCH_LOG = join(__dirname, '..', 'logs', 'skill-matches.jsonl');
 
 /**
  * Read stdin asynchronously
@@ -284,6 +286,15 @@ function matchSkill(skillConfig, task, context = {}) {
       matches.context = true;
   }
 
+  // Collect match types for instrumentation
+  const matchTypes = [];
+  if (matches.keyword) matchTypes.push('keyword');
+  if (matches.synonym) matchTypes.push('synonym');
+  if (matches.intent) matchTypes.push('intent');
+  if (matches.file) matchTypes.push('file');
+  if (matches.context) matchTypes.push('domain');
+  matches.matchTypes = matchTypes;
+
   // Calculate score
   if (matches.keyword || matches.synonym || matches.intent || matches.file || matches.context) {
     const priorityScore = getPriorityScore(skillConfig.priority);
@@ -302,33 +313,7 @@ function matchSkill(skillConfig, task, context = {}) {
 }
 
 
-/**
- * Detect if the current prompt is a subagent task (3P delegation format).
- *
- * Since UserPromptSubmit only exposes `prompt` and `cwd` (no session_id or
- * agent_id), we cannot directly identify subagent context from hook metadata.
- * Instead, we detect the 3P delegation format that Maestro uses for all Task
- * delegations: a prompt containing PRODUCT/PROCESS/PERFORMANCE headers.
- *
- * If this is a subagent prompt, we skip the session dedup cache so the
- * subagent gets fresh skill recommendations (it has its own isolated context
- * window and hasn't seen any skills the conductor received).
- *
- * v2 note: Replace with session_id scoping if Claude Code adds agent context
- * to UserPromptSubmit hook input in a future version.
- *
- * @param {string} prompt - The raw prompt string
- * @returns {boolean} True if this looks like a subagent 3P delegation prompt
- */
-function isSubagentPrompt(prompt) {
-  if (!prompt || typeof prompt !== 'string') return false;
-  // 3P format requires at least two of three headers to avoid false positives
-  const hasProduct = /\bPRODUCT\b[:\s]/i.test(prompt);
-  const hasProcess = /\bPROCESS\b[:\s]/i.test(prompt);
-  const hasPerformance = /\bPERFORMANCE\b[:\s]/i.test(prompt);
-  const headerCount = [hasProduct, hasProcess, hasPerformance].filter(Boolean).length;
-  return headerCount >= 2;
-}
+
 
 /**
  * Find relevant skills for task
@@ -357,6 +342,21 @@ function findRelevantSkills(skillRules, task, context = {}) {
 
   // Sort by score (highest first)
   matches.sort((a, b) => b.score - a.score);
+
+  // --- Instrumentation: log match types for static vs dynamic analysis ---
+  try {
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      prompt: (task || '').slice(0, 100),
+      matches: matches.map(m => ({
+        skill: m.name,
+        score: m.score,
+        matchTypes: m.match?.matchTypes || [],
+        wasForced: !!context.forceRecommend
+      }))
+    };
+    appendFileSync(SKILL_MATCH_LOG, JSON.stringify(logEntry) + '\n');
+  } catch (e) { /* instrumentation must never break the hook */ }
 
   return matches;
 }
@@ -565,6 +565,14 @@ async function main() {
     }
     const files = extractFilePaths(task);
 
+    // Suppress skill recommendations for informational/conversational prompts.
+    // Users asking "what is X?" or "how does Y work?" don't need skill guidance —
+    // they need an answer. Exit early to avoid noise.
+    const intentResult = isInformationalIntent(task);
+    if (intentResult.isInformational && intentResult.confidence === 'high') {
+      process.exit(0);
+    }
+
     // Detect current domain from context
     const currentDomain = projectContext.activeDomain || null;
 
@@ -573,11 +581,10 @@ async function main() {
 
     // Detect explicit skill requests
     const isExplicitRequest = isExplicitSkillRequest(task);
-    // If this is a subagent prompt (3P delegation format), bypass the session
-    // dedup cache — the subagent has its own isolated context window and needs
-    // fresh skill recommendations regardless of what the conductor already saw.
-    const isSubagent = isSubagentPrompt(task);
-    const forceRecommend = isExplicitRequest || sessionStatus === true || isSubagent;
+    // Note: subagent skill delivery is handled by native frontmatter preloading
+    // (skills: [X] in agent .md files), not this hook. This hook serves
+    // parent-context skill discovery only.
+    const forceRecommend = isExplicitRequest || sessionStatus === true;
 
     // Combine file and project context
     const context = {

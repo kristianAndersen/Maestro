@@ -83,14 +83,16 @@
           "inspect",
           "understand",
           "explain code",
-          "how does",
-          "what does"
+          "explain",
+          "explain file"
         ],
         "intentPatterns": [
           "analyze.*file",
           "inspect.*code",
           "understand.*how",
-          "explain.*this"
+          "explain.*this",
+          "explain.*(?:how|this|file|code|function|module)",
+          "explain.*entire"
         ],
         "operations": [
           "analyze",
@@ -127,35 +129,25 @@
       "defaultModel": "haiku"
     },
     "m-file-writer": {
-      "purpose": "Resilient file writer with retry, verification, and fallback — use for ALL write operations",
+      "purpose": "Resilient file writer with retry, verification, and fallback \u2014 use for ALL write operations",
       "triggers": {
         "keywords": [
-          "add",
-          "modify",
-          "change",
-          "update",
-          "fix",
-          "create",
-          "implement",
-          "write",
-          "edit",
-          "generate",
+          "write file",
+          "edit file",
+          "create file",
           "scaffold",
           "construct",
-          "refactor",
-          "tweak",
           "reliable write",
           "critical write",
           "resilient write",
           "safe write",
-          "verified write"
+          "verified write",
+          "fix bug",
+          "fix error",
+          "remove code",
+          "integrate"
         ],
         "synonyms": [
-          "generate",
-          "scaffold",
-          "construct",
-          "refactor",
-          "tweak",
           "guaranteed write",
           "robust write"
         ],
@@ -171,7 +163,17 @@
           "critical.*write",
           "reliable.*create",
           "must.*succeed.*write",
-          "resilient.*file"
+          "resilient.*file",
+          "fix.*(?:bug|error|issue|broken|pagination|format)",
+          "remove.*(?:code|function|import|phrase|keyword)",
+          "integrate.*(?:into|with|classifier|module)",
+          "^fix\\s+(?:the|a|my|this)",
+          "^implement\\s+(?:the|a|an)",
+          "^write\\s+(?:the|a|an|missing)",
+          "^create\\s+(?:a|an|the|new)",
+          "^rewrite\\s+(?:the|a|this)",
+          "^update\\s+(?:the|a|an|my|this)",
+          "^scaffold\\s+"
         ],
         "operations": [
           "write",
@@ -191,14 +193,18 @@
         "keywords": [
           "fetch",
           "get data",
-          "API",
           "download",
-          "retrieve"
+          "retrieve",
+          "http request",
+          "curl",
+          "webhook"
         ],
         "intentPatterns": [
           "fetch.*from",
           "get.*api",
-          "download.*data"
+          "download.*data",
+          "(?:make|send).*(?:http|request|call)",
+          "curl.*(?:endpoint|url|api)"
         ],
         "operations": [
           "fetch",
@@ -230,7 +236,10 @@
         "intentPatterns": [
           "find.*where",
           "search.*for",
-          "locate.*code"
+          "locate.*code",
+          "research.*(?:on|about|the|framework|github)",
+          "^locate\\s+(?:the|where|a)",
+          "^where\\s+(?:is|are|do|does)"
         ],
         "operations": [
           "search",
@@ -250,14 +259,21 @@
           "evaluate",
           "assess",
           "review",
-          "check quality"
+          "quality check",
+          "code review",
+          "measure",
+          "benchmark",
+          "audit code"
         ],
         "intentPatterns": [
-          "analyze.*code",
+          "analyze.*(?:code|implementation|function|method|module|handler|class|file)",
           "analyze.*system",
           "evaluate.*code",
           "assess.*quality",
-          "review.*implementation"
+          "review.*implementation",
+          "check.*(?:quality|security|performance|bugs)",
+          "measure.*(?:impact|rate|performance|false)",
+          "benchmark.*(?:against|performance)"
         ],
         "operations": [
           "analyze",
@@ -340,7 +356,10 @@
           "bulk operation",
           "context overflow",
           "too many files",
-          "heavy context"
+          "heavy context",
+          "entire codebase",
+          "codebase",
+          "entire"
         ],
         "synonyms": [
           "second brain",
@@ -353,12 +372,18 @@
           "analyze.*entire.*codebase",
           "too.*large.*for.*context",
           "context.*overflow",
-          "bulk.*operation"
+          "bulk.*operation",
+          "use.*gemini.*(?:to|for|process|analyze|handle)",
+          "(?:too|file.*is).*(?:large|big).*(?:process|analyze|handle)",
+          "(?:could|can).*(?:you.*)?analyze.*(?:entire|full|whole|all).*codebase",
+          "analyze.*(?:entire|full|whole|all).*(?:codebase|project|repo)",
+          "entire.*codebase\\b"
         ],
         "operations": [
           "offload",
           "bulk-process",
-          "large-scale"
+          "large-scale",
+          "analyze"
         ]
       },
       "complexity": "medium",
@@ -376,7 +401,13 @@
           "extract functionality",
           "simplify",
           "remove duplication",
-          "modernize code"
+          "modernize code",
+          "clean up",
+          "extract",
+          "decompose",
+          "duplication",
+          "code duplication",
+          "deduplication"
         ],
         "synonyms": [
           "reorganize",
@@ -392,7 +423,10 @@
           "extract.*from",
           "simplify.*function",
           "remove.*duplication",
-          "modernize.*legacy"
+          "modernize.*legacy",
+          "^clean\\s+up\\s+(?:the|this|a)",
+          "^simplify\\s+(?:the|this|a)",
+          "^extract\\s+(?:the|this|a)"
         ],
         "operations": [
           "refactor",
@@ -414,14 +448,26 @@
           "wizard",
           "harry",
           "make agent",
-          "new skill"
+          "new skill",
+          "slash command",
+          "new command",
+          "hook",
+          "agent definition",
+          "registry entry"
         ],
         "intentPatterns": [
           "create.*agent",
           "build.*skill",
           "need.*agent",
           "make.*agent",
-          "new.*skill"
+          "new.*skill",
+          "create.*(?:slash|new).*command",
+          "create.*agent.*(?:file|definition|in.*\\.claude)",
+          "create.*hook.*(?:that|for|to|runs)",
+          "new.*hook.*(?:that|for)",
+          "create.*(?:new\\s+)?agent.*for.*(?:processing|handling|parsing|managing)",
+          "make.*(?:new\\s+)?agent.*(?:that|which|to).*(?:handles?|processes?)",
+          "create.*(?:agent|hook).*with.*(?:full|complete|registry)"
         ],
         "operations": [
           "create",
@@ -451,7 +497,14 @@
           "chart",
           "visualization",
           "calculate",
-          "statistics"
+          "statistics",
+          "bar chart",
+          "pie chart",
+          "revenue",
+          "survey results",
+          "financial data",
+          "monthly revenue",
+          "quarterly revenue"
         ],
         "intentPatterns": [
           "analyze.*excel",
@@ -462,7 +515,18 @@
           "chart.*from.*excel",
           "calculate.*in.*workbook",
           "extract.*from.*excel",
-          "pivot.*data"
+          "pivot.*data",
+          "create.*chart",
+          "generate.*(?:chart|graph|visualization)",
+          "(?:pivot|aggregate).*(?:table|data)",
+          "calculate.*(?:statistics|totals|averages|monthly|weekly|annual)",
+          "(?:what|show).*(?:totals|numbers|figures).*(?:in|from).*(?:spreadsheet|workbook|sheet)",
+          "read.*(?:workbook|financial data)",
+          "summarize.*(?:data|workbook)",
+          "(?:from|in).*(?:workbook|xlsx?)\\b",
+          "analyze.*(?:xlsx?|xls\\b)",
+          "create.*(?:bar|line|pie|area|stacked).*chart",
+          "(?:monthly|annual|weekly|quarterly).*(?:revenue|data|chart)"
         ],
         "operations": [
           "analyze",
@@ -485,14 +549,18 @@
           "session summary",
           "save memory",
           "document session",
-          "session notes"
+          "session notes",
+          "entry",
+          "diary entry"
         ],
         "intentPatterns": [
           "capture.*session",
           "write.*diary",
           "save.*session.*memory",
           "document.*this.*session",
-          "session.*summary"
+          "session.*summary",
+          "^write\\s+(?:a\\s+)?diary\\b",
+          "diary\\s+entry\\b"
         ],
         "operations": [
           "capture",
@@ -524,7 +592,9 @@
           "send.*message.*to",
           "communicate.*with.*session",
           "name.*session",
-          "register.*session"
+          "register.*session",
+          "tell.*(?:agent|session|other).*(?:about|that|ready)",
+          "check.*(?:updates|session)"
         ],
         "operations": [
           "send",
@@ -539,7 +609,7 @@
       "defaultModel": "haiku"
     },
     "ccchat": {
-      "purpose": "Multi-agent chat — communicate with peer agents across sessions via ccchat protocol",
+      "purpose": "Multi-agent chat \u2014 communicate with peer agents across sessions via ccchat protocol",
       "triggers": {
         "keywords": [
           "chat",
@@ -553,13 +623,22 @@
         "synonyms": [
           "peer chat",
           "agent chat",
-          "cross-session chat"
+          "cross-session chat",
+          "council message",
+          "to the council"
         ],
         "intentPatterns": [
           "chat with.*agent",
           "ask.*peers",
           "send.*message.*agent",
-          "check.*messages"
+          "check.*messages",
+          "ask.*(?:in|via|through).*ccchat",
+          "(?:ask|check).*(?:peers|team|agents).*(?:about|whether|if)",
+          "send.*(?:to|via).*ccchat",
+          "send.*message.*to.*council",
+          "(?:post|send).*(?:to|via).*council\\b",
+          "read.*messages?\\b",
+          "messages?.*in.*(?:room|channel|general)"
         ],
         "operations": [
           "communicate",
@@ -572,7 +651,7 @@
       "defaultModel": "haiku"
     },
     "ui-ux-designer": {
-      "purpose": "UI/UX design specialist — color theory, typography, layout, spacing, design tokens, WCAG accessibility",
+      "purpose": "UI/UX design specialist \u2014 color theory, typography, layout, spacing, design tokens, WCAG accessibility",
       "triggers": {
         "keywords": [
           "color",
@@ -603,7 +682,9 @@
           "design tokens",
           "color scheme",
           "analyze design",
-          "audit design"
+          "audit design",
+          "padding",
+          "margin"
         ],
         "synonyms": [
           "style guide",
@@ -638,7 +719,14 @@
           "accessibility.*color",
           "layout.*grid",
           "responsive.*design",
-          "design.*tokens"
+          "design.*tokens",
+          "(?:change|fix|update|adjust|tweak).*(?:color|spacing|font|layout|grid|margin|padding)",
+          "(?:add|implement).*(?:dark mode|light mode|theme|color scheme)",
+          "(?:update|change).*(?:css|stylesheet)",
+          "(?:wcag|accessibility).*(?:complian|requirement|audit|check)",
+          "(?:make|check).*(?:wcag|accessible)",
+          "(?:add|change|adjust|update|fix|set).*padding\\b",
+          "(?:add|change|adjust|update|fix|set).*margin\\b"
         ],
         "operations": [
           "design",
@@ -664,7 +752,13 @@
           "x.com",
           "news",
           "digest",
-          "pulse"
+          "pulse",
+          "ai news",
+          "trending ai",
+          "run ai-pulse",
+          "claude news",
+          "search x.com",
+          "search twitter"
         ],
         "synonyms": [
           "ai news",
@@ -678,7 +772,15 @@
           "latest ai news",
           "what's new in claude",
           "ai pulse",
-          "news about claude"
+          "news about claude",
+          "run.*ai.?pulse",
+          "what'?s.*new.*(?:ai|claude)",
+          "trending.*(?:ai|claude)",
+          "latest.*(?:ai|claude)",
+          "can.*you.*run.*(?:ai.?pulse|pulse)",
+          "search.*(?:x\\.com|twitter\\.com|twitter)\\b",
+          "x\\.com.*(?:for|recent|latest|updates?|news)",
+          "(?:latest|recent).*(?:updates?|news).*(?:on|from).*(?:x|twitter)"
         ],
         "operations": [
           "search",
@@ -712,7 +814,7 @@
         ],
         "intentPatterns": [
           "reflect.*on.*sessions?",
-          "analyze.*patterns?",
+          "analyze.*patterns?.*(?:session|diary|diaries|learning|framework)",
           "learn.*from.*sessions?",
           "review.*diar(y|ies)",
           "extract.*insights",
@@ -732,7 +834,7 @@
       "defaultModel": "sonnet"
     },
     "figma": {
-      "purpose": "Figma design operations — read, create, modify designs via websocket bridge",
+      "purpose": "Figma design operations \u2014 read, create, modify designs via websocket bridge",
       "triggers": {
         "keywords": [
           "figma",
@@ -766,6 +868,33 @@
       },
       "complexity": "medium",
       "autonomy": "high",
+      "defaultModel": "sonnet"
+    },
+    "task-analysis": {
+      "description": "Complexity scoring and ceremony tier routing",
+      "keywords": [
+        "complexity",
+        "analyze task",
+        "scope",
+        "how complex",
+        "tier",
+        "routing"
+      ],
+      "intentPatterns": [
+        "assess.*complexity",
+        "score.*task",
+        "how.*complex.*is",
+        "route.*task"
+      ],
+      "operations": [
+        "analyze",
+        "assess",
+        "score",
+        "route"
+      ],
+      "complexity": "simple",
+      "autonomy": "high",
+      "internal": true,
       "defaultModel": "sonnet"
     }
   }

@@ -10,6 +10,7 @@
     "test:evaluation-reminder": "echo 'SUBAGENT REPORT: Complete' | bun evaluation-reminder.js",
     "test:session-initializer": "echo '/maestro analyze codebase' | bun session-initializer.js",
     "test:session-persister": "echo '{\"session_id\":\"test-123\",\"hook_event_name\":\"PreCompact\"}' | bun session-persister.js",
+    "test:pre-compact-diary": "echo '{\"session_id\":\"test-precompact\",\"hook_event_name\":\"PreCompact\"}' | bun pre-compact-diary.js",
     "test:session-finalizer": "echo '{\"session_id\":\"test-123\",\"hook_event_name\":\"SessionEnd\"}' | bun session-finalizer.js"
   },
   "dependencies": {
